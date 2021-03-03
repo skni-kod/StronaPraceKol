@@ -1,0 +1,29 @@
+body
+{
+	/*background-color:#8cedea;*/
+	background-color:white;
+}
+#mainText
+{
+	background-color:#34c9c4;
+	margin: 0%;
+
+}
+
+#referatyT
+{
+	background-color:white;
+}
+
+.btn
+{
+	width:250px;
+	height:55px;
+	font-size:20px;
+}
+
+#list
+{
+	background-color:#b3f2f0;
+}
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+<meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- add bootstrap framework -->
+  
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  
+  <!-- can change to django -->
+  <link rel="stylesheet" href="styleLog.css"
+</head>
+
+<body>
+
+<div class="jumbotron text-center" id="mainText">
+<h1> Prace Kół Naukowych PRz </h1>
+</div>
+
+
+<nav class="navbar navbar-expand-sm bg-info navbar-dark">
+	<ul class="navbar-nav">
+	
+		<li class="nav-item">
+			<a class="nav-link" href="index.html">Start</a>
+		</li>
+		
+		<li class="nav-item active">
+			<a class="nav-link" href="logowanie.html">Logowanie</a>
+		</li>
+			
+		<li class="nav-item">
+			<a class="nav-link" href="rejestracja.html">Rejestracja</a>
+		</li>
+			
+		<li class="nav-item">
+			<a class="nav-link" href="kontakt.html">Kontakt</a>
+		</li>
+		
+	</ul>
+</nav>
+
+
+<div class="container my-3">
+	<div class="col-md-12 text-center">
+	
+	<!-- detect which button is clicked -->
+	
+	{% csrf_token %}  
+    {{ form.as_p }}
+	
+	<form method='POST' action='#'>
+		<input type="submit" class="btn btn-primary" value="Zaloguj" name="Log"/>		
+	</form>
+	 </div>
+
+</div>
+
+
+</body>
+
+
+
+
+</html>
