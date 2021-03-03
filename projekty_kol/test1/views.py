@@ -10,5 +10,14 @@ def index(request):
     return HttpResponse(template.render()) # rendering the template in HttpResponse
     #return render(request,'index.html')
     
+    
+    
 def logowanie(request):
     return render(request,'logowanie.html')
+    
+
+def rejestracja(request):
+    return render(request,'rejestracja.html')
+
+def kontakt(request):
+    return render(request,'kontakt.html')

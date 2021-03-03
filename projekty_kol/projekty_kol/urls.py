@@ -25,4 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('index',views.index),
     path('logowanie',views.logowanie),
+    path('rejestracja',views.rejestracja),
+    path('kontakt',views.kontakt),
 ]
