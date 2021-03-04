@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.template import loader
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 # forms 
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, AddReferat
 
 def index(request):
     template = loader.get_template('index.html') # getting our template  
@@ -30,4 +30,30 @@ def kontakt(request):
     return render(request,'kontakt.html')
     
 def referaty(request):
-    return render(request,'referaty.html')
+    name = { 'imie':'smiercio'}
+    return render(request,'referaty.html',name)
+    
+def dodajReferat(request):
+    ref = AddReferat(request.POST or None);
+    name = { 'imie':'smiercio',
+             'form':ref,
+             'title':"",
+            
+           }
+    title = "nope"
+             
+    if (ref.is_valid()):
+    
+        # getting data from form fields
+        title = ref.cleaned_data.get("title")
+        #print(title)
+        # redirect
+        template = loader.get_template('referaty.html') # getting our template  
+        return HttpResponseRedirect('referaty')
+        
+    print(title)
+    return render(request,'dodajReferat.html',name)
+    
+    
+    
+    

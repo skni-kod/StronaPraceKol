@@ -20,13 +20,17 @@ from django.urls import path
 To add app
 '''
 from test1 import views
+from django.urls import path, include
 
 urlpatterns = [
+    path('summernote/', include('django_summernote.urls')),
     path('admin/', admin.site.urls),
     path('index',views.index),
     path('indexLog',views.indexLog),
     path('logowanie',views.logowanie),
     path('rejestracja',views.rejestracja),
     path('kontakt',views.kontakt),
-     path('referaty',views.referaty),
+    path('referaty',views.referaty),
+    path('dodajReferat',views.dodajReferat),
+    path('dodajReferat',views.dodajReferat),
 ]
