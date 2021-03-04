@@ -34,20 +34,20 @@
 <nav class="navbar navbar-expand-sm bg-info navbar-dark">
 	<ul class="navbar-nav">
 	
-		<li class="nav-item active">
-			<a class="nav-link" href="index">Start</a>
+		<li class="nav-item">
+			<a class="nav-link" href="indexLog">Start</a>
 		</li>
 		
-		<li class="nav-item">
-			<a class="nav-link" href="logowanie">Logowanie</a>
+		<li class="nav-item active">
+			<a class="nav-link" href="referaty">Referaty</a>
 		</li>
 			
 		<li class="nav-item">
-			<a class="nav-link" href="rejestracja">Rejestracja</a>
+			<a class="nav-link">Zalogowano jako: {{imie}} </a>
 		</li>
 			
 		<li class="nav-item">
-			<a class="nav-link" href="kontakt">Kontakt</a>
+			<a class="nav-link" href="index">Wyloguj</a>
 		</li>
 		
 	</ul>
@@ -55,44 +55,28 @@
 
 
 <div class="jumbotron text-center" id="referatyT">
-<h1> Coś tam </h1>
+<h1> Twoje referaty do Prac Kół Naukowych PRz </h1>
 
 <!-- ordered list to send imformations -->
 	<div class="col-md-12 text-center">
 		<ul id="info_list">
-			<li style="list-style-type:none">hmm</li>
+			<li style="list-style-type:none">Twój referat</li>
 		</ul>
 	<br></br>
-	
 	</div>
-
+	
+	
+	<div class="col-md-12 text-center">
+	<form method='GET' action='#'>
+		<input type="submit" class="btn btn-success" value="Dodaj nowy referat" name="Log"/>		
+	</form>
+	</div>
+	
 
 </div>
 
 
 
-<div class="container">
-	<br></br>
-	
-	<!-- ordered list to send imformations -->
-	<div class="row" id="list">
-		<ol id="info_list">
-			<li>Test entry hjhkjhjkhjhjkhjkhjhk</li>
-			<li>Test entry2 hjhkjhjkhjhjkhjkhjhk</li>
-		</ol>
-	<br></br>
-	
-
-	</div>
-</div>
-
-<br></br>
-
-<footer class="footer" style="background-color:#e2e2e2; position:absolute; bottom:0;width:100%; text-align:center;">
-	<div class="container">
-		<span class="text-muted">By someone</span>
-	</div>
-</footer>
 
 </body>
 

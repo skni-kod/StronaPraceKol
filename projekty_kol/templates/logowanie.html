@@ -54,11 +54,11 @@
 	
 	<!-- detect which button is clicked -->
 	
-	{% csrf_token %}  
-    {{ form.as_p }}
-	
-	<form method='POST' action='#'>
+	<form method='POST' class="post-form">
+		{% csrf_token %}
+		{{ form.as_p }}
 		<input type="submit" class="btn btn-primary" value="Zaloguj" name="Log"/>		
+		<a class="nav-link" href="indexLog"></a>
 	</form>
 	 </div>
 

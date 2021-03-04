@@ -24,7 +24,9 @@ from test1 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index',views.index),
+    path('indexLog',views.indexLog),
     path('logowanie',views.logowanie),
     path('rejestracja',views.rejestracja),
     path('kontakt',views.kontakt),
+     path('referaty',views.referaty),
 ]

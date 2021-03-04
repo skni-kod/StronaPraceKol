@@ -48,11 +48,12 @@
 	</ul>
 </nav>
 
-
 <div class="container my-3">
 	<div class="col-md-12 text-center">
 	<!-- detect which button is clicked -->	
-	<form method='get' action='#'>
+	<form method='POST' class="post-form">
+		{% csrf_token %}
+		{{ form.as_p }}
 		<input type="submit" class="btn btn-primary" value="Zarejestruj" name="Log"/>
 		<input type="submit" class="btn btn-warning" value="Wyczyść" name="Clr"/>
 	</form>
