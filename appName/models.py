@@ -19,7 +19,7 @@ class Paper(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     add_date = models.DateTimeField(default=timezone.now)
     last_edit_date = models.DateTimeField(default=timezone.now)
-    status = models.CharField(max_length=64)
+    status = models.SmallIntegerField()
 
 
 class Review(models.Model):
