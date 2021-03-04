@@ -30,7 +30,15 @@ def kontakt(request):
     return render(request,'kontakt.html')
     
 def referaty(request):
-    name = { 'imie':'smiercio'}
+    # get all data from database !!!!
+    name = { 'imie':'smiercio',
+             'title':'Mój pierwszy referat',
+             'autors':'Smiercio',
+             'status':'Zgłoszono',
+    
+    
+    
+           }
     return render(request,'referaty.html',name)
     
 def dodajReferat(request):
