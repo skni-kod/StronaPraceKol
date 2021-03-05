@@ -1,15 +1,20 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
-<div class="container my-3">
+<div class="container my-3" style="width:40%;">
 	<div class="col-md-12 text-center">
 	<!-- detect which button is clicked -->	
 	<form method='POST' class="post-form">
 		{% csrf_token %}
-		{{ form.as_p }}
+		{{ form|crispy }}
 		<input type="submit" class="btn btn-primary" value="Zarejestruj" name="Log"/>
 		<input type="submit" class="btn btn-warning" value="Wyczyść" name="Clr"/>
 	</form>
+	
+	<small class="text-muted">
+		Masz już konto? <a class="ml-2" href="{% url 'logowanie' %}">Zaloguj się</a>
+	</small>
+	
 	 </div>
 
 </div>

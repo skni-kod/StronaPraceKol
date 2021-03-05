@@ -32,104 +32,200 @@
 
 <nav class="navbar navbar-expand-sm bg-info navbar-dark">
 	<ul class="navbar-nav">
-	
-		{% if title == 'index' %}
-		<li class="nav-item active">
-			<a class="nav-link" href="{% url 'index' %}">Start</a>
-			<!--<a class="nav-link" href="index">Start</a>-->
-		</li>
-		
-		<li class="nav-item">
-			<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
-			<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
-		</li>
-			
-		<li class="nav-item">
-			<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
-			<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
-			
-		</li>
-			
-		<li class="nav-item">
-			<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
-			<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
-		</li>
+
+		{% if user.is_authenticated %}
+			{% if title == 'indexLog' %}
+			<li class="nav-item active">
+				<!--<a class="nav-link" href="indexLog">Start</a>-->
+				<a class="nav-link" href="{% url 'indexLog' %}">Start</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="referaty">Referaty</a>-->
+				<a class="nav-link" href="{% url 'referaty' %}">Referaty</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="index">Wyloguj</a> -->
+				<a class="nav-link" href="{% url 'wylogowany' %}">Wyloguj</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'referaty' %}
+			<li class="nav-item">
+				<!--<a class="nav-link" href="indexLog">Start</a>-->
+				<a class="nav-link" href="{% url 'indexLog' %}">Start</a>
+			</li>
+
+			<li class="nav-item active">
+				<!--<a class="nav-link" href="referaty">Referaty</a>-->
+				<a class="nav-link" href="{% url 'referaty' %}">Referaty</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="index">Wyloguj</a> -->
+				<a class="nav-link" href="{% url 'wylogowany' %}">Wyloguj</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'dodajReferat' %}
+			<li class="nav-item">
+				<!--<a class="nav-link" href="indexLog">Start</a>-->
+				<a class="nav-link" href="{% url 'indexLog' %}">Start</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="referaty">Referaty</a>-->
+				<a class="nav-link" href="{% url 'referaty' %}">Referaty</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="index">Wyloguj</a> -->
+				<a class="nav-link" href="{% url 'index' %}">Wyloguj</a>
+			</li>
+			{% endif %}
+
+		{% else %}
+			{% if title == 'index' %}
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'index' %}">Start</a>
+				<!--<a class="nav-link" href="index">Start</a>-->
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
+				<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
+				<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
+
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
+				<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'logowanie' %}
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'index' %}">Start</a>
+				<!--<a class="nav-link" href="index">Start</a>-->
+			</li>
+
+			<li class="nav-item active">
+				<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
+				<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
+				<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
+
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
+				<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'rejestracja' %}
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'index' %}">Start</a>
+				<!--<a class="nav-link" href="index">Start</a>-->
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
+				<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
+			</li>
+
+			<li class="nav-item active">
+				<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
+				<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
+
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
+				<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'kontakt' %}
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'index' %}">Start</a>
+				<!--<a class="nav-link" href="index">Start</a>-->
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
+				<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
+				<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
+
+			</li>
+
+			<li class="nav-item active">
+				<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
+				<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'wylogowany' %}
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'index' %}">Start</a>
+				<!--<a class="nav-link" href="index">Start</a>-->
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
+				<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
+				<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
+
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
+				<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
+			</li>
+			{% endif %}
+
 		{% endif %}
-		
-		{% if title == 'logowanie' %}
-		<li class="nav-item">
-			<a class="nav-link" href="{% url 'index' %}">Start</a>
-			<!--<a class="nav-link" href="index">Start</a>-->
-		</li>
-		
-		<li class="nav-item active">
-			<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
-			<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
-		</li>
-			
-		<li class="nav-item">
-			<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
-			<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
-			
-		</li>
-			
-		<li class="nav-item">
-			<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
-			<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
-		</li>
-		{% endif %}
-		
-		{% if title == 'rejestracja' %}
-		<li class="nav-item">
-			<a class="nav-link" href="{% url 'index' %}">Start</a>
-			<!--<a class="nav-link" href="index">Start</a>-->
-		</li>
-		
-		<li class="nav-item">
-			<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
-			<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
-		</li>
-			
-		<li class="nav-item active">
-			<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
-			<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
-			
-		</li>
-			
-		<li class="nav-item">
-			<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
-			<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
-		</li>
-		{% endif %}
-		
-		{% if title == 'kontakt' %}
-		<li class="nav-item">
-			<a class="nav-link" href="{% url 'index' %}">Start</a>
-			<!--<a class="nav-link" href="index">Start</a>-->
-		</li>
-		
-		<li class="nav-item">
-			<!--<a class="nav-link" href="logowanie">Logowanie</a>-->
-			<a class="nav-link" href="{% url 'logowanie' %}">Logowanie</a>
-		</li>
-			
-		<li class="nav-item">
-			<!--<a class="nav-link" href="rejestracja">Rejestracja</a>-->
-			<a class="nav-link" href="{% url 'rejestracja' %}">Rejestracja</a>
-			
-		</li>
-			
-		<li class="nav-item active">
-			<!-- <a class="nav-link" href="kontakt">Kontakt</a> -->
-			<a class="nav-link" href="{% url 'kontakt' %}">Kontakt</a>
-		</li>
-		{% endif %}
+
+
 		
 		
 	</ul>
 </nav>
 
-
+{% if messages %}
+	{% for message in messages %}
+		<div class="alert alert-{{ message.tags }}" style="text-align:center;">{{ message }}</div>
+	{% endfor %}
+{% endif %}
 {% block content %}{% endblock %}
 
 <br></br>

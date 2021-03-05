@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_summernote',
-    'test1',
+    'crispy_forms',
+    'test1.apps.Test1Config',
 ]
 
 MEDIA_URL = '/media/'
@@ -132,3 +133,9 @@ STATICFILES_DIRS = [
     #BASE_DIR / "static",
     #'/var/www/static/',
 ]
+
+# for crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# redirect user to log-in site after log-in
+LOGIN_REDIRECT_URL = 'indexLog'

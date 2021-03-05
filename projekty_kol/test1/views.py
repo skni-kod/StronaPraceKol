@@ -1,9 +1,8 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
 from django.template import loader
-
-# Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
+from .forms import UserRegisterForm
 
 # forms 
 from .forms import RegisterForm, LoginForm, AddReferat
@@ -12,8 +11,12 @@ from .forms import RegisterForm, LoginForm, AddReferat
 from django.views import generic
 
 # models
+from .models import Paper
 
-from .models import Referats    
+# to use user system
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import views as auth_views
+
 
 
 # before log-in
@@ -33,7 +36,16 @@ def logowanie(request):
     return render(request,'logowanie.html',contex) 
     
 def rejestracja(request):
-    rej = RegisterForm()
+    if request.method == 'POST':
+        rej = UserRegisterForm(request.POST)
+        if rej.is_valid():
+            rej.save()
+            username = rej.cleaned_data.get('username')
+            messages.success(request,f'Konto zostało utworzone dla {username}')
+            return redirect('logowanie')
+    else:
+        rej = UserRegisterForm()
+
     contex = {
                 'form':rej,
                 'title':'rejestracja',
@@ -62,17 +74,18 @@ def indexLog(request):
     
 
 
-
+'''
 def referaty(request):
     # get all data from database !!!!
-    contex = { 'imie':'smiercio',
+    contex = {
+             'imie':'smiercio',
              'ref_Title':'Mój pierwszy referat',
              'autors':'Smiercio',
              'status':'Zgłoszono',
              'title':'referaty',
            }
     return render(request,'referaty.html',contex)
-    
+'''
 def dodajReferat(request):
     ref = AddReferat(request.POST or None);
     name = { 'imie':'smiercio',
@@ -95,9 +108,34 @@ def dodajReferat(request):
     
 
 class ReferatListView(generic.ListView):
-    model = Referats
+    model = Paper
     context_object_name = 'ref_List' # your own name for the list as a template variable
     template_name = 'referaty.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(ReferatListView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'referaty'
+        context['imie'] = 'smiercio'
+        return context
     
-    
-    
+
+class LoginView(auth_views.LoginView):
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(LoginView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'logowanie'
+        return context
+    pass
+
+
+class LogoutView(auth_views.LogoutView):
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(LogoutView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'wylogowany'
+        return context
+    pass

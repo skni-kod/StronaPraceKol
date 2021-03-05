@@ -21,17 +21,20 @@ To add app
 '''
 from test1 import views
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('',views.index, name='index'),
     path('admin/', admin.site.urls),
     path('index/',views.index, name='index'),
     path('indexLog/',views.indexLog, name='indexLog'),
-    path('logowanie/',views.logowanie, name='logowanie'),
+    path('logowanie/',views.LoginView.as_view(template_name='logowanie.html'), name='logowanie'),
+    path('wylogowany/',views.LogoutView.as_view(template_name='wylogowany.html'), name='wylogowany'),
+    #path('logowanie/',views.logowanie, name='logowanie'),
     path('rejestracja/',views.rejestracja, name='rejestracja'),
     path('kontakt/',views.kontakt,name='kontakt'),
-    path('referaty/',views.referaty,name='referaty'),
-    #path('referaty/',views.ReferatListView.as_view(),name='referaty'),
+    #path('referaty/',views.referaty,name='referaty'),
+    path('referaty/',views.ReferatListView.as_view(),name='referaty'),
     path('dodajReferat/',views.dodajReferat,name='dodajReferat'),
     path('dodajReferat/',views.dodajReferat),
     path('summernote/', include('django_summernote.urls')),

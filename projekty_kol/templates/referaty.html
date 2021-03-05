@@ -1,4 +1,4 @@
-{% extends "base2.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="jumbotron text-center" id="referatyT">
@@ -7,16 +7,17 @@
 <!-- ordered list to send imformations -->
 	<div class="col-md-12 text-center">
 		{%if ref_List %}
-		<ul id="info_list">
+		<br id="info_list">
 			
 			{% for referat in ref_List %}
 			<li style="list-style-type:none;border-style:solid;border-color:#e3dfd5;">
 
-			<h4 style = "text-align:left;"><a class="nav-link" href="{% url 'index' %}">{{ref_List.title}}</a></h4>
-			<h5 style = "text-align:left;">{{ref_List.autors}}</h5>
-			<p style = "text-align:left;clear: both;">Status: {{ref_List.status}}</p>
+			<h4 style = "text-align:left;"><a class="nav-link" href="{% url 'index' %}">{{referat.title}}</a></h4>
+			<h5 style = "text-align:left;">{{referat.author}}</h5>
+			<p style = "text-align:left;clear: both;">Status: {{referat.status}}</p>
 			
 			</li>
+			<br></br>
 			{% endfor %}
 			
 		</ul>

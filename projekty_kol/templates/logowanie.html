@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="container my-3">
 	<div class="col-md-12 text-center">
@@ -8,11 +8,19 @@
 	
 	<form method='POST' class="post-form">
 		{% csrf_token %}
-		{{ form.as_p }}
+		<div style="width:23%;margin-left:415px;">
+		{{ form|crispy }}
+		</div>
 		<input type="submit" class="btn btn-primary" value="Zaloguj" name="Log"/>
+		<!--
 		<a class="nav-link" href="{% url 'indexLog' %}"></a>
-		<!--<a class="nav-link" href="indexLog"></a>-->
+		<a class="nav-link" href="indexLog"></a>-->
 	</form>
+	
+	<small class="text-muted">
+		Nie masz konta? <a class="ml-2" href="{% url 'logowanie' %}">Zarejestruj się</a>
+	</small>
+	
 	 </div>
 
 </div>
