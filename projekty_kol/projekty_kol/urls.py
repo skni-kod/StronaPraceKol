@@ -23,14 +23,17 @@ from test1 import views
 from django.urls import path, include
 
 urlpatterns = [
-    path('summernote/', include('django_summernote.urls')),
+    path('',views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('index',views.index),
-    path('indexLog',views.indexLog),
-    path('logowanie',views.logowanie),
-    path('rejestracja',views.rejestracja),
-    path('kontakt',views.kontakt),
-    path('referaty',views.referaty),
-    path('dodajReferat',views.dodajReferat),
-    path('dodajReferat',views.dodajReferat),
+    path('index/',views.index, name='index'),
+    path('indexLog/',views.indexLog, name='indexLog'),
+    path('logowanie/',views.logowanie, name='logowanie'),
+    path('rejestracja/',views.rejestracja, name='rejestracja'),
+    path('kontakt/',views.kontakt,name='kontakt'),
+    path('referaty/',views.referaty,name='referaty'),
+    #path('referaty/',views.ReferatListView.as_view(),name='referaty'),
+    path('dodajReferat/',views.dodajReferat,name='dodajReferat'),
+    path('dodajReferat/',views.dodajReferat),
+    path('summernote/', include('django_summernote.urls')),
+    
 ]
