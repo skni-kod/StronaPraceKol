@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="container my-3">
 	<div class="col-md-12 text-center">
@@ -9,7 +9,9 @@
 	<br></br>
 	<form method='POST' class="post-form">
 		{% csrf_token %}
-		{{ form.as_p }}
+		<div style="width:67%;margin-left:180px;">
+		{{ form|crispy }}
+		</div>
 		<input type="submit" class="btn btn-primary" value="Dodaj" name="Log"/>		
 		<input type="submit" class="btn btn-warning" value="Wyczyść" name="Clr"/>
 		<a class="nav-link" href="indexLog"></a>

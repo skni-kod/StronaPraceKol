@@ -3,6 +3,8 @@ from django_summernote.widgets import SummernoteWidget
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+from .models import *
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
 
@@ -28,14 +30,15 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     login = forms.CharField(label="Login",max_length=50)
     password = forms.CharField(label="Hasło",max_length=50)
-    
+
+'''
 class AddReferat(forms.Form):
-    '''
-    CHOICES = (
-        (1,("Mleko")),
-        (2,("Woda")),
-    )
-    '''
+    
+    # CHOICES = (
+    #     (1,("Mleko")),
+    #     (2,("Woda")),
+    # )
+    
 
 
     title = forms.CharField(label="Tytuł",max_length=150, widget=forms.TextInput(attrs={'size': '150'}))
@@ -43,3 +46,12 @@ class AddReferat(forms.Form):
     organization = forms.CharField(label="Koło naukowe lub organizacja studencka",max_length=150, widget=forms.TextInput(attrs={'size': '150'}))
     summary = forms.CharField(label="Streszczenie",widget=SummernoteWidget())
     #select = forms.ChoiceField(label="Wybierz",choices=CHOICES)
+'''
+
+
+class AddReferat(forms.ModelForm):
+    description = forms.CharField(label="Streszczenie",widget=SummernoteWidget())
+    class Meta:
+        model = Paper
+        #fields = ['title', 'club', 'authors', 'keywords', 'description'] # rest must be auto-filled
+        fields = "__all__"

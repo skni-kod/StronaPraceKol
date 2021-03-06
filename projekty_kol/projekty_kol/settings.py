@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR, 'media/'
+#MEDIA_ROOT = BASE_DIR, 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SUMMERNOTE_THEME = 'bs4'    # Use Bootstrap4 theme
@@ -139,3 +140,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # redirect user to log-in site after log-in
 LOGIN_REDIRECT_URL = 'indexLog'
+
+# to decorators that's require to be logged
+LOGIN_URL = 'logowanie'

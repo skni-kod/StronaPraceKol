@@ -37,6 +37,7 @@ urlpatterns = [
     path('referaty/',views.ReferatListView.as_view(),name='referaty'),
     path('dodajReferat/',views.dodajReferat,name='dodajReferat'),
     path('dodajReferat/',views.dodajReferat),
+    path('profile/', views.profile, name='profile'),
     path('summernote/', include('django_summernote.urls')),
     
 ]

@@ -20,7 +20,8 @@ class StudentClub(models.Model):
 
 class Paper(models.Model):
     title = models.CharField(max_length=128)  # can be changed to longer
-    club_id = models.SmallIntegerField()
+    club = models.ForeignKey(StudentClub, on_delete=models.CASCADE)
+    authors = models.CharField(max_length=128)
     keywords = models.CharField(max_length=64)
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -30,20 +31,24 @@ class Paper(models.Model):
 
 
 class Review(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=User)
-    paper_id = models.SmallIntegerField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     upload_date = models.DateTimeField(default=timezone.now)
     comment = models.TextField()
 
 
+def paper_directory_path(instance, filename):
+    return f'paper_files/{instance.paper.id}/{filename}'
+
+
 class UploadedFile(models.Model):
-    paper_id = models.SmallIntegerField()
-    file = models.FileField(upload_to=f'paper_files{paper_id}')  # TODO test if it rly works
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=paper_directory_path)
     upload_date = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class DownloadedFile(models.Model):
-    file_id = models.SmallIntegerField()
-    author_id = models.SmallIntegerField()
+    file = models.ForeignKey(UploadedFile, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     download_date = models.DateTimeField(default=timezone.now)

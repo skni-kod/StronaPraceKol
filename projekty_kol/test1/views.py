@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from .forms import UserRegisterForm
 
-# forms 
+
+# forms
+from .forms import UserRegisterForm
 from .forms import RegisterForm, LoginForm, AddReferat
 
 # for ListView classes
@@ -16,18 +17,25 @@ from .models import Paper
 # to use user system
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import views as auth_views
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # before log-in
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('indexLog')
+
     contex = {'title':'index'}
     template = loader.get_template('index.html') # getting our template  
     return HttpResponse(template.render(contex)) # rendering the template in HttpResponse
     #return render(request,'index.html')
     
 def logowanie(request):
+    if request.user.is_authenticated:
+        return redirect('indexLog')
+
     log = LoginForm()
     contex = {
                 'form':log,
@@ -36,6 +44,9 @@ def logowanie(request):
     return render(request,'logowanie.html',contex) 
     
 def rejestracja(request):
+    if request.user.is_authenticated:
+        return redirect('indexLog')
+
     if request.method == 'POST':
         rej = UserRegisterForm(request.POST)
         if rej.is_valid():
@@ -54,15 +65,26 @@ def rejestracja(request):
 
 
 def kontakt(request):
+    if request.user.is_authenticated:
+        return redirect('indexLog')
+
     contex = {
                 'title':'kontakt',
              }
     return render(request,'kontakt.html',contex)
-    
-    
+
+class LoginView(auth_views.LoginView):
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(LoginView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'logowanie'
+        return context
+    pass
     
 # after log-in
 
+@ login_required # requires to be logged
 def indexLog(request):
     contex = { 
                 'imie':'smiercio',
@@ -86,24 +108,21 @@ def referaty(request):
            }
     return render(request,'referaty.html',contex)
 '''
+@ login_required # requires to be logged
 def dodajReferat(request):
-    ref = AddReferat(request.POST or None);
+
+    if request.method == 'POST':
+        ref = AddReferat(request.POST)
+        if ref.is_valid():
+            ref.save()
+            return redirect('referaty')
+    else:
+        ref = AddReferat()
+
     name = { 'imie':'smiercio',
              'form':ref,
              'title':"dodajReferat",    
            }
-    ref_Title = "nope"
-             
-    if (ref.is_valid()):
-    
-        # getting data from form fields
-        ref_Title = ref.cleaned_data.get("title")
-        #print(title)
-        # redirect
-        template = loader.get_template('referaty.html') # getting our template  
-        return HttpResponseRedirect('referaty')
-        
-    print(ref_Title)
     return render(request,'dodajReferat.html',name)
     
 
@@ -112,6 +131,12 @@ class ReferatListView(generic.ListView):
     context_object_name = 'ref_List' # your own name for the list as a template variable
     template_name = 'referaty.html'
 
+    def get_queryset(self): # to get all Papers
+        #print(self.request.user.username)
+        user = get_object_or_404(User,username=self.request.user.username)
+        #print(self.kwargs.get('username'))
+        return Paper.objects.filter(author=user)#.order_by('-add_date')
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
         context = super(ReferatListView, self).get_context_data(**kwargs)
@@ -119,16 +144,11 @@ class ReferatListView(generic.ListView):
         context['title'] = 'referaty'
         context['imie'] = 'smiercio'
         return context
+
+
     
 
-class LoginView(auth_views.LoginView):
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super(LoginView, self).get_context_data(**kwargs)
-        # Create any data and add it to the context
-        context['title'] = 'logowanie'
-        return context
-    pass
+
 
 
 class LogoutView(auth_views.LogoutView):
@@ -139,3 +159,11 @@ class LogoutView(auth_views.LogoutView):
         context['title'] = 'wylogowany'
         return context
     pass
+
+@ login_required # requires to be logged
+def profile(request):
+    contex = {
+                'imie':'smiercio',
+                'title':'profile',
+             }
+    return render(request,'profile.html',contex)

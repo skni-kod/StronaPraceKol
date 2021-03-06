@@ -46,7 +46,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+				<a class="nav-link" href="{% url 'profile' %}">Zalogowano jako: {{user.username}} </a>
 			</li>
 
 			<li class="nav-item">
@@ -67,7 +67,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+				<a class="nav-link" href="{% url 'profile' %}">Zalogowano jako: {{user.username}} </a>
 			</li>
 
 			<li class="nav-item">
@@ -88,7 +88,28 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link">Zalogowano jako: {{imie}} </a>
+				<a class="nav-link" href="{% url 'profile' %}">Zalogowano jako: {{user.username}} </a>
+			</li>
+
+			<li class="nav-item">
+				<!-- <a class="nav-link" href="index">Wyloguj</a> -->
+				<a class="nav-link" href="{% url 'index' %}">Wyloguj</a>
+			</li>
+			{% endif %}
+
+			{% if title == 'profile' %}
+			<li class="nav-item">
+				<!--<a class="nav-link" href="indexLog">Start</a>-->
+				<a class="nav-link" href="{% url 'indexLog' %}">Start</a>
+			</li>
+
+			<li class="nav-item">
+				<!--<a class="nav-link" href="referaty">Referaty</a>-->
+				<a class="nav-link" href="{% url 'referaty' %}">Referaty</a>
+			</li>
+
+			<li class="nav-item active">
+				<a class="nav-link" href="{% url 'profile' %}">Zalogowano jako: {{user.username}} </a>
 			</li>
 
 			<li class="nav-item">
