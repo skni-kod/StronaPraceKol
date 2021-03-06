@@ -42,5 +42,4 @@ class UploadedFile(models.Model):
 
 class DownloadedFile(models.Model):
     file = models.ForeignKey(UploadedFile, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
     download_date = models.DateTimeField(default=timezone.now)
