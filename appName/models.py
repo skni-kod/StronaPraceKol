@@ -38,7 +38,6 @@ class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     file = models.FileField(upload_to=paper_directory_path)
     upload_date = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class DownloadedFile(models.Model):
