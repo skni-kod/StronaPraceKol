@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 
 
 class StudentClub(models.Model):
