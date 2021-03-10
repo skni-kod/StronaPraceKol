@@ -50,7 +50,7 @@ class UploadedFile(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    comment = models.TextField()
+    text = models.TextField()
 
 
 class Message(models.Model):
