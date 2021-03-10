@@ -12,12 +12,16 @@ class StudentClub(models.Model):
     def __str__(self):
         return self.acronym
 
+    @classmethod
+    def get_default_pk(cls):
+        club, created = cls.objects.get_or_create(name='Brak koła', acronym='BRAK')
+        return club.pk
+
 
 class Paper(models.Model):
     title = models.CharField(max_length=128)
-    club = models.ForeignKey(StudentClub, on_delete=models.CASCADE)
+    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)  # set default on delete
     authors = models.ManyToManyField(User)
-    authors_string = models.CharField(max_length=128)
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=64)
     description = models.TextField()
@@ -34,7 +38,7 @@ class CoAuthor(models.Model):
 
 
 def paper_directory_path(instance, filename):
-    return f'paper_files{instance.paper.pk}/{filename}'
+    return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
 
 class UploadedFile(models.Model):
