@@ -7,7 +7,7 @@ from django.template import loader
 def test(request):
     now = datetime.datetime.now()
     html = "It is now %s" % now
-    template = loader.get_template('users/index.xhtml')
+    template = loader.get_template('users/index.html')
     context = {
         'html': html,
     }
