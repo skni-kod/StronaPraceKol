@@ -7,6 +7,7 @@ from django.db.models.signals import pre_delete
 class StudentClub(models.Model):
     name = models.CharField(max_length=128)
     acronym = models.CharField(max_length=12)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.acronym
