@@ -22,7 +22,7 @@ class Paper(models.Model):
     description = models.TextField()
     add_date = models.DateTimeField(default=timezone.now)
     last_edit_date = models.DateTimeField(default=timezone.now)
-    approved = models.BooleanField()
+    approved = models.BooleanField(default=False)
 
 
 class CoAuthor(models.Model):
