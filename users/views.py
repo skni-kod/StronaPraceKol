@@ -86,12 +86,55 @@ def register(request):
     return render(request,'users/register.html',contex)
 
 
+
+class RegisterView(TemplateView):
+    template_name = 'users/register.html'
+
+
+    def get(self, request, *args, **kwargs):
+        rej = UserRegisterForm()
+        # Call the base implementation first to get the context
+        context = super(RegisterView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context = {
+            'form': rej,
+            'title': 'rejestracja',
+        }
+        # Check if user is already logged
+        if(self.request.user.is_authenticated):
+            return redirect('index')
+        else:
+            return render(request, self.template_name,context)
+
+    '''
+    def get_context_data(self, **kwargs):
+        rej = UserRegisterForm()
+        # Call the base implementation first to get the context
+        context = super(RegisterView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'index'
+        context['form'] = rej
+        return context
+    '''
+
+    def post(self, request, *args, **kwargs):
+        if self.request.method == 'POST': # cant send to database / HTTP ERROR 405
+            rej = UserRegisterForm(self.request.POST)
+            if rej.is_valid():
+                rej.save()
+                username = rej.cleaned_data.get('username')
+                messages.success(self.request, f'Konto zostało utworzone dla {username}')
+                return redirect('login')
+        else:
+            rej = UserRegisterForm()
+        return render(request, self.template_name, {'form': rej})
+
 class LoginView(auth_views.LoginView):
 
     template_name = 'users/login.html'
 
     def get(self, request, *args, **kwargs):
-        # Check if user is already logged 
+        # Check if user is already logged
         if(self.request.user.is_authenticated):
             form = self.form_class(initial=self.initial)
             return redirect('index')
