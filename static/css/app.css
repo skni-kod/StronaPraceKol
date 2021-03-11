@@ -35,13 +35,18 @@ body {
     border-style: solid;
     border-color: #cccccc;
     border-width: 1px;
-    background: #F9F9F9;
+    background: #ededed;
 }
-
 
 .btn {
     width: 250px;
     height: 55px;
     font-size: 20px;
 }
+
+#login{
+	width:32%;
+}
+
+	
 
