@@ -2,22 +2,29 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="container" id="login">
-	<div class="col text-center">
+<div class="container w-50">
 
-	<h1> Chcesz usunąć konto </h1>
-	<hr>
+	<div class="row">
+		<div class="col text-center">
+			<h1> Czy na pewno chcesz usunąć konto </h1>
+			<hr>
+		</div>
+	</div>
 
-	<form method='POST'>
-		{% csrf_token %}
-		<input type="submit" class="btn btn-danger btn-block" value="Usun konto"/>
-	</form>
+	<div class="row">
+		<div class="col">
+			<form method='POST'>
+				{% csrf_token %}
+				<input type="submit" class="btn btn-danger btn-block" value="Usun konto"/>
+			</form>
+		</div>
 
-	<small class="text-muted">
-		Zmieniłeś zdanie? <a class="ml-2" href="{% url 'profile' %}">Powrót do profilu</a>
-	</small>
-
-	 </div>
+		<div class="col">
+			<form action="{% url 'profile' %}">
+				<input type="submit" class="btn btn-warning text-danger" value="Anuluj"/>
+			</form>
+		</div>
+	</div>
 
 </div>
 {% endblock %}
