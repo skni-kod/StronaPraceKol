@@ -106,17 +106,6 @@ class RegisterView(TemplateView):
         else:
             return render(request, self.template_name,context)
 
-    '''
-    def get_context_data(self, **kwargs):
-        rej = UserRegisterForm()
-        # Call the base implementation first to get the context
-        context = super(RegisterView, self).get_context_data(**kwargs)
-        # Create any data and add it to the context
-        context['title'] = 'index'
-        context['form'] = rej
-        return context
-    '''
-
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST': # cant send to database / HTTP ERROR 405
             rej = UserRegisterForm(self.request.POST)
