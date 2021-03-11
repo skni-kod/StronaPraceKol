@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'messaging.apps.MessagesConfig',
     'papers.apps.PapersConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
