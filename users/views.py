@@ -171,6 +171,7 @@ class AccountDeleteView(LoginRequiredMixin,TemplateView):
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST':
             request.user.delete()
+            messages.success(self.request, f'Konto zostało usunięte')
             return redirect('index')
 
         return render(request, self.template_name)
