@@ -50,6 +50,12 @@
                         <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
                     </li>
 
+                    {% if user.is_authenticated %}
+                    <li class="nav-item {% if title == 'referaty' %} active {% endif %}">
+                        <a class="nav-link" href="#">Referaty</a>
+                    </li>
+                    {% endif %}
+
 
                 </ul>
             </div>

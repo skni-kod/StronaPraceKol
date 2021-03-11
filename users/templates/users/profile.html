@@ -52,9 +52,19 @@
 
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-link">Zmien hasło</button>
-            <button type="button" class="btn btn-link">Zmien login</button>
+            <form action="{% url 'passwordChange' %}">
+                <input type="submit" class="btn btn-link" value="Zmien hasło"/>
+             </form>
+         </div>
+
+        <div class="col">
+            <form action="{% url 'accountDelete' %}">
+                <input type="submit" class="btn btn-link text-danger" value="Usun konto"/>
+             </form>
         </div>
+
+
+
     </div>
 </div>
 

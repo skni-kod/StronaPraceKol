@@ -9,6 +9,7 @@ from django.contrib import messages
 # to use user system
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 # for ListView classes
@@ -17,7 +18,7 @@ from django.views import generic
 # for TemplateView classes
 from django.views.generic import TemplateView
 
-
+# for login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 
@@ -32,29 +33,11 @@ class IndexView(TemplateView):
         context['title'] = 'index'
         return context
 
-'''
-def index(request):
-    template = loader.get_template('users/index.html')
-    context = {
-        'title': 'index',
-    }
-    return HttpResponse(template.render(context, request))
-'''
-
 #
 #
 # before log-in
 #
 #
-
-'''
-def contact(request):
-    template = loader.get_template('users/contact.html')
-    context = {
-                'title':'kontakt',
-             }
-    return render(request,'users/contact.html',context)
-'''
 
 class ContactView(TemplateView):
     template_name = 'users/contact.html'
@@ -62,29 +45,8 @@ class ContactView(TemplateView):
         # Call the base implementation first to get the context
         context = super(ContactView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'index'
+        context['title'] = 'kontakt'
         return context
-
-
-def register(request):
-    if request.user.is_authenticated:
-        return redirect('index')
-
-    if request.method == 'POST':
-        rej = UserRegisterForm(request.POST)
-        if rej.is_valid():
-            rej.save()
-            username = rej.cleaned_data.get('username')
-            messages.success(request,f'Konto zostało utworzone dla {username}')
-            return redirect('login')
-    else:
-        rej = UserRegisterForm()
-    contex = {
-                'form':rej,
-                'title':'rejestracja',
-             }
-    return render(request,'users/register.html',contex)
-
 
 
 class RegisterView(TemplateView):
@@ -118,6 +80,7 @@ class RegisterView(TemplateView):
             rej = UserRegisterForm()
         return render(request, self.template_name, {'form': rej})
 
+
 class LoginView(auth_views.LoginView):
 
     template_name = 'users/login.html'
@@ -129,15 +92,11 @@ class LoginView(auth_views.LoginView):
             return redirect('index')
         else:
             form = self.form_class(initial=self.initial)
-            return render(request, self.template_name, {'form': form})
-
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
-        context = super(LoginView, self).get_context_data(**kwargs)
-        # Create any data and add it to the context
-        context['title'] = 'logowanie'
-        return context
-    pass
+            context = {
+                'form': form,
+                'title': 'logowanie',
+            }
+            return render(request, self.template_name, context)
 
 
 #
@@ -156,18 +115,9 @@ class LogoutView(auth_views.LogoutView):
         return context
     pass
 
-'''
-@login_required
-# to use this you need #LOGIN_URL = 'login' in settings.py
-def profile(request):
-    contex = {
-                'imie':'smiercio',
-                'title':'profil',
-             }
-    return render(request,'users/profile.html',contex)
-'''
+
 class ProfileView(LoginRequiredMixin,TemplateView):
-    login_url = 'login'
+    login_url = 'login' # if user isn't logged, when redirect
     #redirect_field_name = 'login' # if user isn't logged, when redirect
 
     template_name = 'users/profile.html'
@@ -175,5 +125,52 @@ class ProfileView(LoginRequiredMixin,TemplateView):
         # Call the base implementation first to get the context
         context = super(ProfileView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'index'
+        context['title'] = 'profil'
         return context
+
+
+class PasswordChangeView(LoginRequiredMixin,TemplateView):
+    login_url = 'login' # if user isn't logged, when redirect
+    template_name = 'users/passwordChange.html'
+
+
+    def get(self, request, *args, **kwargs):
+        password_change = PasswordChangeForm(self.request.user)
+        # Call the base implementation first to get the context
+        context = super(PasswordChangeView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context = {
+            'form': password_change,
+            'title': 'zmiana hasła',
+        }
+        return render(request, self.template_name,context)
+
+    def post(self, request, *args, **kwargs):
+        if self.request.method == 'POST':
+            password_change = PasswordChangeForm(self.request.user, self.request.POST)
+            if password_change.is_valid():
+                password_change.save()
+                messages.success(self.request, f'Hasło zostało zmienione')
+                return redirect('profile')
+        else:
+            password_change = PasswordChangeForm(self.request.user)
+        return render(request, self.template_name, {'form': password_change})
+
+
+class AccountDeleteView(LoginRequiredMixin,TemplateView):
+    login_url = 'login' # if user isn't logged, when redirect
+
+    template_name = 'users/accountDelete.html'
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get the context
+        context = super(AccountDeleteView, self).get_context_data(**kwargs)
+        # Create any data and add it to the context
+        context['title'] = 'usuwanie konta'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if self.request.method == 'POST':
+            request.user.delete()
+            return redirect('index')
+
+        return render(request, self.template_name)

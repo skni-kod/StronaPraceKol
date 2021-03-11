@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container" id="login">
+	<div class="col text-center">
+
+	<h1> Usuwanie konta!!!! </h1>
+	<hr>
+
+	<form method='POST'>
+		{% csrf_token %}
+		<input type="submit" class="btn btn-danger btn-block" value="Usun konto"/>
+	</form>
+
+	<small class="text-muted">
+		Zmieniłeś zdanie? <a class="ml-2" href="{% url 'profile' %}">Powrót do profilu</a>
+	</small>
+
+	 </div>
+
+</div>
+{% endblock %}
