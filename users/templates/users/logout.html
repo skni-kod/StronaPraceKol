@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container my-3" style="width:100%;text-align:center;">
+        <h2>Wylogowałeś się</h2>
+        <small class="text-muted">
+            <a class="ml-2" href="{% url 'login' %}">Zaloguj się ponownie</a>
+        </small>
+    </div>>
+
+{% endblock %}

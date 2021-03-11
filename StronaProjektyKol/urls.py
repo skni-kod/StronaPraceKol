@@ -20,4 +20,5 @@ urlpatterns = [
     path('site_administration/', admin.site.urls, name='admin-panel'),
     path('papers/', include('papers.urls')),
     path('user/', include('users.urls')),
+    path('', include('users.urls')),
 ]

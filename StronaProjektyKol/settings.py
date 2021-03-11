@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,12 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     '/static/',
 ]
+
+# for crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# redirect user to log-in site after log-in
+LOGIN_REDIRECT_URL = 'index'
+
+# for decorators (login_required) which require user to be logged, it's redirect to login
+#LOGIN_URL = 'login'
