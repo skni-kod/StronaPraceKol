@@ -107,7 +107,7 @@ class RegisterView(TemplateView):
             return render(request, self.template_name,context)
 
     def post(self, request, *args, **kwargs):
-        if self.request.method == 'POST': # cant send to database / HTTP ERROR 405
+        if self.request.method == 'POST':
             rej = UserRegisterForm(self.request.POST)
             if rej.is_valid():
                 rej.save()
