@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
+import os
 
 
 class StudentClub(models.Model):
@@ -45,6 +46,9 @@ class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     file = models.FileField(upload_to=paper_directory_path)
     add_date = models.DateTimeField(default=timezone.now)
+
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 
 class Review(models.Model):
