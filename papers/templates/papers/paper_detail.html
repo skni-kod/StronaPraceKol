@@ -59,7 +59,7 @@
         <div class="col text-left">
             <p>
                 {% for file in paper.uploadedfile_set.all %}
-                    <a href="{{ file.file.url }}" download="file.file.url">{{ file.filename }}</a>
+                    <a href="{% url 'paper-file-download' pk=paper.id item=file.id %}">{{ file.filename }}</a>
                 {% endfor %}
             </p>
         </div>
