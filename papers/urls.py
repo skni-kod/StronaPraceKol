@@ -6,6 +6,5 @@ urlpatterns = [
     path('paper/new', views.PaperCreateView.as_view(), name='paperCreate'),
     path('paper/<int:pk>/', views.PaperDetailView.as_view(), name='paperDetail'),
     path('paper/<int:pk>/file/<int:item>/', views.paper_file_download, name='paperFileDownload'),
-    path('paper/newtest', views.UploadTest.as_view(), name='uploadTest')
 ]
 
