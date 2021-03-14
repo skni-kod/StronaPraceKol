@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/add_review.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/change_paper.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/delete_paper.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,7 @@
       <updated>1615390739791</updated>
       <workItem from="1615482758219" duration="149000" />
       <workItem from="1615542206315" duration="21192000" />
-      <workItem from="1615629233605" duration="8410000" />
+      <workItem from="1615629233605" duration="26737000" />
     </task>
     <servers />
   </component>

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container w-50">
+
+	<div class="row">
+		<div class="col text-center">
+			<h1> Czy na pewno chcesz usunąć referat </h1>
+			<hr>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<form method='POST'>
+				{% csrf_token %}
+				<input type="submit" class="btn btn-danger btn-block" value="Usun referat"/>
+			</form>
+		</div>
+
+		<div class="col">
+			<form action="#">
+				<input type="submit" class="btn btn-warning text-danger" value="Anuluj"/>
+			</form>
+		</div>
+	</div>
+
+</div>
+{% endblock %}

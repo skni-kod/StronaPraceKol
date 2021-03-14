@@ -44,7 +44,7 @@ def paper_directory_path(instance, filename):
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=paper_directory_path)
+    file = models.FileField(upload_to=paper_directory_path, blank=True)
     add_date = models.DateTimeField(default=timezone.now)
 
     def filename(self):

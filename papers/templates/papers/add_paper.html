@@ -2,27 +2,59 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container my-3">
+
+	<div class="row text-center">
+		<div class="col">
+			<h2>Nowy referat</h2>
+			<hr>
+		</div>
+	</div>
+
+	<div class="row text-center">
+		<div class="col">
+			<form method='POST' class="post-form" enctype="multipart/form-data">
+
+				{% csrf_token %}
+				<div class="offset-2" style="width:67%;">
+					{{ paper_form|crispy }}
+				</div>
+				<div class="offset-2" style="width:67%;">
+					{{ file_form|crispy }}
+				</div>
+
+				<input type="submit" class="btn btn-primary" value="Dodaj" name="Log"/>
+
+			</form>
+		</div>
+	</div>
+
+
+
+<!--
 	<div class="col-md-12 text-center">
-	
-	<!-- detect which button is clicked -->
+
 	<h2>Nowy referat</h2>
+	<hr>
 	<br></br>
+
 	<form method='POST' class="post-form">
 		{% csrf_token %}
-		<!--<div style="width:67%;margin-left:180px;">-->
 		<div class="offset-2" style="width:67%;">
 			{{ form|crispy }}
 		</div>
-
-		<!--</div> -->
 
 		<div class="offset-4" style="width:30%;">
 			<input type="submit" class="btn btn-primary btn-block" value="Dodaj" name="Log"/>
 			<a class="nav-link" href="indexLog"></a>
 		</div>
 
+		<div class="text-center w-25 offset-4">
+		<input type="submit" class="btn btn-primary btn-block" value="Dodaj" name="Log"/>
+		</div>
+
 	</form>
 	 </div>
-
+-->
 </div>
+
 {% endblock %}

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="jumbotron text-center">
-    <h4>Informacje o referacie</h4>
-    <hr class="my-4">
+    <div class="row text-center">
+        <div class="col">
+            <h4>Informacje o referacie</h4>
+            <hr class="my-4">
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col text-right">
@@ -59,7 +63,7 @@
         <div class="col text-left">
             <p>
                 {% for file in paper.uploadedfile_set.all %}
-                    <a href="{% url 'paper-file-download' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                    <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
                 {% endfor %}
             </p>
         </div>
@@ -95,8 +99,13 @@
         </div>
     </div>
 
-    <br>
-    <h5>Streszczenie:&ensp; </h5>
+    <div class="row text-center">
+        <div class="col">
+            <br>
+            <h5>Streszczenie:&ensp; </h5>
+        </div>
+
+    </div>
 
     <div class="jambotron text-center w-50 offset-3 ">
         <hr>
@@ -105,12 +114,53 @@
         <hr>
     </div>
 
+    {% if user.groups.all.0.name != 'reviewer' %} <!-- for Mateusz, change this if to make it better xD -->
+        <div class="row text-center">
+
+            <div class="col">
+
+                <form action="#">
+                    <button type="button" class="btn btn-link">Edytuj referat</button>
+                </form>
+            </div>
+
+            <div class="col">
+
+                <form action="#">
+                    <button type="button" class="btn btn-link text-danger">Usun referat</button>
+                </form>
+            </div>
+        </div>
+
+    {% elif user.groups.all.0.name == 'reviewer' %} <!-- this too -->
+        <div class="row mb-2">
+            <div class="col text-center">
+                <form action="#">
+                <!-- for Mateusz, enable this button if review exists xD , using {{diable}} or {{enable}} passed by contex -->
+                <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz recenzję" disabled/>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col text-center">
+                {% if 2 == 1 %} <!-- for Mateusz, if reviewer already add review -->
+                    <form action="#">
+                    <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz recenzję"/>
+                    </form>
+                {% else %}
+                    <form action="#">
+                    <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 
 
 
-    <button type="button" class="btn btn-link">Edytuj referat</button>
-    <button type="button" class="btn btn-link">Usun referat</button>
 
-</div>
+
 
 {% endblock %}

@@ -20,4 +20,6 @@ class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
         fields = ['file']
-        labels = {'file': _('Plik')}
+        labels = {'file': _('Pliki')}
+        help_texts = {'file': _('Pliki możesz dodać później w zakładce edycji referatu')}
+        widgets = {'file': forms.ClearableFileInput(attrs={'multiple': True})}
