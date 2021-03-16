@@ -1,10 +1,12 @@
 from .models import Paper, UploadedFile
-from django.shortcuts import redirect, render
-from django.http import FileResponse, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.http import FileResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, FormView, View
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.decorators import login_required
-from .forms import PaperCreationForm, FileUploadForm
+from .forms import PaperCreationForm, CoAuthorFormSet, UploadedFileFormSet
+from django.db import transaction
+from django.urls import reverse_lazy
 import os
 
 
@@ -51,39 +53,41 @@ def paper_file_download(request, pk, item):
         return redirect('paper-list')
 
 
-class PaperCreateView(LoginRequiredMixin, View):
+class PaperCreateView(LoginRequiredMixin, CreateView):
     template_name = 'papers/add_paper.html'
+    model = Paper
+    form_class = PaperCreationForm
+    success_url = '/'
 
-    def get(self, request, *args, **kwargs):
-        paper_form = PaperCreationForm()
-        file_form = FileUploadForm()
-        context = {'paper_form': paper_form, 'file_form': file_form}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        paper_form = PaperCreationForm(request.POST)
-        file_form = FileUploadForm(request.POST, request.FILES)
-        # TODO not sure about assigning values by that function
-        paper_form.instance.original_author_id = request.user.id
-        if paper_form.is_valid():
-            paper_form.save()
-            paper = paper_form.instance
-            files = request.FILES.getlist('file')
-            if file_form.is_valid():
-                for f in files:
-                    file_instance = UploadedFile(file=f, paper=paper)
-                    file_instance.save()
-            return redirect('paperList')
+    def get_context_data(self, **kwargs):
+        context = super(PaperCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['coAuthors'] = CoAuthorFormSet(self.request.POST)
+            context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
         else:
-            paper_form = PaperCreationForm()
-            file_form = FileUploadForm()
-            context = {'paper_form': paper_form, 'file_form': file_form}
+            context['coAuthors'] = CoAuthorFormSet()
+            context['files'] = UploadedFileFormSet()
+        return context
 
-        return render(request, self.template_name, context)
+    def form_valid(self, form):
+        context = self.get_context_data()
+        coAuthors = context['coAuthors']
+        files = context['files']
+        with transaction.atomic():
+            form.instance.original_author_id = self.request.user.pk
+            self.object = form.save()
+            form.instance.authors.add(self.request.user)
+            if coAuthors.is_valid():
+                coAuthors.instance = self.object
+                coAuthors.save()
+            if files.is_valid():
+                for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
+                    file_instance = UploadedFile(file=f, paper=self.object)
+                    file_instance.save()
+        return super(PaperCreateView, self).form_valid(form)
 
 
-class UploadTest(LoginRequiredMixin, FormView):
-    file_form = FileUploadForm()
-    template_name = 'papers/add_paper.html'
+
+
 
 

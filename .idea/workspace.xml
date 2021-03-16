@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/custom_layout_object.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/formset.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/upload_files_formset.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/jquery.formset.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +39,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Confirmation" />
+    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\mateu\Desktop\Mystyk\Prz_Informatics\Semester4\Data_bases\Project\StronaProjektyKol\static\js" />
+      <recent name="D:\Users\mateu\Desktop\Mystyk\Prz_Informatics\Semester4\Data_bases\Project\StronaProjektyKol\papers\libraries\django-dynamic-formset" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -44,7 +58,11 @@
       <workItem from="1615482758219" duration="149000" />
       <workItem from="1615542206315" duration="21192000" />
       <workItem from="1615629233605" duration="26737000" />
-      <workItem from="1615680905012" duration="195000" />
+      <workItem from="1615680905012" duration="249000" />
+      <workItem from="1615719350109" duration="11251000" />
+      <workItem from="1615800849291" duration="11092000" />
+      <workItem from="1615832242624" duration="1189000" />
+      <workItem from="1615888063134" duration="10193000" />
     </task>
     <servers />
   </component>

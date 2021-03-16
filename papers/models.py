@@ -22,7 +22,7 @@ class StudentClub(models.Model):
 class Paper(models.Model):
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)  # set default on delete
-    authors = models.ManyToManyField(User)
+    authors = models.ManyToManyField(User, blank=True)
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=64)
     description = models.TextField()
@@ -34,7 +34,7 @@ class Paper(models.Model):
 class CoAuthor(models.Model):
     name = models.CharField(max_length=32)
     surname = models.CharField(max_length=32)
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
 
