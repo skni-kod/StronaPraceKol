@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/papers/templates/papers/delete_review.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +56,7 @@
       <workItem from="1615800849291" duration="11092000" />
       <workItem from="1615832242624" duration="1189000" />
       <workItem from="1615888063134" duration="10193000" />
-      <workItem from="1615975942402" duration="17169000" />
+      <workItem from="1615975942402" duration="18430000" />
     </task>
     <servers />
   </component>

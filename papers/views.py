@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.db import transaction
+from django.utils import timezone
 from django.urls import reverse_lazy
 import os
 
@@ -99,6 +100,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
     def post(self, request, *args, **kwargs):
+        paper = self.get_object()
+        paper.last_edit_date = timezone.now()
+        paper.save()
         if 'send-new-files' in request.POST:
             new_files = FileAppendForm(self.request.POST, self.request.FILES)
             files = request.FILES.getlist('file')
