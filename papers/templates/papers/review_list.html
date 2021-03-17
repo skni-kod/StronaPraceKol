@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container my-3">
+
+	<p> Reviews for {{ paper.title }}</p>
+
+	{% for review in reviews %}
+		{{ review.author.first_name }} {{ review.author.last_name }}
+	<p>{{ review.text }}</p>
+
+	<p>Link do czatu w ramach danej recenzji??</p>
+
+	{% endfor %}
+
+	{% if not reviews %}
+	<p> Ten referat nie ma jeszcze żadnej recenzji </p>
+	{% endif %}
+
+</div>
+
+{% endblock %}

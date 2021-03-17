@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load custom_papers_tags %}
 {% block content %}
 <div class="container text-center" style="width:80%">
 
@@ -21,7 +21,7 @@
 
 	<!-- ordered list to send imformations -->
 		<div class="col-md-12 text-center">
-			{%if papers %}
+			{% if papers %}
 			<ul>
 			<br id="info_list">
 
@@ -52,7 +52,14 @@
 						{% for author in paper.authors.all %}
 							<li>
 								<div class="row ml-1">
-								{{ author }}
+								{{ author.first_name }} {{ author.last_name }}
+								</div>
+							</li>
+						{% endfor %}
+						{% for author in paper.coauthor_set.all %}
+							<li>
+								<div class="row ml-1">
+								{{ author.name }} {{ author.surname }}
 								</div>
 							</li>
 						{% endfor %}
@@ -69,7 +76,7 @@
 						{% for review in paper.review_set.all %}
 							<li>
 								<div class="row ml-1">
-								{{ review.author }}
+								{{ review.author.first_name }} {{ review.author.last_name }}
 								</div>
 							</li>
 						{% endfor %}
@@ -89,11 +96,11 @@
 							</p>
 						</div>
 
-						{% if user.groups.all.0.name == 'reviewer' %} <!-- for Mateusz, change this if to make it better xD -->
+						{% if user|is_in_group:'reviewer' %}
 						<div class="col text-right mb-2">
 							<form action="#">
 							<!-- for Mateusz, enable this button if review exists xD , using {{diable}} or {{enable}} passed by contex -->
-							<input type="submit" class="btn btn-warning w-50 h-100 mr-2" value="Zobacz recenzję" disabled/>
+							<input type="submit" class="btn btn-warning w-50 h-100 mr-2" value="Zobacz wszystkie recenzj" disabled/>
 							</form>
 						</div>
 						{% endif %}
@@ -105,12 +112,11 @@
 							<p style = "">Liczba nowych wiadomości: TODO </p>
 						</div>
 
-						{% if user.groups.all.0.name == 'reviewer' %} <!-- for Mateusz, change this if to make it better xD -->
-						<div class="col text-right mb-2">
-							{% if 2 == 1 %} <!-- for Mateusz, if reviewer already add review -->
+						{% if user|is_in_group:'reviewer' and user not in paper.authors.all%}
+							{% if user|already_reviewed:paper %}
 								<form action="#">
-								<input type="submit" class="btn btn-info w-50 h-100 mr-2" value="Zobacz recenzję"/>
-								</form>
+									<input type="submit" class="btn btn-info w-50 h-100 mr-2" value="Zobacz swoją recenzję"/>
+									</form>
 							{% else %}
 								<form action="#">
 								<input type="submit" class="btn btn-info w-50 h-100 mr-2" value="Dodaj recenzję"/>

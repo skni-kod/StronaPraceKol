@@ -1,10 +1,10 @@
-from .models import Paper, UploadedFile
+from .models import Paper, UploadedFile, Review
 from django.shortcuts import redirect
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
-from .forms import PaperCreationForm, CoAuthorFormSet, UploadedFileFormSet
+from .forms import *
 from django.db import transaction
 from django.urls import reverse_lazy
 import os
@@ -36,7 +36,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             return False
 
     def handle_no_permission(self):
-        return redirect('paper-list')
+        return redirect('paperList')
 
 
 @login_required
@@ -87,7 +87,122 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         return super(PaperCreateView, self).form_valid(form)
 
 
+class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Paper
+    form_class = PaperEditForm
+    template_name = 'papers/change_paper.html'
 
+    def test_func(self):
+        paper = self.get_object()
+        if self.request.user in paper.authors.all():
+            return True
+        return False
+
+    def post(self, request, *args, **kwargs):
+        if 'send-new-files' in request.POST:
+            new_files = FileAppendForm(self.request.POST, self.request.FILES)
+            files = request.FILES.getlist('file')
+            if new_files.is_valid():
+                for f in files:
+                    file_instance = UploadedFile(file=f, paper=self.get_object())
+                    file_instance.save()
+            return HttpResponseRedirect(request.path_info)
+        elif 'delete-file' in request.POST:
+            filePK = request.POST.get('file-pk')
+            UploadedFile.objects.filter(pk=filePK).delete()
+            return HttpResponseRedirect(request.path_info)
+        else:
+            return super(PaperEditView, self).post(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(PaperEditView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
+            context['files'] = FileAppendForm(self.request.POST, self.request.FILES)
+        else:
+            context['coAuthors'] = CoAuthorFormSet(instance=self.object)
+            context['files'] = FileAppendForm()
+        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        coAuthors = context['coAuthors']
+        with transaction.atomic():
+            self.object = form.save()
+            if coAuthors.is_valid():
+                coAuthors.instance = self.object
+                coAuthors.save()
+        return super(PaperEditView, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.request.path_info
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+
+class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Paper
+    template_name = 'papers/delete_paper.html'
+    success_url = '/papers'
+
+    def test_func(self):
+        paper = self.get_object()
+        if self.request.user.pk == paper.original_author_id:
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+
+class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Review
+    context_object_name = 'reviews'
+    template_name = 'papers/review_list.html'
+
+    def get_queryset(self):
+        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return Review.objects.filter(paper=paper)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewListView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
+    def test_func(self):
+        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.user.groups.filter(name='reviewer').exists() or self.request.user in paper.authors.all():
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+
+class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Review
+    template_name = 'papers/add_review.html'
+    success_url = '/papers'  # TODO this might be change if we decide what is best
+    form_class = ReviewCreationForm
+
+    def test_func(self):
+        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        if self.request.user not in paper.authors.all() and self.request.user.groups.filter(name='reviewer').exists():
+            for review in paper.review_set.all():
+                if review.author == self.request.user:
+                    return False
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return super(ReviewCreateView, self).form_valid(form)
 
 
 

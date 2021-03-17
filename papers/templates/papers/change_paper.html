@@ -13,9 +13,38 @@
 	<form method='POST' class="post-form">
 		{% csrf_token %}
 
-		{{ form|crispy }}
-		<input type="submit" class="btn btn-primary btn-block" value="Zmień referat" name="Log"/>
+		{% crispy form %}
 	</form>
+	<div class="content-section">
+        <form method="POST" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Prześlij nowe pliki</legend>
+                {{ files|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <input name="send-new-files" hidden>
+                <button class="btn btn-outline-info" type="submit">Prześlij</button>
+            </div>
+        </form>
+    </div>
+
+	<div class="content-section">
+
+    {% if uploaded_files %}
+        {% for file in uploaded_files %}
+            <form method="POST" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <input name="delete-file" hidden>
+                <input name="file-pk" value="{{ file.pk }}" hidden>
+                {{ file.filename }} <button class="btn btn-outline-info" type="submit">Usuń</button>
+            </div>
+            </form>
+        {% endfor %}
+    {% endif %}
+
+    </div>
 
 	<small class="text-muted">
 		Zmieniłeś zdanie? <a class="ml-2" href="#">Powrót do referatów</a>

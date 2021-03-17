@@ -6,5 +6,9 @@ urlpatterns = [
     path('paper/new', views.PaperCreateView.as_view(), name='paperCreate'),
     path('paper/<int:pk>/', views.PaperDetailView.as_view(), name='paperDetail'),
     path('paper/<int:pk>/file/<int:item>/', views.paper_file_download, name='paperFileDownload'),
+    path('paper/<int:pk>/edit/', views.PaperEditView.as_view(), name='paperEdit'),
+    path('paper/<int:pk>/delete/', views.PaperDeleteView.as_view(), name='paperDelete'),
+    path('paper/<int:pk>/reviews/', views.ReviewListView.as_view(), name='reviewList'),
+    path('paper/<int:pk>/addreview/', views.ReviewCreateView.as_view(), name='reviewCreate'),
 ]
 
