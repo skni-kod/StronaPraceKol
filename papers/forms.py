@@ -132,11 +132,12 @@ class PaperEditForm(forms.ModelForm):
 
     class Meta:
         model = Paper
-        fields = ['title', 'club', 'keywords', 'description']
+        fields = ['title', 'club', 'approved', 'keywords', 'description']
         exclude = ['authors']
         labels = {
             'title': _('Tytuł'),
             'club': _('Koło'),
+            'approved': _('Zatwierdź'),
             'keywords': _('Słowa kluczowe'),
             'description': _('Krótki opis'),
         }
@@ -152,6 +153,7 @@ class PaperEditForm(forms.ModelForm):
             Div(
                 Field('title'),
                 Field('club'),
+                Field('approved'),
                 Fieldset('Współautorzy',
                          Formset('coAuthors')),
                 HTML("<br><br><br>"),

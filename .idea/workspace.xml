@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/papers/templates/papers/review_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/papers/templatetags/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/papers/templatetags/custom_papers_tags.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/delete_review.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_review.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_review.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/change_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/change_paper.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/delete_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/delete_paper.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
@@ -68,7 +59,7 @@
       <workItem from="1615800849291" duration="11092000" />
       <workItem from="1615832242624" duration="1189000" />
       <workItem from="1615888063134" duration="10193000" />
-      <workItem from="1615975942402" duration="14979000" />
+      <workItem from="1615975942402" duration="17169000" />
     </task>
     <servers />
   </component>

@@ -205,4 +205,34 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return super(ReviewCreateView, self).form_valid(form)
 
 
+class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Review
+    template_name = 'papers/add_review.html'
+    form_class = ReviewCreationForm
+    success_url = '/papers'  # TODO change if needed
+
+    def test_func(self):
+        review = self.get_object()
+        if self.request.user == review.author:
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Review
+    template_name = 'papers/delete_review.html'
+    success_url = '/papers'
+
+    def test_func(self):
+        review = self.get_object()
+        if self.request.user == review.author:
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
 
