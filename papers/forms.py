@@ -94,7 +94,6 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 
 class PaperCreationForm(forms.ModelForm):
-
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
 
     class Meta:
@@ -119,20 +118,36 @@ class PaperCreationForm(forms.ModelForm):
             Div(
                 Field('title'),
                 Field('club'),
-                Fieldset('Dodaj współautorów',
-                         Formset('coAuthors')),
-                HTML("<br><br><br>"),
                 Field('keywords'),
                 Field('description'),
+                HTML("<br><hr>"),
+
+                Fieldset('Dodaj współautorów',
+                         HTML("<br><div class='row'>"),
+                         HTML("<div class='col offset-2'>"),
+                         Formset('coAuthors'),
+                         HTML("</div>"),
+                         HTML("</div>"),
+
+                         ),
+
+                HTML("<br><hr>"),
+
                 Fieldset('Dodaj pliki',
+                         HTML("<br><div class='row'>"),
+                         HTML("<div class='col offset-4'>"),
                          Formset('files', 'papers/upload_files_formset.html')),
+                         HTML("</div>"),
+                         HTML("</div>"),
+
+                HTML("<hr><br>"),
                 ButtonHolder(Submit('submit', 'Dodaj')),
+                HTML("<br>"),
             )
         )
 
 
 class PaperEditForm(forms.ModelForm):
-
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
 
     class Meta:
@@ -158,20 +173,39 @@ class PaperEditForm(forms.ModelForm):
             Div(
                 Field('title'),
                 Field('club'),
-                Field('approved'),
-                Fieldset('Współautorzy',
-                         Formset('coAuthors')),
-                HTML("<br><br><br>"),
                 Field('keywords'),
                 Field('description'),
+
+                HTML('<div class="row">'),
+                Field('approved'),
+                HTML('</div>'),
+
+                HTML('<div class="row text-left ml-2">'),
+                HTML('<span class="text-danger">( Pole to wskazuje recenzentowi, że referat jest gotowy )</span>'),
+                HTML('</div>'),
+                HTML('<hr>'),
+
+
+                HTML('<div class="row>'),
+                HTML('<div class="col>'),
+                Fieldset('Współautorzy',
+                HTML('</div>'),
+                HTML('</div>'),
+
+                         HTML("<br>"),
+                         HTML('<div class="row offset-1">'),
+                         Formset('coAuthors')),
+                         HTML('</div>'),
+
+                HTML("<hr><br>"),
                 ButtonHolder(Submit('submit', 'Zapisz zmiany')),
+                HTML("<br><br>"),
             )
         )
 
 
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Recenzja', widget=SummernoteWidget())
-
     class Meta:
         model = Review
         fields = ['text']
