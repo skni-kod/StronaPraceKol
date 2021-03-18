@@ -106,7 +106,7 @@ class PaperNotApprovedMixin(AccessMixin):
         return super().dispatch(request, *args, **kwargs)
 
 
-class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, PaperNotApprovedMixin, UpdateView):
+class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Paper
     form_class = PaperEditForm
     template_name = 'papers/change_paper.html'
