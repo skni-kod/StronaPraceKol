@@ -21,3 +21,10 @@ def already_reviewed(user, paper):
             return True
     return False
 
+
+@register.filter(name='get_user_review_id')
+def get_user_review_id(user, paper):
+    for review in paper.review_set.all():
+        if review.author == user:
+            return review.pk
+
