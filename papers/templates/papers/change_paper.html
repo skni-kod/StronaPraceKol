@@ -38,7 +38,8 @@
             <div class="form-group">
                 <input name="delete-file" hidden>
                 <input name="file-pk" value="{{ file.pk }}" hidden>
-                {{ file.filename }} <button class="btn btn-outline-info" type="submit">Usuń</button>
+                <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                <button class="btn btn-outline-info" type="submit">Usuń</button>
             </div>
             </form>
         {% endfor %}
