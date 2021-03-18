@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'papers.apps.PapersConfig',
     'users.apps.UsersConfig',
+    'django_summernote',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,3 +138,5 @@ MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'

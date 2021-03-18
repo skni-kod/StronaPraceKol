@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +35,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -57,7 +60,13 @@
       <workItem from="1615832242624" duration="1189000" />
       <workItem from="1615888063134" duration="10193000" />
       <workItem from="1615975942402" duration="19782000" />
-      <workItem from="1616053717586" duration="3091000" />
+      <workItem from="1616053717586" duration="3395000" />
+      <workItem from="1616084060184" duration="1474000" />
+      <workItem from="1616086882615" duration="311000" />
+      <workItem from="1616087217394" duration="57000" />
+      <workItem from="1616087301495" duration="33000" />
+      <workItem from="1616088087122" duration="1689000" />
+      <workItem from="1616091451331" duration="27000" />
     </task>
     <servers />
   </component>

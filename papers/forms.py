@@ -5,6 +5,7 @@ from django.forms.models import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
 from .custom_layout_object import Formset
+from django_summernote.widgets import SummernoteWidget
 import re
 
 
@@ -94,6 +95,8 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 class PaperCreationForm(forms.ModelForm):
 
+    description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
+
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description']
@@ -130,6 +133,8 @@ class PaperCreationForm(forms.ModelForm):
 
 class PaperEditForm(forms.ModelForm):
 
+    description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
+
     class Meta:
         model = Paper
         fields = ['title', 'club', 'approved', 'keywords', 'description']
@@ -165,6 +170,7 @@ class PaperEditForm(forms.ModelForm):
 
 
 class ReviewCreationForm(forms.ModelForm):
+    text = forms.CharField(label='Recenzja', widget=SummernoteWidget())
 
     class Meta:
         model = Review
