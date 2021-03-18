@@ -1,7 +1,7 @@
 from .models import Paper, UploadedFile, Review
 from django.shortcuts import redirect
 from django.http import FileResponse, HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, AccessMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -88,7 +88,25 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         return super(PaperCreateView, self).form_valid(form)
 
 
-class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class PaperNotApprovedMixin(AccessMixin):
+    """
+    Deny a request with a permission error if paper's attribute 'approved' is set to True
+    """
+
+    def paper_approval_test(self):
+        paper = self.get_object()
+        if paper.approved:
+            return False
+        return True
+
+    def dispatch(self, request, *args, **kwargs):
+        paper_test_result = self.paper_approval_test()
+        if not paper_test_result:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+
+class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, PaperNotApprovedMixin, UpdateView):
     model = Paper
     form_class = PaperEditForm
     template_name = 'papers/change_paper.html'
@@ -238,5 +256,6 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def handle_no_permission(self):
         return redirect('paperList')
+
 
 
