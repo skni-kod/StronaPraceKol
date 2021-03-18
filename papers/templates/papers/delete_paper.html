@@ -6,8 +6,8 @@
 
 	<div class="row">
 		<div class="col text-center">
-			<h1> Czy na pewno chcesz usunąć referat </h1>
-			{{ paper.title }}
+			<h1> Czy na pewno chcesz usunąć referat: <br> <span class="text-primary"> {{ paper.title }} </span> </h1>
+
 			<hr>
 		</div>
 	</div>
@@ -16,12 +16,14 @@
 		<div class="col">
 			<form method='POST'>
 				{% csrf_token %}
-				<input type="submit" class="btn btn-danger btn-block" value="Usun referat"/>
+				<input type="submit" class="btn btn-danger btn-block w-100" value="Usun referat"/>
 			</form>
 		</div>
 
 		<div class="col">
-			 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'paperDetail' paper.pk %}">Anuluj</a>
+			<form action="{% url 'paperDetail' paper.pk %}">
+				<input type="submit" class="btn btn-warning btn-block w-100" value="Anuluj"/>
+			</form>
 		</div>
 	</div>
 

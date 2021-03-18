@@ -3,19 +3,48 @@
 {% block content %}
 <div class="container my-3">
 
-	<p> Reviews for {{ paper.title }}</p>
+	<div class="row text-center">
+		<div class="col">
+			<h2> Recenzje dla : {{ paper.title }}</h2>
+			<hr>
+			<br>
+		</div>
+	</div>
+
 
 	{% for review in reviews %}
-		{{ review.author.first_name }} {{ review.author.last_name }}
-	<p>{{ review.text }}</p>
+		<div class="row text-center">
+			<div class="col">
+				<hr class="w-50">
+				<h4 class="text-primary"> Marek Mleko{{ review.author.first_name }} {{ review.author.last_name }}</h4>
+				<hr class="w-50">
+			</div>
+		</div>
 
-	<p>Link do czatu w ramach danej recenzji??</p>
+		<div class="row text-center">
+			<div class="col">
+				<p>{{ review.text|safe }}</p>
+				<hr class="w-25">
+
+				<br>
+			</div>
+		</div>
+
+
+
+	<p class="btn-link">Link do czatu w ramach danej recenzji??</p>
 
 	{% endfor %}
 
-	{% if not reviews %}
-	<p> Ten referat nie ma jeszcze żadnej recenzji </p>
-	{% endif %}
+	<div class="row text-center">
+		<div class="col">
+			{% if not reviews %}
+			<h4 class="text-danger"> Ten referat nie ma jeszcze żadnej recenzji </h4>
+			{% endif %}
+		</div>
+	</div>
+
+
 
 </div>
 
