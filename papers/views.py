@@ -225,7 +225,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReviewUpdateView, self).get_context_data(**kwargs)
-        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
         return context
 
     def test_func(self):
@@ -248,6 +248,11 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == review.author:
             return True
         return False
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewDeleteView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
+        return context
 
     def handle_no_permission(self):
         return redirect('paperList')
