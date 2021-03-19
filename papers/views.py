@@ -223,6 +223,11 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = ReviewCreationForm
     success_url = '/papers'  # TODO change if needed
 
+    def get_context_data(self, **kwargs):
+        context = super(ReviewCreateView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
     def test_func(self):
         review = self.get_object()
         if self.request.user == review.author:
