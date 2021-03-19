@@ -224,7 +224,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = '/papers'  # TODO change if needed
 
     def get_context_data(self, **kwargs):
-        context = super(ReviewCreateView, self).get_context_data(**kwargs)
+        context = super(ReviewUpdateView, self).get_context_data(**kwargs)
         context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
         return context
 
