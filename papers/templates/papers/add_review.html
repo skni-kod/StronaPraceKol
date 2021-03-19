@@ -6,8 +6,8 @@
 
 	<div class="row text-center">
 		<div class="col">
-			<form action="{% url 'paperDetail' review.paper.id %}">
-				<input type="submit" class="btn btn-link" value="{{review.paper.title}}" name="Log"/>
+			<form action="{% url 'paperDetail' paper.id %}">
+				<input type="submit" class="btn btn-link" value="{{paper.title}}" name="Log"/>
 			</form>
 
 		</div>

@@ -1,4 +1,3 @@
-from .models import Paper, UploadedFile, Review
 from django.shortcuts import redirect
 from django.http import FileResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -7,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.db import transaction
 from django.utils import timezone
-from django.urls import reverse_lazy
 import os
 
 
@@ -22,7 +20,6 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
         context['title'] = 'referaty'
         return context
-
 
     def get_queryset(self):
         if self.request.user.groups.filter(name='reviewer').exists():
@@ -205,6 +202,11 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                     return False
             return True
         return False
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewCreateView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return context
 
     def handle_no_permission(self):
         return redirect('paperList')
