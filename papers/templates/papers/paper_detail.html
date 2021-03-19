@@ -26,10 +26,22 @@
         </div>
 
         <div class="col text-left">
-            <p>
-                {% for author in paper.authors.all %}
-                    {{ author }}
-                {% endfor %}</p>
+                <ul>
+						{% for author in paper.authors.all %}
+							<li>
+								<div class="row ml-1">
+								{{ author.first_name }} {{ author.last_name }}
+								</div>
+							</li>
+						{% endfor %}
+						{% for author in paper.coauthor_set.all %}
+							<li>
+								<div class="row ml-1">
+								{{ author.name }} {{ author.surname }}
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
         </div>
     </div>
 
@@ -39,10 +51,23 @@
         </div>
 
         <div class="col text-left">
-            <p>
-                {% for review in paper.review_set.all %}
-                    {{ review.author }}
-                {% endfor %} </p>
+
+                {% if paper.review_set.all.count == 0 %}
+                    <span class="text-danger">Brak recenzji</span>
+                {% else %}
+                    <ul>
+						{% for review in paper.review_set.all %}
+							<li>
+								<div class="row ml-1">
+								{{ review.author.first_name }} {{ review.author.last_name }}
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+
+                {% endif %}
+
+
         </div>
     </div>
 
@@ -62,11 +87,19 @@
         </div>
 
         <div class="col text-left">
-            <p>
-                {% for file in paper.uploadedfile_set.all %}
-                    <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
-                {% endfor %}
-            </p>
+
+                {% if paper.uploadedfile_set.all.count == 0 %}
+                    <span class="text-danger">Brak plików</span>
+                {% else %}
+                    <ul>
+                        {% for file in paper.uploadedfile_set.all %}
+                        <li>
+                            <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
         </div>
     </div>
 
@@ -115,26 +148,29 @@
         <hr>
     </div>
 
-    {% if user in paper.authors.all %} <!-- for Mateusz, change this if to make it better xD -->
+    {% if user in paper.authors.all %}
         <div class="row text-center">
 
-            <div class="col">
+            <div class="col text-right">
 
-                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
+                 <a class="btn btn-link" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
             </div>
     {% if user.pk == paper.original_author_id %}
-            <div class="col">
+            <div class="col text-left">
 
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
+                <a class="btn btn-link text-danger" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
             </div>
     {% endif %}
         </div>
     {% endif %}
+
+    <br>
+
     {% if user in paper.authors.all or user|is_in_group:'reviewer' %}
         <div class="row mb-2">
             <div class="col text-center">
-                <!-- for Mateusz, enable this button if review exists xD , using {{diable}} or {{enable}} passed by contex -->
-                <input type="submit" class="btn btn-warning w-35 h-100" value="Zobacz wszystkie recenzje" disabled/>
+                <form action="{% url 'reviewList' paper.id %}">
+                <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>
                 </form>
             </div>
         </div>
@@ -145,11 +181,11 @@
         <div class="row">
             <div class="col text-center">
                 {% if user|already_reviewed:paper %} <!-- for Mateusz, if reviewer already add review -->
-                    <form action="#">
+                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper  %}">
                     <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>
                     </form>
                 {% else %}
-                    <form action="#">
+                    <form action="{% url 'reviewCreate' paper.id %}">
                     <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
                     </form>
                 {% endif %}

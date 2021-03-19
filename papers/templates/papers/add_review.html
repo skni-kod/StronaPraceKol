@@ -1,23 +1,53 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load custom_papers_tags %}
 {% block content %}
-<div class="container my-3">
+<div class="container">
 
 	<div class="row text-center">
 		<div class="col">
-			<form method='POST' class="post-form">
+			<form action="{% url 'paperDetail' review.paper.id %}">
+				<input type="submit" class="btn btn-link" value="{{review.paper.title}}" name="Log"/>
+			</form>
 
-				{% csrf_token %}
-				<div class="offset-2" style="width:67%;">
-					{{ form|crispy }}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row text-center">
+
+			{% if review %}
+				<div class="col">
+					<form method='POST' class="post-form">
+
+						{% csrf_token %}
+						{{ form|crispy }}
+						<hr>
+						<input type="submit" class="btn btn-success" value="Zmień" name="Log"/>
+					</form>
+				</div>
+				<div class="col mt-1">
+					<form action="{% url 'reviewDelete' review.paper.id review.id %}">
+						<input type="submit" class="btn btn-danger" value="Usuń" name="Log"/>
+					</form>
 				</div>
 
-				<hr>
+			{% else %}
+				<div class="col">
+					<form method='POST' class="post-form">
 
-				<input type="submit" class="btn btn-success" value="Dodaj" name="Log"/>
+						{% csrf_token %}
+						{{ form|crispy }}
 
-			</form>
-		</div>
+						<hr>
+
+						<input type="submit" class="btn btn-success" value="Dodaj" name="Log"/>
+
+					</form>
+				</div>
+			{% endif%}
+
 	</div>
 
 </div>

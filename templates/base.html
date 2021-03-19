@@ -4,11 +4,10 @@
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap framework -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
@@ -23,8 +22,8 @@
     <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
         <div class="container">
             <div class="navbar-brand">
-                <a>
-                    <img class="site_logo" src="{% static 'images/site_logo.png' %}"/>
+                <a href="{% url 'index' %}">
+                    <img class="site_logo" src="{% static 'images/site_logo.png' %}" href="fgf"/>
                 </a>
             </div>
 
@@ -110,7 +109,7 @@
     </div>
     <div id="footer">
         <div class="container">
-            <span class="text-muted">©2021 </span>
+            <span class="text-muted">©2021 Miłosz Serafin, Mateusz Rejman, Jakub Przystasz </span>
         </div>
     </div>
 </div>

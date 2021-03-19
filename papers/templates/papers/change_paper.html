@@ -2,54 +2,79 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="container w-50">
+<div class="container w-75">
 	<div class="col text-center">
 
 	<h1> Edycja referatu </h1>
 	<hr>
-	
-	<!-- detect which button is clicked -->
 
 	<form method='POST' class="post-form">
 		{% csrf_token %}
 
 		{% crispy form %}
 	</form>
-	<div class="content-section">
-        <form method="POST" class="post-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Prześlij nowe pliki</legend>
-                {{ files|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <input name="send-new-files" hidden>
-                <button class="btn btn-outline-info" type="submit">Prześlij</button>
-            </div>
-        </form>
-    </div>
 
-	<div class="content-section">
-
-    {% if uploaded_files %}
-        {% for file in uploaded_files %}
+    <div class="container text-center">
+        <div class="content-section">
             <form method="POST" class="post-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <input name="delete-file" hidden>
-                <input name="file-pk" value="{{ file.pk }}" hidden>
-                <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
-                <button class="btn btn-outline-info" type="submit">Usuń</button>
-            </div>
-            </form>
-        {% endfor %}
-    {% endif %}
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Prześlij nowe pliki</legend>
+                    <div class="row offset-4">
+                        {{ files|crispy }}
+                    </div>
 
+                </fieldset>
+                <div class="form-group">
+                    <input name="send-new-files" hidden>
+                    <button class="btn btn-outline-info" type="submit">Prześlij</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="content-section">
+
+        {% if uploaded_files %}
+            <hr class="w-50">
+                <h7 class="text-success"> Przesłane pliki </h7>
+            <hr class="w-50">
+            <ul>
+            {% for file in uploaded_files %}
+                <li class="offset-4">
+                    <form method="POST" class="post-form text-left" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input name="delete-file" hidden>
+                        <input name="file-pk" value="{{ file.pk }}" hidden>
+                        <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        <button class="btn btn-outline-info w-25 h-25" type="submit">Usuń</button>
+                    </div>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
+        </div>
     </div>
 
-	<small class="text-muted">
-		Zmieniłeś zdanie? <a class="ml-2" href="#">Powrót do referatów</a>
-	</small>
+    <hr>
+
+    <div class="row text-center">
+        <div class="col">
+            <h2>
+            <small class="text-muted">
+                Zmieniłeś zdanie? <a class="ml-2" href="{% url 'paperDetail' paper.id %}">Powrót do referatu</a>
+            </small>
+            </h2>
+        </div>
+    </div>
+
+
+
+
+
+
 
 	 </div>
 </div>
