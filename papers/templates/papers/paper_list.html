@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
 {% block content %}
+
+<script>
+	$enable-responsive-font-sizes = True;
+</script>
+
 <div class="container text-center" style="width:80%">
 
 	{% if user.groups.all.0.name == 'reviewer' %}

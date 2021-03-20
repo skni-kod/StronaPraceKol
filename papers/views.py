@@ -7,6 +7,7 @@ from .forms import *
 from django.db import transaction
 from django.utils import timezone
 import os
+from django.contrib import messages
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -143,7 +144,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
-        return self.request.path_info
+        messages.success(self.request, f'Referat został zmieniony')
+        paper = self.get_object()
+        return str('/papers/paper/'+ str(paper.pk) + '/')
 
     def handle_no_permission(self):
         return redirect('paperList')

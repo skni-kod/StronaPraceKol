@@ -27,25 +27,35 @@
 						<input type="submit" class="btn btn-success" value="Zmień" name="Log"/>
 					</form>
 				</div>
-				<div class="col mt-1">
+
+				<div class="col mt-1 text-center">
 					<form action="{% url 'reviewDelete' paper.id review.id %}">
 						<input type="submit" class="btn btn-danger" value="Usuń" name="Log"/>
+					</form>
+				</div>
+				</div>
+				<div class="col mt-1 text-center ">
+					<form action="{% url 'paperList' %}">
+						<input type="submit" class="btn btn-warning" value="Powrót"/>
 					</form>
 				</div>
 
 			{% else %}
 				<div class="col">
 					<form method='POST' class="post-form">
-
 						{% csrf_token %}
 						{{ form|crispy }}
-
 						<hr>
-
 						<input type="submit" class="btn btn-success" value="Dodaj" name="Log"/>
-
 					</form>
 				</div>
+
+				<div class="col mt-1 ">
+					<form action="{% url 'paperList' %}">
+						<input type="submit" class="btn btn-warning" value="Anuluj"/>
+					</form>
+				</div>
+
 			{% endif%}
 
 	</div>
