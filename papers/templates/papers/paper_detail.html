@@ -77,7 +77,21 @@
         </div>
 
         <div class="col text-left">
-            <p> {{paper.approved}} TODO </p>
+            {% if paper.approved == True %}
+            <p class="text-success"> Gotowy </p>
+            {% else %}
+            <p style="color:#ccb910;"> W przygotowaniu </p>
+            {% endif %}
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col text-right">
+            <h5>Koło:&ensp; </h5>
+        </div>
+
+        <div class="col text-left">
+            <p> {{paper.club}} </p>
         </div>
     </div>
 
