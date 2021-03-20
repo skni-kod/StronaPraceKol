@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 
 # forms
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, UserLoginForm, UserPasswordChangeForm
 from django.contrib import messages
 
 # to use user system
@@ -88,10 +88,10 @@ class LoginView(auth_views.LoginView):
     def get(self, request, *args, **kwargs):
         # Check if user is already logged
         if(self.request.user.is_authenticated):
-            form = self.form_class(initial=self.initial)
+            form = UserLoginForm()
             return redirect('index')
         else:
-            form = self.form_class(initial=self.initial)
+            form = UserLoginForm()
             context = {
                 'form': form,
                 'title': 'logowanie',
@@ -135,7 +135,7 @@ class PasswordChangeView(LoginRequiredMixin,TemplateView):
 
 
     def get(self, request, *args, **kwargs):
-        password_change = PasswordChangeForm(self.request.user)
+        password_change = UserPasswordChangeForm(self.request.user)
         # Call the base implementation first to get the context
         context = super(PasswordChangeView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
@@ -147,13 +147,13 @@ class PasswordChangeView(LoginRequiredMixin,TemplateView):
 
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST':
-            password_change = PasswordChangeForm(self.request.user, self.request.POST)
+            password_change = UserPasswordChangeForm(self.request.user, self.request.POST)
             if password_change.is_valid():
                 password_change.save()
                 messages.success(self.request, f'Hasło zostało zmienione')
                 return redirect('profile')
         else:
-            password_change = PasswordChangeForm(self.request.user)
+            password_change = UserPasswordChangeForm(self.request.user)
         return render(request, self.template_name, {'form': password_change})
 
 
