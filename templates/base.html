@@ -23,7 +23,7 @@
         <div class="container">
             <div class="navbar-brand">
                 <a href="{% url 'index' %}">
-                    <img class="site_logo" src="{% static 'images/site_logo.png' %}" href="fgf"/>
+                    <img class="site_logo" src="{% static 'images/site_logo.png' %}"/>
                 </a>
             </div>
 
@@ -40,22 +40,15 @@
                         <a class="nav-link" href="{% url 'index' %}">Informacje</a>
                     </li>
 
-                     <!--
-                    <li class="nav-item {% if title == '#' %} active {% endif %}">
-                        <a class="nav-link" href="#">Referaty</a>
-                    </li>
-                    -->
-
-                    <li class="nav-item {% if title == 'kontakt' %} active {% endif %}">
-                        <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
-                    </li>
-
                     {% if user.is_authenticated %}
-                    <li class="nav-item {% if title == 'referaty' %} active {% endif %}">
+                    <li class="nav-item {% if site_name == 'papers' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'paperList' %}">Referaty</a>
                     </li>
                     {% endif %}
 
+                    <li class="nav-item {% if site_name == 'contact' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
+                    </li>
 
                 </ul>
             </div>
@@ -65,7 +58,7 @@
 
                     {% if user.is_authenticated %}
 
-                    <li class="nav-item {% if title == 'profil' %} active {% endif %}">
+                    <li class="nav-item {% if site_name == 'user_profile' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'profile' %}">Zalogowano jako: {{ user.username }} </a>
                     </li>
 
@@ -75,11 +68,11 @@
 
                     {% else %}
 
-                    <li class="nav-item {% if title == 'logowanie' %} active {% endif %}">
+                    <li class="nav-item {% if site_name == 'login_page' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'login' %}">Logowanie</a>
                     </li>
 
-                    <li class="nav-item {% if title == 'rejestracja' %} active {% endif %}">
+                    <li class="nav-item {% if site_name == 'register_page' %} active {% endif %}">
                         <a class="nav-link " href="{% url 'register' %}">Rejestracja</a>
                     </li>
 

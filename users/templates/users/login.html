@@ -2,29 +2,27 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    <div class="container" id="login">
-        <div class="row">
-            <div class="col col-md-1"></div>
-            <div class="col-md-auto">
-                <h1> Zaloguj się </h1>
-                <hr>
+<div class="container" id="login">
+	<div class="col text-center">
 
-                <form method='POST' class="post-form">
-                    {% csrf_token %}
+	<h1> Zaloguj się </h1>
+	<hr>
+	
+	<!-- detect which button is clicked -->
 
-                    {{ form|crispy }}
+	<form method='POST' class="post-form">
+		{% csrf_token %}
 
-                    <input type="submit" class="btn btn-primary btn-block" value="Zaloguj" name="Log"/>
+		{{ form|crispy }}
 
-                </form>
+		<input type="submit" class="btn btn-primary btn-block" value="Zaloguj" name="Log"/>
 
-                <small class="text-muted text-center">
-                <p>Nie masz konta? <a class="ml-2" href="{% url 'register' %}">Zarejestruj się</a></p>
-                <p>W przypadku utraty hasła, istnieje możliwość <br> <a href="{% url 'password_reset' %}">odzyskania hasła</a></p>
-            </small>
-            </div>
-            <div class="col col-md-1"></div>
-        </div>
-    </div>
+	</form>
 
+	<small class="text-muted">
+		Nie masz konta? <a class="ml-2" href="{% url 'register' %}">Zarejestruj się</a>
+	</small>
+
+	 </div>
+</div>
 {% endblock %}
