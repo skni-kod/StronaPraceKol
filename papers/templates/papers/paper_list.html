@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
 {% block content %}
+
+<script>
+	$enable-responsive-font-sizes = True;
+</script>
+
 <div class="container text-center" style="width:80%">
 
 	{% if user.groups.all.0.name == 'reviewer' %}
@@ -85,7 +90,11 @@
 
 					<div class="row">
 						<div class="col text-left ml-3">
-							<p>Status: {{paper.approved}} TODO</p>
+							{% if paper.approved == True %}
+							<p class="text-success"> Gotowy </p>
+							{% else %}
+							<p style="color:#ccb910;"> W przygotowaniu </p>
+							{% endif %}
 						</div>
 					</div>
 

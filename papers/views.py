@@ -1,4 +1,3 @@
-from .models import Paper, UploadedFile, Review
 from django.shortcuts import redirect
 from django.http import FileResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -7,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.db import transaction
 from django.utils import timezone
-from django.urls import reverse_lazy
 import os
+from django.contrib import messages
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -22,7 +21,6 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
         context['title'] = 'referaty'
         return context
-
 
     def get_queryset(self):
         if self.request.user.groups.filter(name='reviewer').exists():
@@ -146,7 +144,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
-        return self.request.path_info
+        messages.success(self.request, f'Referat został zmieniony')
+        paper = self.get_object()
+        return str('/papers/paper/'+ str(paper.pk) + '/')
 
     def handle_no_permission(self):
         return redirect('paperList')
@@ -206,6 +206,11 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             return True
         return False
 
+    def get_context_data(self, **kwargs):
+        context = super(ReviewCreateView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
     def handle_no_permission(self):
         return redirect('paperList')
 
@@ -220,6 +225,11 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'papers/add_review.html'
     form_class = ReviewCreationForm
     success_url = '/papers'  # TODO change if needed
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewUpdateView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
+        return context
 
     def test_func(self):
         review = self.get_object()
@@ -241,6 +251,11 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == review.author:
             return True
         return False
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewDeleteView, self).get_context_data(**kwargs)
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
+        return context
 
     def handle_no_permission(self):
         return redirect('paperList')

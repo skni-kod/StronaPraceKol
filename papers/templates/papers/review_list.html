@@ -16,7 +16,7 @@
 		<div class="row text-center">
 			<div class="col">
 				<hr class="w-50">
-				<h4 class="text-primary"> Marek Mleko{{ review.author.first_name }} {{ review.author.last_name }}</h4>
+				<h4 class="text-primary">{{ review.author.first_name }} {{ review.author.last_name }}</h4>
 				<hr class="w-50">
 			</div>
 		</div>
@@ -37,10 +37,22 @@
 	{% endfor %}
 
 	<div class="row text-center">
+
 		<div class="col">
 			{% if not reviews %}
 			<h4 class="text-danger"> Ten referat nie ma jeszcze żadnej recenzji </h4>
 			{% endif %}
+		</div>
+	</div>
+
+	<br>
+	<div class="row text-center">
+			<div class="col">
+				<div class="col mt-1">
+				<form action="{% url 'paperList' %}">
+					<input type="submit" class="btn btn-warning" value="Powrót"/>
+				</form>
+			</div>
 		</div>
 	</div>
 
