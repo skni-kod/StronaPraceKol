@@ -57,19 +57,6 @@ class Review(models.Model):
     text = models.TextField()
 
 
-class Message(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
-    add_date = models.DateTimeField(default=timezone.now)
-    text = models.TextField()
-
-
-class MessageSeen(models.Model):
-    message = models.ForeignKey(Message, on_delete=models.CASCADE)
-    reader = models.ForeignKey(User, on_delete=models.CASCADE)
-    seen_date = models.DateTimeField(default=timezone.now)
-
-
 class Announcement(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
