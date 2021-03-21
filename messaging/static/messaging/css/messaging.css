@@ -1,0 +1,4 @@
+#messages_box{
+    max-height: 650px;
+    overflow: scroll;
+}
