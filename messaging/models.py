@@ -22,4 +22,3 @@ class MessageSeen(models.Model):
 
     def __str__(self):
         return f'{self.reader.username} seen: {self.message}'
-

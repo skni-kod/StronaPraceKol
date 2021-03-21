@@ -104,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl-pl'
 
 TIME_ZONE = 'Europe/Warsaw'
 
@@ -120,8 +120,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static',
     '/static/',
+    BASE_DIR / 'messaging/static/messaging',
 ]
 
 # for crispy forms
@@ -131,7 +132,21 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'index'
 
 # for decorators (login_required) which require user to be logged, it's redirect to login
-#LOGIN_URL = 'login'
-=======
+# LOGIN_URL = 'login'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_PORT = '2525'
+EMAIL_HOST_USER = 'b616df948c35a1'
+EMAIL_HOST_PASSWORD = '297234ec84f732'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
+SITE_DOMAIN = 'localhost'
+SITE_ADMIN_MAIL = 'admin@pracekol.pl'
+
+
+LOGIN_URL = '/users/login'
