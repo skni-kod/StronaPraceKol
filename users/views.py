@@ -129,7 +129,6 @@ class LogoutView(auth_views.LogoutView):
         # Create any data and add it to the context
         context['title'] = 'wylogowany'
         return context
-
     pass
 
 

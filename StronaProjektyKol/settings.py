@@ -136,9 +136,6 @@ LOGIN_REDIRECT_URL = 'user'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'login'
-
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -157,4 +154,5 @@ SITE_DOMAIN = 'localhost'
 SITE_ADMIN_MAIL = 'admin@pracekol.pl'
 
 
-LOGIN_URL = '/users/login'
+LOGIN_REDIRECT_URL = 'profile'
+LOGIN_URL = 'login'

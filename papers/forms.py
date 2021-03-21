@@ -122,7 +122,7 @@ class PaperCreationForm(forms.ModelForm):
                 Field('description'),
                 HTML("<br><hr>"),
 
-                Fieldset('Dodaj współautorów',
+                Fieldset('Współautorzy',
                          HTML("<br><div class='row'>"),
                          HTML("<div class='col offset-2'>"),
                          Formset('coAuthors'),
@@ -133,7 +133,7 @@ class PaperCreationForm(forms.ModelForm):
 
                 HTML("<br><hr>"),
 
-                Fieldset('Dodaj pliki',
+                Fieldset('Pliki',
                          HTML("<br><div class='row'>"),
                          HTML("<div class='col offset-4'>"),
                          Formset('files', 'papers/upload_files_formset.html')),
