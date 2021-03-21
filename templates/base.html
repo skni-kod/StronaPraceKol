@@ -12,11 +12,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <script src="{% static 'js/app.js' %}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-    <!-- app dependent header -->
-    {% block header %}{% endblock %}
-    <!-- app dependent header -->
 
     <title>{{ title }}</title>
 
@@ -27,8 +22,8 @@
     <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
         <div class="container">
             <div class="navbar-brand">
-                <a>
-                    <img class="site_logo" src="{% static 'images/site_logo.png' %}"/>
+                <a href="{% url 'index' %}">
+                    <img class="site_logo" src="{% static 'images/site_logo.png' %}" href="fgf"/>
                 </a>
             </div>
 
@@ -45,13 +40,19 @@
                         <a class="nav-link" href="{% url 'index' %}">Informacje</a>
                     </li>
 
+                     <!--
+                    <li class="nav-item {% if title == '#' %} active {% endif %}">
+                        <a class="nav-link" href="#">Referaty</a>
+                    </li>
+                    -->
+
                     <li class="nav-item {% if title == 'kontakt' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
                     </li>
 
                     {% if user.is_authenticated %}
                     <li class="nav-item {% if title == 'referaty' %} active {% endif %}">
-                        <a class="nav-link" href="#">Referaty</a>
+                        <a class="nav-link" href="{% url 'paperList' %}">Referaty</a>
                     </li>
                     {% endif %}
 
@@ -108,7 +109,7 @@
     </div>
     <div id="footer">
         <div class="container">
-            <span class="text-muted">©2021 </span>
+            <span class="text-muted">©2021 Miłosz Serafin, Mateusz Rejman, Jakub Przystasz </span>
         </div>
     </div>
 </div>

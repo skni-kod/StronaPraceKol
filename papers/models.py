@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
+import os
 
 
 class StudentClub(models.Model):
@@ -21,7 +22,7 @@ class StudentClub(models.Model):
 class Paper(models.Model):
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)  # set default on delete
-    authors = models.ManyToManyField(User)
+    authors = models.ManyToManyField(User, blank=True)
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=64)
     description = models.TextField()
@@ -33,7 +34,7 @@ class Paper(models.Model):
 class CoAuthor(models.Model):
     name = models.CharField(max_length=32)
     surname = models.CharField(max_length=32)
-    email = models.EmailField()
+    email = models.EmailField(blank=True)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
 
@@ -43,8 +44,11 @@ def paper_directory_path(instance, filename):
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=paper_directory_path)
+    file = models.FileField(upload_to=paper_directory_path, blank=True)
     add_date = models.DateTimeField(default=timezone.now)
+
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 
 class Review(models.Model):
@@ -59,6 +63,8 @@ class Announcement(models.Model):
 
 
 def check_empty_author_relation(instance, **kwargs):
+    """checks if user that is being deleted is an original author of any paper of the last author of any paper
+    and acts accordingly"""
     papers = Paper.objects.filter(authors=instance)
     for paper in papers:
         if len(paper.authors.all()) == 1:
@@ -71,4 +77,10 @@ def check_empty_author_relation(instance, **kwargs):
                     break
 
 
+def delete_file_with_object(instance, **kwargs):
+    """deletes files from system when UploadedFile object is deleted from database"""
+    instance.file.delete()
+
+
 pre_delete.connect(check_empty_author_relation, sender=User)
+pre_delete.connect(delete_file_with_object, sender=UploadedFile)
