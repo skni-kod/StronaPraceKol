@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block header %}
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/messaging.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div id="messages_box" class="container"></div>
+    <div class="input-group">
+            <textarea id="input_message" placeholder="Wprowadź wiadomość" aria-describedby="send_message_button"
+                      class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
+        <div class="input-group-append">
+            <div class="input-group-text">
+                <button id="send_message_button" class="btn btn-primary"> Wyślij</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        send_message_url = "{% url 'send_message' %}";
+        get_messages_url = "{% url 'get_messages' %}";
+        render_message_url = "{% url 'render_messages' %}";
+        username = "{{ username }}";
+        ReviewId = '{{ review_id }}';
+    </script>
+    <script src="{% static  'js/messaging.js' %}"></script>
+
+{% endblock %}
+

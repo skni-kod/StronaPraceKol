@@ -12,6 +12,11 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
     <script src="{% static 'js/app.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- app dependent header -->
+    {% block header %}{% endblock %}
+    <!-- app dependent header -->
 
     <title>{{ title }}</title>
 
@@ -39,12 +44,6 @@
                     <li class="nav-item {% if title == 'index' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'index' %}">Informacje</a>
                     </li>
-
-                     <!--
-                    <li class="nav-item {% if title == '#' %} active {% endif %}">
-                        <a class="nav-link" href="#">Referaty</a>
-                    </li>
-                    -->
 
                     <li class="nav-item {% if title == 'kontakt' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
