@@ -3,30 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/messaging/static/messaging/css/messaging.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/messaging/static/messaging/js/messaging.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/messaging/templates/messaging/message.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_complete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_confirm.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_done.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_email.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/registration/password_reset_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/StronaProjektyKol.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/StronaProjektyKol.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging/templates/messaging/messagebox.html" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/templates/messaging/messagebox.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/templates/users/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/users/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/users/passwordChange.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/users/passwordChange.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +50,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/registration" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/users" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -82,6 +61,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\users" />
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\templates\registration" />
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\users\templates\users" />
     </key>
@@ -146,7 +126,24 @@
       <workItem from="1616157528050" duration="86000" />
       <workItem from="1616157869373" duration="107000" />
       <workItem from="1616174593908" duration="210000" />
+      <workItem from="1616322802125" duration="12744000" />
+      <workItem from="1616438368946" duration="1814000" />
     </task>
+    <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
+      <created>1616324506690</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1616324506690</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Make some refactor">
+      <created>1616332124143</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1616332124143</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,6 +160,11 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update requirements.txt, update base.html" />
+    <MESSAGE value="Make some refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Make some refactor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

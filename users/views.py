@@ -38,6 +38,8 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMultiAlternatives
 from django import template
 
+from django.contrib import messages
+
 
 class IndexView(TemplateView):
     template_name = 'users/index.html'
@@ -102,7 +104,7 @@ class LoginView(auth_views.LoginView):
 
     def get(self, request, *args, **kwargs):
         # Check if user is already logged
-        if(self.request.user.is_authenticated):
+        if (self.request.user.is_authenticated):
             form = UserLoginForm()
             return redirect('index')
         else:
@@ -200,31 +202,33 @@ def password_reset_request(request):
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
-            associated_users = User.objects.filter(Q(email=data) | Q(username=data))
+            associated_users = User.objects.filter(Q(email=data))
             if associated_users.exists():
-                for user in associated_users:
-                    subject = "Prace Kół Naukowych - Odzyskiwanie hasła"
-                    plaintext = template.loader.get_template('registration/password_reset_email.txt')
-                    htmltemp = template.loader.get_template('registration/password_reset_email.html')
-                    c = {
-                        "email": user.email,
-                        'domain': SITE_DOMAIN,
-                        'site_name': SITE_NAME,
-                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                        "user": user,
-                        'token': default_token_generator.make_token(user),
-                        'protocol': 'http',
-                    }
-                    text_content = plaintext.render(c)
-                    html_content = htmltemp.render(c)
-                    try:
-                        msg = EmailMultiAlternatives(subject, text_content, SITE_ADMIN_MAIL, [user.email],
-                                                     headers={'Reply-To': SITE_ADMIN_MAIL})
-                        msg.attach_alternative(html_content, "text/html")
-                        msg.send()
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
-                    return redirect('password_reset_done')
+                user = associated_users.first()
+                subject = "Prace Kół Naukowych - Odzyskiwanie hasła"
+                plaintext = template.loader.get_template('registration/password_reset_email.txt')
+                htmltemp = template.loader.get_template('registration/password_reset_email.html')
+                c = {
+                    "email": user.email,
+                    'domain': SITE_DOMAIN,
+                    'site_name': SITE_NAME,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                }
+                text_content = plaintext.render(c)
+                html_content = htmltemp.render(c)
+                try:
+                    msg = EmailMultiAlternatives(subject, text_content, SITE_ADMIN_MAIL, [user.email],
+                                                 headers={'Reply-To': SITE_ADMIN_MAIL})
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+                return redirect('password_reset_done')
+            else:
+                messages.add_message(request, messages.WARNING, 'Nie znaleziono konta powiązanego z podanym adresem')
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password_reset_form.html",
-                  context={"form": password_reset_form})
+              context={"form": password_reset_form})

@@ -129,15 +129,10 @@ STATICFILES_DIRS = [
 # for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# redirect user to log-in site after log-in
-LOGIN_REDIRECT_URL = 'user'
 
 # for decorators (login_required) which require user to be logged, it's redirect to login
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'login'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -157,4 +152,5 @@ SITE_DOMAIN = 'localhost'
 SITE_ADMIN_MAIL = 'admin@pracekol.pl'
 
 
-LOGIN_URL = '/users/login'
+LOGIN_REDIRECT_URL = 'profile'
+LOGIN_URL = 'login'

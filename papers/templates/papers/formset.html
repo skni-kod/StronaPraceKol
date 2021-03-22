@@ -21,8 +21,8 @@
 <script src="{% static 'js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
     $('.formset_row-{{ formset.prefix }}').formset({
-        addText: 'dodaj kolejnego',
-        deleteText: 'usuń',
+        addText: '<div class="btn btn-primary">Dodaj</div>',
+        deleteText: '<div class="btn btn-primary">Usuń</div>',
         prefix: '{{ formset.prefix }}',
     });
 </script>
