@@ -5,7 +5,7 @@
     <div class="container">
 
         <div class="text-center">
-            {% if user.groups.all.0.name == 'reviewer' %}
+            {% if user|is_in_group:'reviewer' %}
                 <h2> Wszystkie referaty do Prac Kół Naukowych </h2>
             {% else %}
                 <h2> Przesłane referaty do Prac Kół Naukowych </h2>
@@ -13,6 +13,10 @@
         </div>
         <hr class="my-4">
 
+        <form method="get">
+            {{ filter.form }}
+            <button class="btn btn-primary" type="submit"> Wyszukaj </button>
+        </form>
         <div class="row my-2">
             <div class="col-md-4">
                 <div class="input-group input-group-sm mb-3">

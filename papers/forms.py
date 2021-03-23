@@ -1,5 +1,5 @@
 from django import forms
-from .models import Paper, UploadedFile, CoAuthor, Review
+from .models import *
 from django.utils.translation import ugettext_lazy as _
 from django.forms.models import inlineformset_factory
 from crispy_forms.helper import FormHelper
@@ -145,6 +145,7 @@ class PaperCreationForm(forms.ModelForm):
                 HTML("<br>"),
             )
         )
+        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='BRAK')
 
 
 class PaperEditForm(forms.ModelForm):
@@ -202,6 +203,7 @@ class PaperEditForm(forms.ModelForm):
                 HTML("<br><br>"),
             )
         )
+        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='BRAK')
 
 
 class ReviewCreationForm(forms.ModelForm):

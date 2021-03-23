@@ -8,6 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 import os
 from django.contrib import messages
+from .filters import PaperFilter
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -20,6 +21,8 @@ class PaperListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(PaperListView, self).get_context_data(**kwargs)
         context['title'] = 'referaty'
+        context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
+        context['papers'] = context['filter'].qs
         return context
 
     def get_queryset(self):

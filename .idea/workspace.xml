@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/users/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/users/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,6 +124,9 @@
       <workItem from="1616174593908" duration="210000" />
       <workItem from="1616322802125" duration="12744000" />
       <workItem from="1616438368946" duration="1814000" />
+      <workItem from="1616441378657" duration="8903000" />
+      <workItem from="1616485716297" duration="7782000" />
+      <workItem from="1616510711776" duration="13000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
