@@ -17,8 +17,12 @@ class PaperListView(LoginRequiredMixin, ListView):
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
     ordering = ['-last_edit_date']
+    paginate_by = 2
+
+
 
     def get_context_data(self, **kwargs):
+
         context = super(PaperListView, self).get_context_data(**kwargs)
         context['title'] = 'referaty'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
@@ -93,6 +97,10 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                     file_instance = UploadedFile(file=f, paper=self.object)
                     file_instance.save()
         return super(PaperCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, f'Dodano referat')
+        return str('/papers/')
 
 
 class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

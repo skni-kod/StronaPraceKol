@@ -44,12 +44,12 @@
                     </li>
 
                     {% if user.is_authenticated %}
-                        <li class="nav-item {% if site_name == 'papers' %} active {% endif %}">
+                        <li class="nav-item {% if title == 'referaty' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'paperList' %}">Referaty</a>
                         </li>
                     {% endif %}
 
-                    <li class="nav-item {% if site_name == 'contact' %} active {% endif %}">
+                    <li class="nav-item {% if title == 'kontakt' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
                     </li>
 
@@ -67,7 +67,7 @@
                         </li>
 
 
-                        <li class="nav-item {% if site_name == 'user_profile' %} active {% endif %}">
+                        <li class="nav-item {% if title == 'profil' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'profile' %}"> Profil</a>
                         </li>
 
@@ -77,11 +77,11 @@
 
                     {% else %}
 
-                        <li class="nav-item {% if site_name == 'login_page' %} active {% endif %}">
+                        <li class="nav-item {% if title == 'logowanie' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'login' %}">Logowanie</a>
                         </li>
 
-                        <li class="nav-item {% if site_name == 'register_page' %} active {% endif %}">
+                        <li class="nav-item {% if title == 'rejestracja' %} active {% endif %}">
                             <a class="nav-link " href="{% url 'register' %}">Rejestracja</a>
                         </li>
 

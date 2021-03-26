@@ -56,7 +56,7 @@
                 <ul>
                     <br id="info_list">
 
-                    {% for paper in papers %}
+                    {% for paper in page_obj %}
                         <li style="list-style-type:none;border-style:solid;border-color:#2cd3db;">
 
                             <div class="row mt-0">
@@ -113,6 +113,14 @@
                                     </li>
                                 {% endfor %}
                             </ul>
+                            <br>
+
+                            <div class="row">
+                                <div class="col text-left ml-3">
+                                    <h6>Słowa kluczowe: </h6>
+                                    {{ paper.keywords }}
+                                </div>
+                            </div>
                             <br>
 
                             <div class="row">
