@@ -25,7 +25,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['title'] = 'referaty'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
         papers = context['filter'].qs
-        paginator = Paginator(papers, 10)
+        paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
             context['papers'] = paginator.page(page)

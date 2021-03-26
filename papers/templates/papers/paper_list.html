@@ -187,8 +187,8 @@
                         {% if papers.has_previous %}
                             {% if 'title' in  querystring %}
                                 {% if 'page' in querystring %}
-                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page=1">Pierwsza</a>
-                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.previous_page_number }}">Poprzednia</a>
                                 {% else %}
                                     <a class="btn btn-outline-info" href="{{ querystring }}&page=1">Pierwsza</a>
                                     <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.previous_page_number }}">Poprzednia</a>
@@ -203,7 +203,7 @@
                             {% if papers.number == num %}
                                 {% if 'title' in querystring %}
                                     {% if 'page' in querystring %}
-                                        <a class="btn btn-info" href="{{ querystring|slice:":-7" }}&page={{ num }}">{{ num }}</a>
+                                        <a class="btn btn-info" href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
                                     {% else %}
                                         <a class="btn btn-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
                                     {% endif %}
@@ -214,7 +214,7 @@
                             {% elif num > papers.number|add:'-4' and num < papers.number|add:'+4' %}
                                 {% if 'title' in querystring %}
                                     {% if 'page' in querystring %}
-                                        <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ num }}">{{ num }}</a>
+                                        <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
                                     {% else %}
                                         <a class="btn btn-outline-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
                                     {% endif %}
@@ -228,8 +228,8 @@
                         {% if papers.has_next %}
                             {% if 'title' in  querystring %}
                                 {% if 'page' in querystring %}
-                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.next_page_number }}">Następna</a>
-                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
                                 {% else %}
                                     <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.next_page_number }}">Następna</a>
                                     <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
