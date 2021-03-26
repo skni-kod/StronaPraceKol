@@ -9,6 +9,7 @@ from django.utils import timezone
 import os
 from django.contrib import messages
 from .filters import PaperFilter
+from django.core.paginator import Paginator
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -22,7 +23,10 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
         context['title'] = 'referaty'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
-        context['papers'] = context['filter'].qs
+        papers = context['filter'].qs
+        paginator = Paginator(papers, 2)
+        page = self.request.GET.get('page', 1)
+        context['papers'] = paginator.page(page)
         return context
 
     def get_queryset(self):
