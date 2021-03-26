@@ -56,7 +56,7 @@
                 <ul>
                     <br id="info_list">
 
-                    {% for paper in page_obj %}
+                    {% for paper in papers %}
                         <li style="list-style-type:none;border-style:solid;border-color:#2cd3db;">
 
                             <div class="row mt-0">
@@ -181,31 +181,67 @@
                         <br></br>
                     {% endfor %}
 
-                    {% if is_paginated %}
+                    {% with request.get_full_path as querystring %}
+                    {% if papers.has_other_pages %}
 
-                        {% if page_obj.has_previous %}
-                            <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                        {% if papers.has_previous %}
+                            {% if 'title' in  querystring %}
+                                {% if 'page' in querystring %}
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                {% else %}
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                {% endif %}
+                                {% else %}
+                                <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
+                                <a class="btn btn-outline-info" href="?page={{ papers.previous_page_number }}">Poprzednia</a>
+                            {% endif %}
                         {% endif %}
 
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
+                        {% for num in papers.paginator.page_range %}
+                            {% if papers.number == num %}
+                                {% if 'title' in querystring %}
+                                    {% if 'page' in querystring %}
+                                        <a class="btn btn-info" href="{{ querystring|slice:":-7" }}&page={{ num }}">{{ num }}</a>
+                                    {% else %}
+                                        <a class="btn btn-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% else %}
                                 <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
+                                {% endif %}
 
-                            {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'+4' %}
+                            {% elif num > papers.number|add:'-4' and num < papers.number|add:'+4' %}
+                                {% if 'title' in querystring %}
+                                    {% if 'page' in querystring %}
+                                        <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ num }}">{{ num }}</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% else %}
                                 <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
+                                {% endif %}
 
                             {% endif %}
                         {% endfor %}
 
-                        {% if page_obj.has_next %}
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.next_page_number }}">Następna</a>
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.paginator.num_pages }}">Ostatnia</a>
-
+                        {% if papers.has_next %}
+                            {% if 'title' in  querystring %}
+                                {% if 'page' in querystring %}
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice:":-7" }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                {% else %}
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                {% endif %}
+                                {% else %}
+                                <a class="btn btn-outline-info" href="?page={{ papers.next_page_number }}">Następna</a>
+                                <a class="btn btn-outline-info" href="?page={{ papers.paginator.num_pages }}">Ostatnia</a
+                            {% endif %}
                         {% endif %}
 
                     {% endif %}
-
+                    {% endwith %}
 
 
                 </ul>
