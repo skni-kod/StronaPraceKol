@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
+{% load crispy_forms_tags %}
 {% block content %}
 
     <div class="container">
@@ -14,40 +15,27 @@
         <hr class="my-4">
 
         <form method="get">
-            {{ filter.form }}
-            <button class="btn btn-primary" type="submit"> Wyszukaj </button>
+            <div class="row">
+                {% crispy filter.form %}
+                <a class="pl-4 pt-4">
+                <input class="btn btn-primary" type="submit" value="Wyszukaj"></input>
+                </a>
+            </div>
         </form>
-        <div class="row my-2">
-            <div class="col-md-4">
-                <div class="input-group input-group-sm mb-3">
-                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
-                        placeholder="Wyszukiwana fraza">
-                </div>
+        <div class="row" style="font-size:13px;">
+            <div class="col">
+                <span class="text-secondary"> ( Słowa kluczowe podawaj z przecinkami ) </span>
             </div>
-            <div class="col-md-4">
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Sortuj według</span>
-                    </div>
-                    <select class="custom-select" id="order_select">
-                        <option selected>Data dodania</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-1 text-center">
-                <form action="{% url 'paperCreate' %}">
-                    <div class="btn btn-secondary" id="filter_button">Filtruj</div>
-                </form>
-            </div>
-            <div class="col-md-3 text-center">
-                <form action="{% url 'paperCreate' %}">
-                    <input type="submit" class="btn btn-success" value="Dodaj referat" name="New Paper"/>
-                </form>
-            </div>
+        </div>
 
+        <div class="row">
+            <div class="col text-center">
+                <hr>
+                <form action="{% url 'paperCreate' %}">
+                    <input type="submit" class="btn btn-success w-25" value="Dodaj referat" name="New Paper"/>
+                </form>
+                <hr>
+            </div>
         </div>
 
 
@@ -187,6 +175,7 @@
                         {% if papers.has_previous %}
                             {% if 'title' in  querystring %}
                                 {% if 'page' in querystring %}
+
                                     <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
                                     <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.previous_page_number }}">Poprzednia</a>
                                 {% else %}
@@ -236,7 +225,7 @@
                                 {% endif %}
                                 {% else %}
                                 <a class="btn btn-outline-info" href="?page={{ papers.next_page_number }}">Następna</a>
-                                <a class="btn btn-outline-info" href="?page={{ papers.paginator.num_pages }}">Ostatnia</a
+                                <a class="btn btn-outline-info" href="?page={{ papers.paginator.num_pages }}">Ostatnia</a>
                             {% endif %}
                         {% endif %}
 
