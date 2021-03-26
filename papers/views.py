@@ -9,7 +9,7 @@ from django.utils import timezone
 import os
 from django.contrib import messages
 from .filters import PaperFilter
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -26,7 +26,12 @@ class PaperListView(LoginRequiredMixin, ListView):
         papers = context['filter'].qs
         paginator = Paginator(papers, 2)
         page = self.request.GET.get('page', 1)
-        context['papers'] = paginator.page(page)
+        try:
+            context['papers'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['papers'] = paginator.page(1)
+        except EmptyPage:
+            context['papers'] = paginator.page(paginator.num_pages)
         return context
 
     def get_queryset(self):
