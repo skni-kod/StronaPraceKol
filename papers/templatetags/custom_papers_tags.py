@@ -28,3 +28,21 @@ def get_user_review_id(user, paper):
         if review.author == user:
             return review.pk
 
+
+@register.filter(name='slice_page')
+def slice_page(path):
+    index = len(path) - 7
+    if path.count('&page=') >= 1:
+        while True:
+            tmp = path.find('&page=', index)
+            if tmp != -1:
+                index
+                break
+            else:
+                index -= 1
+        return path[:-(len(path) - index)]
+    else:
+        return path
+
+
+

@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/filters.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templatetags/custom_papers_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templatetags/custom_papers_tags.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +134,8 @@
       <workItem from="1616510965301" duration="31000" />
       <workItem from="1616749764430" duration="9570000" />
       <workItem from="1616760289698" duration="1761000" />
-      <workItem from="1616764959547" duration="3454000" />
+      <workItem from="1616764959547" duration="3629000" />
+      <workItem from="1616769117740" duration="4076000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
