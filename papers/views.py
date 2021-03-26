@@ -18,9 +18,6 @@ class PaperListView(LoginRequiredMixin, ListView):
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
     ordering = ['-last_edit_date']
-    paginate_by = 2
-
-
 
     def get_context_data(self, **kwargs):
 
@@ -28,7 +25,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['title'] = 'referaty'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
         papers = context['filter'].qs
-        paginator = Paginator(papers, 20)  # TODO change to higher number
+        paginator = Paginator(papers, 10)
         page = self.request.GET.get('page', 1)
         try:
             context['papers'] = paginator.page(page)
