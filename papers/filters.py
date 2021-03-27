@@ -22,7 +22,7 @@ class MultiValueCharFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
                 queryset = self.get_method(qs)(**{lookup: value})
             else:
                 queryset = queryset | self.get_method(qs)(**{lookup: value})
-        if not queryset and len(value) == 0:
+        if not queryset and len(values) == 0:
             queryset = qs.all()
         return queryset
 
