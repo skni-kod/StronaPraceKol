@@ -54,7 +54,7 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
                     queryset = self.name_filter(queryset, value)
                 elif self.ref_field == 'last_name':
                     queryset = self.surname_filter(queryset, value)
-        if not queryset and len(value) == 0:
+        if not queryset and len(values) == 0:
             queryset = qs.all()
         return queryset
 
