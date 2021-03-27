@@ -22,11 +22,20 @@
                 </a>
             </div>
         </form>
-        <div class="row" style="font-size:13px;">
-            <div class="col">
+
+
+        <div class="row text-right">
+            <div class="col text-left" style="font-size:13px;">
                 <span class="text-secondary"> ( Słowa kluczowe podawaj z przecinkami ) </span>
             </div>
+
+            <div class="col">
+                <a href="{% url 'paperList' %}"><input class="btn btn-warning" type="submit" value="Wyczyść"></input></a>
+            </div>
+
+
         </div>
+
 
         <div class="row">
             <div class="col text-center">
