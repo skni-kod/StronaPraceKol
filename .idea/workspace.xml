@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +136,9 @@
       <workItem from="1616769117740" duration="4307000" />
       <workItem from="1616777205432" duration="595000" />
       <workItem from="1616849941132" duration="160000" />
-      <workItem from="1616850393162" duration="66000" />
+      <workItem from="1616850393162" duration="137000" />
+      <workItem from="1616850796375" duration="108000" />
+      <workItem from="1617210327184" duration="4217000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
