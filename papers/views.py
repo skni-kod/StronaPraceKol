@@ -278,3 +278,18 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('paperList')
 
 
+class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Review
+    # TODO template_name = ''
+    context_object_name = 'reviews'
+
+    def test_func(self):
+        if self.request.user.groups.filter(name='reviewer').exists():
+            return True
+        return False
+
+    def get_queryset(self):
+        return Review.objects.filter(author=self.request.user)
+
+    def handle_no_permission(self):
+        return redirect('paperList')
