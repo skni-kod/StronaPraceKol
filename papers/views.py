@@ -280,7 +280,7 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Review
-    # TODO template_name = ''
+    template_name = 'papers/user_review_list.html'
     context_object_name = 'reviews'
 
     def test_func(self):
@@ -293,3 +293,8 @@ class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def handle_no_permission(self):
         return redirect('paperList')
+
+    def get_context_data(self, **kwargs):
+        context = super(UserReviewList, self).get_context_data(**kwargs)
+        context['title'] = 'mojeRecenzje'
+        return context

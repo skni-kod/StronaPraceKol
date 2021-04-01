@@ -18,6 +18,8 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
     <title>{{ title }}</title>
 
+    {% load custom_papers_tags %}
+
 </head>
 <body>
 
@@ -46,6 +48,12 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item {% if title == 'referaty' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'paperList' %}">Referaty</a>
+                        </li>
+                    {% endif %}
+
+                    {% if user|is_in_group:'reviewer' %}
+                        <li class="nav-item {% if title == 'mojeRecenzje' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'userReviewList' %}">Moje recenzje</a>
                         </li>
                     {% endif %}
 

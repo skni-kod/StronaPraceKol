@@ -67,12 +67,12 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
 
 class PaperFilter(django_filters.FilterSet):
 
-    title = CharFilter(field_name='title', lookup_expr='icontains', label='tytuł')
-    keywords = MultiValueCharFilter(field_name='keywords', label='Słowa kluczowe oddzielone przecinkami',
+    title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł')
+    keywords = MultiValueCharFilter(field_name='keywords', label='Słowa kluczowe',
                                     lookup_expr='icontains', widget=CSVWidget, help_text='')
-    author_name = MultiValueUserFilter(ref_field='first_name', label='imiona autorów', widget=CSVWidget, help_text='')
-    author_surname = MultiValueUserFilter(ref_field='last_name', label='nazwiska autorów', widget=CSVWidget, help_text='')
-    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(acronym='BRAK'), field_name='club', label='koło')
+    author_name = MultiValueUserFilter(ref_field='first_name', label='Imiona autorów', widget=CSVWidget, help_text='')
+    author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget, help_text='')
+    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(acronym='BRAK'), field_name='club', label='Koło')
 
     class Meta:
         model = Paper
