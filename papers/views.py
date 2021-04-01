@@ -59,7 +59,13 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 @login_required
 def paper_file_download(request, pk, item):
-    # Function used to ensure that user is allowed to download given file
+    """
+    Function allows logged in users to download a file if they have permission to
+    :param request:
+    :param pk: integer (id of a paper that the files belongs to)
+    :param item: integer (id of a file user wants to download)
+    :return:
+    """
     paper = Paper.objects.get(pk=pk)
     if request.user in paper.authors.all() or request.user.groups.filter(name='reviewer').exists():
         document = UploadedFile.objects.get(pk=item)
@@ -282,6 +288,7 @@ class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Review
     template_name = 'papers/user_review_list.html'
     context_object_name = 'reviews'
+    paginate_by = 5
 
     def test_func(self):
         if self.request.user.groups.filter(name='reviewer').exists():

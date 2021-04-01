@@ -63,8 +63,13 @@ class Announcement(models.Model):
 
 
 def check_empty_author_relation(instance, **kwargs):
-    """checks if user that is being deleted is an original author of any paper of the last author of any paper
-    and acts accordingly"""
+    """
+    Checks if user that is being deleted is an original author of any paper of the last author of any paper.
+    If any paper has no other authors it's deleted, otherwise original_author is replaced with another author
+    :param instance: User objects (user that is being deleted)
+    :param kwargs:
+    :return:
+    """
     papers = Paper.objects.filter(authors=instance)
     for paper in papers:
         if len(paper.authors.all()) == 1:
@@ -78,7 +83,12 @@ def check_empty_author_relation(instance, **kwargs):
 
 
 def delete_file_with_object(instance, **kwargs):
-    """deletes files from system when UploadedFile object is deleted from database"""
+    """
+    Deletes files from system when UploadedFile object is deleted from database
+    :param instance: UploadedFile object (file that is being deleted)
+    :param kwargs:
+    :return:
+    """
     instance.file.delete()
 
 

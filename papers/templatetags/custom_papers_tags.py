@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.auth.models import User, Group
+from papers.models import Paper
 
 
 register = template.Library()
@@ -7,6 +8,12 @@ register = template.Library()
 
 @register.filter(name='is_in_group')
 def is_in_group(user, group_name):
+    """
+    Checks if given user is in a group of the given name
+    :param user: User object
+    :param group_name: string (name of a group)
+    :return: boolean
+    """
     group = Group.objects.get(name=group_name)
     if group in user.groups.all():
         return True
@@ -15,6 +22,12 @@ def is_in_group(user, group_name):
 
 @register.filter(name='already_reviewed')
 def already_reviewed(user, paper):
+    """
+    Checks if given user has already reviewed given paper
+    :param user: User object
+    :param paper: Paper object
+    :return: boolean
+    """
     reviews = paper.review_set.all()
     for review in reviews:
         if review.author == user:
@@ -24,6 +37,12 @@ def already_reviewed(user, paper):
 
 @register.filter(name='get_user_review_id')
 def get_user_review_id(user, paper):
+    """
+    Returns id of a review written by given user for the given paper
+    :param user: User object
+    :param paper: Paper object
+    :return: integer (id of a review)
+    """
     for review in paper.review_set.all():
         if review.author == user:
             return review.pk
@@ -31,6 +50,12 @@ def get_user_review_id(user, paper):
 
 @register.filter(name='slice_page')
 def slice_page(path):
+    """
+    Function removes proper amount of characters from the end of a given path,
+    so that it can later be appended in an altered form
+    :param path: string (url path with filter and page parameters)
+    :return: string (sliced path)
+    """
     index = len(path) - 7
     if path.count('&page=') >= 1:
         while True:
@@ -45,4 +70,11 @@ def slice_page(path):
         return path
 
 
-
+@register.filter(name='get_review_paper_id')
+def get_review_paper_id(review):
+    """
+    Returns id of a paper that given review concerns
+    :param review: Review object
+    :return: integer (paper id)
+    """
+    return Paper.objects.get(review=review).pk
