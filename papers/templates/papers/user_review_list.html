@@ -119,7 +119,7 @@
 
 
                                 <div class="col text-right mb-2">
-                                    <form action="{% url 'reviewEdit' review|get_review_paper_id review.pk %}">
+                                    <form action="{% url 'reviewEdit' review.paper.pk review.pk %}">
                                         <input type="submit" class="btn btn-info w-50 h-100 mr-2"
                                                value="Twoja recenzja"/>
                                     </form>

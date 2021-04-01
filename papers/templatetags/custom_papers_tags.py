@@ -69,12 +69,3 @@ def slice_page(path):
     else:
         return path
 
-
-@register.filter(name='get_review_paper_id')
-def get_review_paper_id(review):
-    """
-    Returns id of a paper that given review concerns
-    :param review: Review object
-    :return: integer (paper id)
-    """
-    return Paper.objects.get(review=review).pk
