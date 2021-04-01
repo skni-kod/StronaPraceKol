@@ -119,18 +119,10 @@
 
 
                                 <div class="col text-right mb-2">
-                                    {% if user|already_reviewed:paper %} <!-- TODO tu musisz ogranąć filtr -->
-                                        <form action="{% url 'reviewEdit' review.paper.id user|get_user_review_id:paper %}">
-                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                   value="Twoja recenzja"/>
-                                        </form>
-
-                                    {% else %}
-                                        <form action="{% url 'reviewCreate' review.paper.id %}">
-                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                   value="Dodaj recenzję"/>
-                                        </form>
-                                    {% endif %}
+                                    <form action="{% url 'reviewEdit' review|get_review_paper_id review.pk %}">
+                                        <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                               value="Twoja recenzja"/>
+                                    </form>
                                 </div>
 
 
