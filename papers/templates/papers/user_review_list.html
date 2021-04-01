@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load custom_papers_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <div class="container">
+
+        <div class="text-center">
+            <h2> Twoje recenzje </h2>
+        </div>
+        <hr class="my-4">
+
+
+
+        <div class="col-md-12 text-center">
+            {% if reviews %}
+                <ul>
+                    <br id="info_list">
+
+                    {% for review in reviews %}
+                        <li style="list-style-type:none;border-style:solid;border-color:#2cd3db;">
+
+                            <div class="row mt-0">
+                                <div class="col text-left">
+                                    <a class="nav-link" style="font-size:25px;"
+                                       href="{% url 'paperDetail' review.paper.id %}">{{ review.paper.title }}</a>
+                                </div>
+
+                                <div class="col mt-3 text-left ml-4">
+                                    <h7 style="">Data dodania: {{ review.paper.add_date|date:"d/m/Y G:i" }}</h7>
+                                    <br>
+                                    <h7 style="">Data modyfikacji: {{ review.paper.last_edit_date|date:"d/m/Y G:i" }}</h7>
+                                </div>
+                            </div>
+
+                            <hr style="background-color:#2cd3db;">
+
+                            <div class="row text-left ml-1">
+                                <div class="col text-left">
+                                    <h5>Autorzy:</h5>
+                                </div>
+                            </div>
+
+                            <ul>
+                                {% for author in review.paper.authors.all %}
+                                    <li>
+                                        <div class="row ml-1">
+                                            {{ author.first_name }} {{ author.last_name }}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                                {% for author in review.paper.coauthor_set.all %}
+                                    <li>
+                                        <div class="row ml-1">
+                                            {{ author.name }} {{ author.surname }}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <br>
+
+                            <div class="row text-left ml-1">
+                                <div class="col">
+                                    <h5>Recenzenci: </h5>
+                                </div>
+                            </div>
+
+                            <ul>
+                                {% for review in review.paper.review_set.all %}
+                                    <li>
+                                        <div class="row ml-1">
+                                            {{ review.author.first_name }} {{ review.author.last_name }}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <br>
+
+                            <div class="row">
+                                <div class="col text-left ml-3">
+                                    <h6>Słowa kluczowe: </h6>
+                                    {{ review.paper.keywords }}
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                <div class="col text-left ml-3">
+                                    {% if review.paper.approved == True %}
+                                        <p class="text-success"> Gotowy </p>
+                                    {% else %}
+                                        <p style="color:#ccb910;"> W przygotowaniu </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col text-left ml-3">
+                                    <p>Liczba przesłanych plików:
+                                        {{ review.paper.uploadedfile_set.all.count }}
+                                    </p>
+                                </div>
+
+                                {% if user|is_in_group:'reviewer' %}
+                                    <div class="col text-right mb-2">
+                                        <form action="{% url 'reviewList' review.paper.id %}">
+                                            <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
+                                                   value="Recenzje" enable/>
+                                        </form>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col text-left ml-3">
+                                    <p style="">Liczba nowych wiadomości: TODO </p>
+                                </div>
+
+
+                                <div class="col text-right mb-2">
+                                    {% if user|already_reviewed:paper %} <!-- TODO tu musisz ogranąć filtr -->
+                                        <form action="{% url 'reviewEdit' review.paper.id user|get_user_review_id:paper %}">
+                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                   value="Twoja recenzja"/>
+                                        </form>
+
+                                    {% else %}
+                                        <form action="{% url 'reviewCreate' review.paper.id %}">
+                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                   value="Dodaj recenzję"/>
+                                        </form>
+                                    {% endif %}
+                                </div>
+
+
+                            </div>
+
+
+                        </li>
+                        <br></br>
+                    {% endfor %}
+
+                    <!-- TODO tu musisz zdecydować czy to ma być czy nie, plus dostosować że to review jest -->
+                    {% with request.get_full_path as querystring %}
+                    {% if papers.has_other_pages %}
+
+                        {% if papers.has_previous %}
+                            {% if 'title' in  querystring %}
+                                {% if 'page' in querystring %}
+
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                {% else %}
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                {% endif %}
+                                {% else %}
+                                <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
+                                <a class="btn btn-outline-info" href="?page={{ papers.previous_page_number }}">Poprzednia</a>
+                            {% endif %}
+                        {% endif %}
+
+                        {% for num in papers.paginator.page_range %}
+                            {% if papers.number == num %}
+                                {% if 'title' in querystring %}
+                                    {% if 'page' in querystring %}
+                                        <a class="btn btn-info" href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                    {% else %}
+                                        <a class="btn btn-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% else %}
+                                <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
+                                {% endif %}
+
+                            {% elif num > papers.number|add:'-4' and num < papers.number|add:'+4' %}
+                                {% if 'title' in querystring %}
+                                    {% if 'page' in querystring %}
+                                        <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-info" href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+                                {% else %}
+                                <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
+                                {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if papers.has_next %}
+                            {% if 'title' in  querystring %}
+                                {% if 'page' in querystring %}
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                {% else %}
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info" href="{{ querystring }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                {% endif %}
+                                {% else %}
+                                <a class="btn btn-outline-info" href="?page={{ papers.next_page_number }}">Następna</a>
+                                <a class="btn btn-outline-info" href="?page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                            {% endif %}
+                        {% endif %}
+
+                    {% endif %}
+                    {% endwith %}
+
+
+                </ul>
+            {% else %}
+                <p> Brak przesłanych referatów </p>
+            {% endif %}
+            <br>
+        </div>
+
+
+    </div>
+{% endblock %}
