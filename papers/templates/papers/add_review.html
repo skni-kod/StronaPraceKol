@@ -15,50 +15,60 @@
 
 	<hr>
 
-	<div class="row text-center">
+	{% if review %}
+		<div class="row text-center">
+			<div class="col mt-1">
+				<form method='POST' class="post-form">
 
-			{% if review %}
+					{% csrf_token %}
+					{{ form|crispy }}
+					<hr>
+					<input type="submit" class="btn btn-success" style="width:10%;" value="Zmień" name="Log"/>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col text-center mt-1">
+				<form action="{% url 'reviewDelete' paper.id review.id %}">
+					<input type="submit" class="btn btn-danger" style="width:10%;" value="Usuń" name="Log"/>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col text-center mt-1">
+				<form action="{% url 'paperList' %}">
+					<input type="submit" class="btn btn-warning" style="width:10%;" value="Powrót"/>
+				</form>
+			</div>
+		</div>
+
+
+		{% else %}
+			<div class="row text-center">
 				<div class="col">
 					<form method='POST' class="post-form">
-
 						{% csrf_token %}
 						{{ form|crispy }}
 						<hr>
-						<input type="submit" class="btn btn-success" value="Zmień" name="Log"/>
+						<input type="submit" class="btn btn-success" style="width:10%;" value="Dodaj" name="Log"/>
 					</form>
 				</div>
+			</div>
 
-				<div class="col mt-1 text-center">
-					<form action="{% url 'reviewDelete' paper.id review.id %}">
-						<input type="submit" class="btn btn-danger" value="Usuń" name="Log"/>
-					</form>
-				</div>
-				</div>
-				<div class="col mt-1 text-center ">
+			<div class="row">
+				<div class="col text-center mt-1">
 					<form action="{% url 'paperList' %}">
-						<input type="submit" class="btn btn-warning" value="Powrót"/>
+						<input type="submit" class="btn btn-warning" style="width:10%;" value="Anuluj"/>
 					</form>
 				</div>
+			</div>
 
-			{% else %}
-				<div class="col">
-					<form method='POST' class="post-form">
-						{% csrf_token %}
-						{{ form|crispy }}
-						<hr>
-						<input type="submit" class="btn btn-success" value="Dodaj" name="Log"/>
-					</form>
-				</div>
 
-				<div class="col mt-1 ">
-					<form action="{% url 'paperList' %}">
-						<input type="submit" class="btn btn-warning" value="Anuluj"/>
-					</form>
-				</div>
+		{% endif%}
 
-			{% endif%}
 
-	</div>
 
 </div>
 
