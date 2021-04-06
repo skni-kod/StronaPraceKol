@@ -1,14 +1,16 @@
 import django_filters
-from .models import Paper, StudentClub
 from django_filters import CharFilter, ModelChoiceFilter
 from django_filters.constants import EMPTY_VALUES
 from django_filters.widgets import CSVWidget
+
+from .models import Paper, StudentClub
 
 
 class MultiValueCharFilter(django_filters.BaseCSVFilter, django_filters.CharFilter):
     """
     Custom filter to accept multiple CharFilter strings provided using CSVWidget
     """
+
     def filter(self, qs, value):
         values = value or []
         queryset = None
@@ -66,15 +68,14 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
 
 
 class PaperFilter(django_filters.FilterSet):
-
     title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł')
     keywords = MultiValueCharFilter(field_name='keywords', label='Słowa kluczowe',
                                     lookup_expr='icontains', widget=CSVWidget, help_text='')
     author_name = MultiValueUserFilter(ref_field='first_name', label='Imiona autorów', widget=CSVWidget, help_text='')
-    author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget, help_text='')
+    author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget,
+                                          help_text='')
     club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(acronym='BRAK'), field_name='club', label='Koło')
 
     class Meta:
         model = Paper
         fields = ['club']
-

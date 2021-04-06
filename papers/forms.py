@@ -1,16 +1,17 @@
-from django import forms
-from .models import *
-from django.utils.translation import ugettext_lazy as _
-from django.forms.models import inlineformset_factory
+import re
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
-from .custom_layout_object import Formset
+from django import forms
+from django.forms.models import inlineformset_factory
+from django.utils.translation import ugettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
-import re
+
+from .custom_layout_object import Formset
+from .models import *
 
 
 class FileUploadForm(forms.ModelForm):
-
     class Meta:
         model = UploadedFile
         fields = ['file']
@@ -38,7 +39,6 @@ UploadedFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUpload
 
 
 class FileAppendForm(forms.ModelForm):
-
     class Meta:
         model = UploadedFile
         fields = ['file']
@@ -62,7 +62,6 @@ class FileAppendForm(forms.ModelForm):
 
 
 class CoAuthorForm(forms.ModelForm):
-
     class Meta:
         model = CoAuthor
         fields = ['name', 'surname', 'email']
@@ -137,8 +136,8 @@ class PaperCreationForm(forms.ModelForm):
                          HTML("<br><div class='row'>"),
                          HTML("<div class='col offset-4'>"),
                          Formset('files', 'papers/upload_files_formset.html')),
-                         HTML("</div>"),
-                         HTML("</div>"),
+                HTML("</div>"),
+                HTML("</div>"),
 
                 HTML("<hr><br>"),
                 ButtonHolder(Submit('submit', 'Dodaj')),
@@ -186,17 +185,16 @@ class PaperEditForm(forms.ModelForm):
                 HTML('</div>'),
                 HTML('<hr>'),
 
-
                 HTML('<div class="row>'),
                 HTML('<div class="col>'),
                 Fieldset('Współautorzy',
-                HTML('</div>'),
-                HTML('</div>'),
+                         HTML('</div>'),
+                         HTML('</div>'),
 
                          HTML("<br>"),
                          HTML('<div class="row offset-1">'),
                          Formset('coAuthors')),
-                         HTML('</div>'),
+                HTML('</div>'),
 
                 HTML("<hr><br>"),
                 ButtonHolder(Submit('submit', 'Zapisz zmiany')),
@@ -208,10 +206,10 @@ class PaperEditForm(forms.ModelForm):
 
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Recenzja', widget=SummernoteWidget())
+
     class Meta:
         model = Review
         fields = ['text']
         labels = {
             'text': _('Recenzja'),
         }
-

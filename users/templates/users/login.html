@@ -2,28 +2,29 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="container" id="login">
-	<div class="col text-center">
+    <div class="container" id="login">
+        <div class="col text-center">
 
-	<h1> Zaloguj się </h1>
-	<hr>
-	
-	<!-- detect which button is clicked -->
+            <h1> Zaloguj się </h1>
+            <hr>
 
-	<form method='POST' class="post-form">
-		{% csrf_token %}
+            <!-- detect which button is clicked -->
 
-		{{ form|crispy }}
+            <form method='POST' class="post-form">
+                {% csrf_token %}
 
-		<input type="submit" class="btn btn-primary btn-block" value="Zaloguj" name="Log"/>
+                {{ form|crispy }}
 
-	</form>
+                <input type="submit" class="btn btn-primary btn-block" value="Zaloguj" name="Log"/>
 
-	<small class="text-muted">
-        <p>Nie masz konta? <a class="ml-2" href="{% url 'register' %}">Zarejestruj się</a></p>
-        <p>Istnieje również możliowść<a class="ml-2" href="{% url 'password_reset' %}">odzyskiwania hasła</a></p>
-	</small>
+            </form>
 
-	 </div>
-</div>
+            <small class="text-muted">
+                <p>Nie masz konta? <a class="ml-2" href="{% url 'register' %}">Zarejestruj się</a></p>
+                <p>Istnieje również możliowść<a class="ml-2" href="{% url 'password_reset' %}">odzyskiwania hasła</a>
+                </p>
+            </small>
+
+        </div>
+    </div>
 {% endblock %}

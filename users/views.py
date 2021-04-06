@@ -1,44 +1,32 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL
 
 # forms
-from .forms import UserRegisterForm, UserLoginForm, UserPasswordChangeForm
-from .forms import UserRegisterForm
-from django.contrib.auth.forms import PasswordResetForm
 from django.contrib import messages
-
 # to use user system
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
-
-# for ListView classes
-from django.views import generic
-
+from django.contrib.auth.forms import PasswordResetForm
+# for login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import BadHeaderError
+from django.core.mail import EmailMultiAlternatives
+from django.db.models.query_utils import Q
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
 from django.views.generic import TemplateView
 
-# for login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
+from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL
+# forms
+from .forms import UserLoginForm, UserPasswordChangeForm
+from .forms import UserRegisterForm
 
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
-from django.contrib import messages
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.models import User
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-from django.core.mail import EmailMultiAlternatives
-from django import template
 
-from django.contrib import messages
+# for ListView classes
 
 
 class IndexView(TemplateView):
@@ -94,9 +82,9 @@ class RegisterView(TemplateView):
                 username = rej.cleaned_data.get('username')
                 messages.success(self.request, f'Konto zostało utworzone dla {username}')
                 return redirect('login')
-        else:
-            rej = UserRegisterForm()
-        return render(request, self.template_name, {'form': rej})
+            else:
+                return render(request, self.template_name, {'form': rej})
+        return render(request, self.template_name, {'form': UserRegisterForm()})
 
 
 class LoginView(auth_views.LoginView):
@@ -231,4 +219,4 @@ def password_reset_request(request):
                 messages.add_message(request, messages.WARNING, 'Nie znaleziono konta powiązanego z podanym adresem')
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password_reset_form.html",
-              context={"form": password_reset_form})
+                  context={"form": password_reset_form})

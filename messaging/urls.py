@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import get_message, send_message, render_message, TestView
 
 urlpatterns = [

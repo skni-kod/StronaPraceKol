@@ -11,7 +11,6 @@
         <hr class="my-4">
 
 
-
         <div class="col-md-12 text-center">
             {% if reviews %}
                 <ul>
@@ -29,7 +28,8 @@
                                 <div class="col mt-3 text-left ml-4">
                                     <h7 style="">Data dodania: {{ review.paper.add_date|date:"d/m/Y G:i" }}</h7>
                                     <br>
-                                    <h7 style="">Data modyfikacji: {{ review.paper.last_edit_date|date:"d/m/Y G:i" }}</h7>
+                                    <h7 style="">Data
+                                        modyfikacji: {{ review.paper.last_edit_date|date:"d/m/Y G:i" }}</h7>
                                 </div>
                             </div>
 
@@ -137,7 +137,8 @@
 
                         {% if page_obj.has_previous %}
                             <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                            <a class="btn btn-outline-info"
+                               href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
                         {% endif %}
 
                         {% for num in page_obj.paginator.page_range %}

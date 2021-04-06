@@ -1,20 +1,22 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+
 
 class UserRegisterForm(UserCreationForm):
     error_messages = {
-        'This password is too common.' : _('To hasło jest często używane'),
+        'This password is too common.': _('Podane hasło jest zbyt często wykorzystywane'),
+        'password_mismatch': "Podane hasła nie są identyczne",
     }
     email = forms.EmailField()
     password1 = forms.CharField(label=_("Hasło"),
                                 widget=forms.PasswordInput,
                                 help_text=_("<ul class='text-left'>"
-                                                "<li>Twoje hasło nie może być podobne do twoich innych informacji personalnych</li>"
-                                                "<li>Twoje hasło musi zawierać przynajmniej 8 znaków</li>"
-                                                "<li>Twoje hasło nie może być często używanym hasłem</li>"
-                                                "<li>Twoje hasło nie może składać się tylko z cyfr</li>"
+                                            "<li>Hasło nie może być skojarzone z danymi personalnymi</li>"
+                                            "<li>Hasło musi zawierać przynajmniej 8 znaków</li>"
+                                            "<li>Hasło nie może być często używanym hasłem</li>"
+                                            "<li>Hasło nie może składać się tylko z cyfr</li>"
                                             "</ul>"
                                             ),
                                 )
@@ -29,7 +31,6 @@ class UserRegisterForm(UserCreationForm):
         # there's a `fields` property now
         for field in self.Meta.required:
             self.fields[field].required = True
-
 
     class Meta:
         model = User
@@ -49,16 +50,13 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(label=_('Login'),max_length=254)
+    username = forms.CharField(label=_('Login'), max_length=254)
     password = forms.CharField(label=_("Hasło"), widget=forms.PasswordInput)
 
 
-
-
 class UserPasswordChangeForm(PasswordChangeForm):
-
     old_password = forms.CharField(label=_("Stare hasło"),
-                                    widget=forms.PasswordInput)
+                                   widget=forms.PasswordInput)
 
     new_password1 = forms.CharField(label=_("Nowe hasło"),
                                     widget=forms.PasswordInput,

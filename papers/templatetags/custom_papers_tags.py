@@ -1,7 +1,5 @@
 from django import template
-from django.contrib.auth.models import User, Group
-from papers.models import Paper
-
+from django.contrib.auth.models import Group
 
 register = template.Library()
 
@@ -68,4 +66,3 @@ def slice_page(path):
         return path[:-(len(path) - index)]
     else:
         return path
-

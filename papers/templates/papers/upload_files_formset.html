@@ -2,12 +2,11 @@
 {% load static %}
 
 
-
 {{ formset.management_form|crispy }}
 {% for form in formset.forms %}
-  {% for hidden in form.hidden_fields %}
-    {{ hidden|as_crispy_field }}
-  {% endfor %}
-  {% crispy form %}
+    {% for hidden in form.hidden_fields %}
+        {{ hidden|as_crispy_field }}
+    {% endfor %}
+    {% crispy form %}
 {% endfor %}
 

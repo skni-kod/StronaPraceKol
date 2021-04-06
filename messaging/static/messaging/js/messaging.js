@@ -23,7 +23,7 @@ function SendMessage() {
 
 
 function GetMessage() {
-    if(CanGetMessage == false)
+    if (CanGetMessage == false)
         return;
 
     CanGetMessage = false;
@@ -64,7 +64,7 @@ function RenderMessages() {
         $("#messages_box").append(tmpStr);
     });
 
-     if (MessagesArray.length > 0 && scroll == true) {
+    if (MessagesArray.length > 0 && scroll == true) {
         scrollSmoothToBottom('messages_box');
     }
     MessagesArray = [];
@@ -72,9 +72,9 @@ function RenderMessages() {
 
 function scrollSmoothToBottom(id) {
     let div = document.getElementById(id);
-     $('#' + id).animate({
-         scrollTop: div.scrollHeight - div.clientHeight
-     }, 350);
+    $('#' + id).animate({
+        scrollTop: div.scrollHeight - div.clientHeight
+    }, 350);
 }
 
 $().ready(function () {

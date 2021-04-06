@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import StudentClub, Paper, CoAuthor, UploadedFile, Review, Announcement
 
+from .models import StudentClub, Paper, CoAuthor, UploadedFile, Review, Announcement
 
 admin.site.register(StudentClub)
 admin.site.register(Paper)

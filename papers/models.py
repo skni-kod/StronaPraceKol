@@ -1,8 +1,9 @@
-from django.db import models
-from django.utils import timezone
-from django.contrib.auth.models import User
-from django.db.models.signals import pre_delete
 import os
+
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import pre_delete
+from django.utils import timezone
 
 
 class StudentClub(models.Model):
@@ -21,7 +22,8 @@ class StudentClub(models.Model):
 
 class Paper(models.Model):
     title = models.CharField(max_length=128)
-    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)  # set default on delete
+    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk,
+                             on_delete=models.SET_DEFAULT)  # set default on delete
     authors = models.ManyToManyField(User, blank=True)
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=64)

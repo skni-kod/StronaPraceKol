@@ -1,72 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
-<!--<div class="jumbotron text-center">-->
+    <!--<div class="jumbotron text-center">-->
 
-<div class="container text-center">
-    <div class="row">
-        <div class="col offset">
-            <h4>Informacje o użytkowniku</h4></p>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col offset">
+                <h4>Informacje o użytkowniku</h4></p>
+            </div>
+        </div>
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col text-right">
+                <h5>Login:</h5>
+            </div>
+
+            <div class="col text-left">
+                <p> {{ user.username }} </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right">
+                <h5>Imie:</h5>
+            </div>
+
+            <div class="col text-left">
+                <p> {{ user.first_name }} </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right">
+                <h5>Nazwisko:</h5>
+            </div>
+
+            <div class="col text-left">
+                <p> {{ user.last_name }} </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right">
+                <h5>Email:</h5>
+            </div>
+
+            <div class="col text-left">
+                <p> {{ user.email }} </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <form action="{% url 'passwordChange' %}">
+                    <input type="submit" class="btn btn-link" value="Zmien hasło"/>
+                </form>
+            </div>
+
+            <div class="col">
+                <form action="{% url 'accountDelete' %}">
+                    <input type="submit" class="btn btn-link text-danger" value="Usun konto"/>
+                </form>
+            </div>
+
+
         </div>
     </div>
-    <hr class="my-4">
-
-    <div class="row" >
-        <div class="col text-right">
-            <h5>Login:</h5>
-        </div>
-
-        <div class="col text-left">
-            <p> {{user.username}} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col text-right">
-            <h5>Imie:</h5>
-        </div>
-
-        <div class="col text-left">
-            <p> {{user.first_name}} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col text-right">
-            <h5>Nazwisko:</h5>
-        </div>
-
-        <div class="col text-left">
-            <p> {{user.last_name}} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col text-right">
-            <h5>Email:</h5>
-        </div>
-
-        <div class="col text-left">
-            <p> {{user.email}} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <form action="{% url 'passwordChange' %}">
-                <input type="submit" class="btn btn-link" value="Zmien hasło"/>
-             </form>
-         </div>
-
-        <div class="col">
-            <form action="{% url 'accountDelete' %}">
-                <input type="submit" class="btn btn-link text-danger" value="Usun konto"/>
-             </form>
-        </div>
-
-
-
-    </div>
-</div>
 
 
 

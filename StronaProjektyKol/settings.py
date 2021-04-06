@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,7 +130,6 @@ STATICFILES_DIRS = [
 # for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-
 # for decorators (login_required) which require user to be logged, it's redirect to login
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -151,7 +150,6 @@ EMAIL_USE_SSL = False
 SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
 SITE_DOMAIN = 'localhost'
 SITE_ADMIN_MAIL = 'admin@pracekol.pl'
-
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'

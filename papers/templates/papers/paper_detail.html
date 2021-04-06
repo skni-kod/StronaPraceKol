@@ -26,22 +26,22 @@
         </div>
 
         <div class="col text-left">
-                <ul>
-						{% for author in paper.authors.all %}
-							<li>
-								<div class="row ml-1">
-								{{ author.first_name }} {{ author.last_name }}
-								</div>
-							</li>
-						{% endfor %}
-						{% for author in paper.coauthor_set.all %}
-							<li>
-								<div class="row ml-1">
-								{{ author.name }} {{ author.surname }}
-								</div>
-							</li>
-						{% endfor %}
-					</ul>
+            <ul>
+                {% for author in paper.authors.all %}
+                    <li>
+                        <div class="row ml-1">
+                            {{ author.first_name }} {{ author.last_name }}
+                        </div>
+                    </li>
+                {% endfor %}
+                {% for author in paper.coauthor_set.all %}
+                    <li>
+                        <div class="row ml-1">
+                            {{ author.name }} {{ author.surname }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 
@@ -52,20 +52,20 @@
 
         <div class="col text-left">
 
-                {% if paper.review_set.all.count == 0 %}
-                    <span class="text-danger">Brak recenzji</span>
-                {% else %}
-                    <ul>
-						{% for review in paper.review_set.all %}
-							<li>
-								<div class="row ml-1">
-								{{ review.author.first_name }} {{ review.author.last_name }}
-								</div>
-							</li>
-						{% endfor %}
-					</ul>
+            {% if paper.review_set.all.count == 0 %}
+                <span class="text-danger">Brak recenzji</span>
+            {% else %}
+                <ul>
+                    {% for review in paper.review_set.all %}
+                        <li>
+                            <div class="row ml-1">
+                                {{ review.author.first_name }} {{ review.author.last_name }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
 
-                {% endif %}
+            {% endif %}
 
 
         </div>
@@ -89,20 +89,20 @@
 
         <div class="col text-left">
             {% if paper.approved == True %}
-            <p class="text-success"> Gotowy </p>
+                <p class="text-success"> Gotowy </p>
             {% else %}
-            <p style="color:#ccb910;"> W przygotowaniu </p>
+                <p style="color:#ccb910;"> W przygotowaniu </p>
             {% endif %}
         </div>
     </div>
 
-     <div class="row">
+    <div class="row">
         <div class="col text-right">
             <h5>Koło:&ensp; </h5>
         </div>
 
         <div class="col text-left">
-            <p> {{paper.club}} </p>
+            <p> {{ paper.club }} </p>
         </div>
     </div>
 
@@ -113,17 +113,17 @@
 
         <div class="col text-left">
 
-                {% if paper.uploadedfile_set.all.count == 0 %}
-                    <span class="text-danger">Brak plików</span>
-                {% else %}
-                    <ul>
-                        {% for file in paper.uploadedfile_set.all %}
+            {% if paper.uploadedfile_set.all.count == 0 %}
+                <span class="text-danger">Brak plików</span>
+            {% else %}
+                <ul>
+                    {% for file in paper.uploadedfile_set.all %}
                         <li>
                             <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
                         </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
         </div>
     </div>
@@ -144,7 +144,7 @@
         </div>
 
         <div class="col text-left">
-            <p> {{paper.add_date|date:"d/m/Y G:i" }} </p>
+            <p> {{ paper.add_date|date:"d/m/Y G:i" }} </p>
         </div>
     </div>
 
@@ -154,7 +154,7 @@
         </div>
 
         <div class="col text-left">
-            <p> {{paper.last_edit_date|date:"d/m/Y G:i" }} </p>
+            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
         </div>
     </div>
 
@@ -169,7 +169,7 @@
     <div class="jambotron text-center w-50 offset-3 ">
         <hr>
         <!--{{referat.description|safe}} to show formated description-->
-        {{paper.description|safe}}
+        {{ paper.description|safe }}
         <hr>
     </div>
 
@@ -178,14 +178,14 @@
 
             <div class="col text-right">
 
-                 <a class="btn btn-link" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
+                <a class="btn btn-link" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
             </div>
-    {% if user.pk == paper.original_author_id %}
-            <div class="col text-left">
+            {% if user.pk == paper.original_author_id %}
+                <div class="col text-left">
 
-                <a class="btn btn-link text-danger" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
-            </div>
-    {% endif %}
+                    <a class="btn btn-link text-danger" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
+                </div>
+            {% endif %}
         </div>
     {% endif %}
 
@@ -195,34 +195,34 @@
         <div class="row mb-2">
             <div class="col text-center">
                 <form action="{% url 'reviewList' paper.id %}">
-                <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>
+                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>
                 </form>
             </div>
         </div>
     {% endif %}
 
 
-    {% if user|is_in_group:'reviewer' and user not in paper.authors.all%}
+    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
         <div class="row">
             <div class="col text-center">
                 {% if user|already_reviewed:paper %} <!-- for Mateusz, if reviewer already add review -->
-                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper  %}">
-                    <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>
+                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
+                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>
                     </form>
                 {% else %}
                     <form action="{% url 'reviewCreate' paper.id %}">
-                    <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
+                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
                     </form>
                 {% endif %}
             </div>
         </div>
     {% endif %}
     <div class="row mb-2">
-            <div class="col text-center mt-2">
-                <form action="{% url 'paperList' %}">
+        <div class="col text-center mt-2">
+            <form action="{% url 'paperList' %}">
                 <input type="submit" class="btn btn-secondary w-25 h-100" value="Powrót"/>
-                </form>
-            </div>
+            </form>
+        </div>
     </div>
 
 

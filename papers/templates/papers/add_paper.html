@@ -1,39 +1,39 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container my-3">
+    <div class="container my-3">
 
-	<div class="row text-center">
-		<div class="col">
-			<h2>Nowy referat</h2>
-			<hr>
-		</div>
-	</div>
+        <div class="row text-center">
+            <div class="col">
+                <h2>Nowy referat</h2>
+                <hr>
+            </div>
+        </div>
 
-	<div class="row text-center">
-		<div class="col">
-			<form method="POST" class="post-form" enctype="multipart/form-data">
-				<div class="container">
-					<div class="card">
-						<div class="card-body">
-							 {% crispy form %}
-						</div>
-					</div>
-				</div>
-			</form>
+        <div class="row text-center">
+            <div class="col">
+                <form method="POST" class="post-form" enctype="multipart/form-data">
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                {% crispy form %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-			<form action="{% url 'paperList' %}">
-				<div class="container text-center">
-					<div class="card">
-						<div class="card-body">
-							 <input type="submit" class="btn btn-warning" value="Anuluj"/>
-						</div>
-					</div>
-				</div>
-			</form>
+                <form action="{% url 'paperList' %}">
+                    <div class="container text-center">
+                        <div class="card">
+                            <div class="card-body">
+                                <input type="submit" class="btn btn-warning" value="Anuluj"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

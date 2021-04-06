@@ -1,12 +1,12 @@
-from django.urls import path
-from . import views
 from django.contrib.auth import views as pass_reset_view
+from django.urls import path
 
+from . import views
 
 urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
-    path('login/',views.LoginView.as_view(), name='login'),
-    path('logout/',views.LogoutView.as_view(), name='logout'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('password_change/', views.PasswordChangeView.as_view(), name='passwordChange'),
     path('account_delete/', views.AccountDeleteView.as_view(), name='accountDelete'),
