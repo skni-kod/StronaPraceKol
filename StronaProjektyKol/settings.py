@@ -150,6 +150,7 @@ EMAIL_USE_SSL = False
 SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
 SITE_DOMAIN = 'localhost'
 SITE_ADMIN_MAIL = 'admin@pracekol.pl'
+SITE_ADMIN_PHONE = '123456789'
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'

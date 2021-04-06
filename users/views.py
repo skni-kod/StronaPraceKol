@@ -1,5 +1,3 @@
-from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL
-
 # forms
 from django.contrib import messages
 # to use user system
@@ -14,19 +12,16 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
 from django.views.generic import TemplateView
+from django.template import loader
 
-from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL
+from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
 # forms
 from .forms import UserLoginForm, UserPasswordChangeForm
 from .forms import UserRegisterForm
-
-
-# for ListView classes
 
 
 class IndexView(TemplateView):
@@ -36,13 +31,13 @@ class IndexView(TemplateView):
         # Call the base implementation first to get the context
         context = super(IndexView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'index'
+        context['site_name'] = 'index'
+        context['site_title'] = f'Strona główna - {SITE_NAME}'
         return context
 
 
 #
 # before log-in
-#
 #
 
 class ContactView(TemplateView):
@@ -52,7 +47,10 @@ class ContactView(TemplateView):
         # Call the base implementation first to get the context
         context = super(ContactView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'kontakt'
+        context['site_name'] = 'contact'
+        context['site_title'] = f'Kontakt - {SITE_NAME}'
+        context['admin_mail'] = SITE_ADMIN_MAIL
+        context['admin_phone'] = SITE_ADMIN_PHONE
         return context
 
 
@@ -60,13 +58,14 @@ class RegisterView(TemplateView):
     template_name = 'users/register.html'
 
     def get(self, request, *args, **kwargs):
-        rej = UserRegisterForm()
+        form = UserRegisterForm()
         # Call the base implementation first to get the context
         context = super(RegisterView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context = {
-            'form': rej,
-            'title': 'rejestracja',
+            'form': form,
+            'site_name': 'register',
+            'site_title': f'Rejestracja - {SITE_NAME}'
         }
         # Check if user is already logged
         if (self.request.user.is_authenticated):
@@ -76,14 +75,14 @@ class RegisterView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST':
-            rej = UserRegisterForm(self.request.POST)
-            if rej.is_valid():
-                rej.save()
-                username = rej.cleaned_data.get('username')
+            form = UserRegisterForm(self.request.POST)
+            if form.is_valid():
+                form.save()
+                username = form.cleaned_data.get('username')
                 messages.success(self.request, f'Konto zostało utworzone dla {username}')
                 return redirect('login')
             else:
-                return render(request, self.template_name, {'form': rej})
+                return render(request, self.template_name, {'form': form})
         return render(request, self.template_name, {'form': UserRegisterForm()})
 
 
@@ -92,14 +91,15 @@ class LoginView(auth_views.LoginView):
 
     def get(self, request, *args, **kwargs):
         # Check if user is already logged
-        if (self.request.user.is_authenticated):
+        if self.request.user.is_authenticated:
             form = UserLoginForm()
             return redirect('index')
         else:
             form = UserLoginForm()
             context = {
                 'form': form,
-                'title': 'logowanie',
+                'site_name': 'login',
+                'site_title': 'Logowanie - ' + SITE_NAME
             }
             return render(request, self.template_name, context)
 
@@ -117,14 +117,13 @@ class LogoutView(auth_views.LogoutView):
         # Call the base implementation first to get the context
         context = super(LogoutView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'wylogowany'
+        context['site_name'] = 'logout'
+        context['site_title'] = 'Wylogowano - ' + SITE_NAME
         return context
-
-    pass
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    login_url = 'login'  # if user isn't logged, when redirect
+    login_url = 'login'  # if user isn't logged, then redirect
     # redirect_field_name = 'login' # if user isn't logged, when redirect
 
     template_name = 'users/profile.html'
@@ -133,7 +132,8 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         # Call the base implementation first to get the context
         context = super(ProfileView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'profil'
+        context['site_name'] = 'profile'
+        context['site_title'] = 'Ustawienia konta - ' + SITE_NAME
         return context
 
 
@@ -142,26 +142,27 @@ class PasswordChangeView(LoginRequiredMixin, TemplateView):
     template_name = 'users/passwordChange.html'
 
     def get(self, request, *args, **kwargs):
-        password_change = UserPasswordChangeForm(self.request.user)
+        form = UserPasswordChangeForm(self.request.user)
         # Call the base implementation first to get the context
         context = super(PasswordChangeView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context = {
-            'form': password_change,
-            'title': 'zmiana hasła',
+            'form': form,
+            'site_name': 'password_change',
+            'site_title': f'Zmiana hasła - {SITE_NAME}'
         }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         if self.request.method == 'POST':
-            password_change = UserPasswordChangeForm(self.request.user, self.request.POST)
-            if password_change.is_valid():
-                password_change.save()
+            form = UserPasswordChangeForm(self.request.user, self.request.POST)
+            if form.is_valid():
+                form.save()
                 messages.success(self.request, f'Hasło zostało zmienione')
                 return redirect('profile')
         else:
-            password_change = UserPasswordChangeForm(self.request.user)
-        return render(request, self.template_name, {'form': password_change})
+            form = UserPasswordChangeForm(self.request.user)
+        return render(request, self.template_name, {'form': form})
 
 
 class AccountDeleteView(LoginRequiredMixin, TemplateView):
@@ -173,7 +174,8 @@ class AccountDeleteView(LoginRequiredMixin, TemplateView):
         # Call the base implementation first to get the context
         context = super(AccountDeleteView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
-        context['title'] = 'usuwanie konta'
+        context['site_name'] = 'account_delete'
+        context['site_title'] = f'Usuwanie konta - {SITE_NAME}'
         return context
 
     def post(self, request, *args, **kwargs):
@@ -193,9 +195,9 @@ def password_reset_request(request):
             associated_users = User.objects.filter(Q(email=data))
             if associated_users.exists():
                 user = associated_users.first()
-                subject = "Prace Kół Naukowych - Odzyskiwanie hasła"
-                plaintext = template.loader.get_template('registration/password_reset_email.txt')
-                htmltemp = template.loader.get_template('registration/password_reset_email.html')
+                subject = f'Odzyskiwanie hasła - {SITE_NAME}'
+                plaintext = loader.get_template('registration/password_reset_email.txt')
+                htmltemp = loader.get_template('registration/password_reset_email.html')
                 c = {
                     "email": user.email,
                     'domain': SITE_DOMAIN,
@@ -216,7 +218,7 @@ def password_reset_request(request):
                     return HttpResponse('Invalid header found.')
                 return redirect('password_reset_done')
             else:
-                messages.add_message(request, messages.WARNING, 'Nie znaleziono konta powiązanego z podanym adresem')
+                messages.add_message(request, messages.WARNING, 'Nie znaleziono konta powiązanego z podanym adresem email')
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password_reset_form.html",
                   context={"form": password_reset_form})

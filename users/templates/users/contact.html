@@ -2,25 +2,28 @@
 
 {% block content %}
 
-    <div class="row text-center">
-        <div class="col">
-            <h1> Kontakt </h1>
-            <hr class="my-4">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="row">
+                <h1>Kontakt</h1>
+            </div>
         </div>
+        <div class="col-md-3"></div>
     </div>
+
+    <hr class="my-1">
 
     <div class="row">
-        <div class="col">
-            Tel: <p style="display:inline;color:grey;">00000000000</p>
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <div class="row">
+            <p>Telefon: {{ admin_phone }}</p>
+        </div>
+        <div class="row">
+            <p>Email: {{ admin_mail }}</p>
         </div>
     </div>
-
     <br>
-
-    <div class="row">
-        <div class="col">
-            Email: <p style="display:inline;color:grey;">anonim@gmail.com</p>
-        </div>
-    </div>
 
 {% endblock %}

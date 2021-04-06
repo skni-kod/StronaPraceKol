@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="container my-3" style="width:50%;">
-        <div class="col-md-12 text-center">
-            <h1> Zarejestruj się </h1>
+    <div class="container my-3 row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1> Rejestracja nowego konta </h1>
             <hr>
-
 
             <form method='POST' class="post-form">
                 {% csrf_token %}
@@ -14,14 +14,15 @@
                 <div class="text-center w-50 offset-3">
                     <input type="submit" class="btn btn-primary btn-block" value="Zarejestruj" name="Log"/>
                 </div>
-
             </form>
 
-            <small class="text-muted">
-                Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>
+            <br>
+
+            <small class="text-muted text-center ">
+                Powrót do <a href="{% url 'login' %}">strony logowania</a>
             </small>
 
+            <div class="col-md-3"></div>
         </div>
-
     </div>
 {% endblock %}

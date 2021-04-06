@@ -7,23 +7,22 @@ from django.utils.translation import ugettext_lazy as _
 class UserRegisterForm(UserCreationForm):
     error_messages = {
         'This password is too common.': _('Podane hasło jest zbyt często wykorzystywane'),
-        'password_mismatch': "Podane hasła nie są identyczne",
+        'password_mismatch': _('Podane hasła nie są identyczne'),
     }
     email = forms.EmailField()
     password1 = forms.CharField(label=_("Hasło"),
                                 widget=forms.PasswordInput,
                                 help_text=_("<ul class='text-left'>"
-                                            "<li>Hasło nie może być skojarzone z danymi personalnymi</li>"
-                                            "<li>Hasło musi zawierać przynajmniej 8 znaków</li>"
-                                            "<li>Hasło nie może być często używanym hasłem</li>"
-                                            "<li>Hasło nie może składać się tylko z cyfr</li>"
-                                            "</ul>"
+                                            "<li>Hasło musi zawierać conajmniej 8 znaków</li>"
+                                                "<li>Hasło musi być oryginalne</li>"
+                                                "<li>Hasło nie może być skojarzone z pozostałymi danymi</li>"
+                                                "<li>Hasło nie może składać się tylko z cyfr</li>"
+                                                "</ul>"
                                             ),
                                 )
 
     password2 = forms.CharField(label=_("Powtórz hasło"),
-                                widget=forms.PasswordInput,
-                                help_text=_("Wpisz takie sałe hasło jak wyżej, dla weryfikacji."))
+                                widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -34,18 +33,19 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        help_texts = {'username': _('Wymagane. 150 znaków lub mniej. Litery, cyfry i @/./+/-/_ tylko.')}
+        help_texts = {'username': _('Maksymalnie 150 znaków, dopuszczone znaki: litery, cyfry oraz @/./+/-/_')}
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
         labels = {
-            'first_name': _('Imie'),
+            'first_name': _('Imię'),
             'last_name': _('Nazwisko'),
             'username': _('Login'),
-            'email': _('Email'),
+            'email': _('Adres email'),
         }
 
         required = (
             'first_name',
             'last_name',
+            'username'
         )
 
 
@@ -61,10 +61,10 @@ class UserPasswordChangeForm(PasswordChangeForm):
     new_password1 = forms.CharField(label=_("Nowe hasło"),
                                     widget=forms.PasswordInput,
                                     help_text=_("<ul class='text-left'>"
-                                                "<li>Twoje hasło nie może być podobne do twoich innych informacji personalnych</li>"
-                                                "<li>Twoje hasło musi zawierać przynajmniej 8 znaków</li>"
-                                                "<li>Twoje hasło nie może być często używanym hasłem</li>"
-                                                "<li>Twoje hasło nie może składać się tylko z cyfr</li>"
+                                                "<li>Hasło musi zawierać conajmniej 8 znaków</li>"
+                                                "<li>Hasło musi być oryginalne</li>"
+                                                "<li>Hasło nie może być skojarzone z pozostałymi danymi</li>"
+                                                "<li>Hasło nie może składać się tylko z cyfr</li>"
                                                 "</ul>"
                                                 ),
                                     )
