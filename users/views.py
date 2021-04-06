@@ -12,11 +12,11 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template import loader
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
 from django.views.generic import TemplateView
-from django.template import loader
 
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
 # forms
@@ -218,7 +218,8 @@ def password_reset_request(request):
                     return HttpResponse('Invalid header found.')
                 return redirect('password_reset_done')
             else:
-                messages.add_message(request, messages.WARNING, 'Nie znaleziono konta powiązanego z podanym adresem email')
+                messages.add_message(request, messages.WARNING,
+                                     'Nie znaleziono konta powiązanego z podanym adresem email')
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password_reset_form.html",
                   context={"form": password_reset_form})

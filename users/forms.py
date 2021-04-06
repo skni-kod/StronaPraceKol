@@ -14,10 +14,10 @@ class UserRegisterForm(UserCreationForm):
                                 widget=forms.PasswordInput,
                                 help_text=_("<ul class='text-left'>"
                                             "<li>Hasło musi zawierać conajmniej 8 znaków</li>"
-                                                "<li>Hasło musi być oryginalne</li>"
-                                                "<li>Hasło nie może być skojarzone z pozostałymi danymi</li>"
-                                                "<li>Hasło nie może składać się tylko z cyfr</li>"
-                                                "</ul>"
+                                            "<li>Hasło musi być oryginalne</li>"
+                                            "<li>Hasło nie może być skojarzone z pozostałymi danymi</li>"
+                                            "<li>Hasło nie może składać się tylko z cyfr</li>"
+                                            "</ul>"
                                             ),
                                 )
 

@@ -1,5 +1,3 @@
-import os
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -7,7 +5,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .filters import PaperFilter
