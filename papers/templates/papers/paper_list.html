@@ -6,177 +6,271 @@
     <div class="container">
 
         <div class="text-center">
-            {% if user|is_in_group:'reviewer' %}
-                <h2> Wszystkie referaty do Prac Kół Naukowych </h2>
-            {% else %}
-                <h2> Przesłane referaty do Prac Kół Naukowych </h2>
-            {% endif %}
+            {#            {% if user|is_in_group:'reviewer' %}#}
+            {#                <h2> Wszystkie referaty do Prac Kół Naukowych </h2>#}
+            {#            {% else %}#}
+            <h2>Przesłane referaty</h2>
         </div>
-        <hr class="my-4">
+
+        <hr class="my-1">
 
         <form method="get">
+            {% csrf_token %}
+
+            {{ filter.form.non_field_errors }}
+
+            {% for hidden_field in filter.form.hidden_fields %}
+                {{ hidden_field.errors }}
+                {{ hidden_field }}
+            {% endfor %}
+
             <div class="row">
-                {% crispy filter.form %}
-                <a class="pl-4 pt-4">
-                    <input class="btn btn-primary" type="submit" value="Wyszukaj"></input>
-                </a>
+                {% with field=filter.form.title %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.keywords %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.value|length > 0 %}value="
+                                           {% for itm in field.value %}{{ itm }},{% endfor %}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.author_name %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.author_surname %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.club %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endwith %}
+
+
+                <div class="col-md-6 text-center">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Znaleziono: </label>
+                        </div>
+                        <div class="form-control">
+                            <label>{{ papers|length }}</label>
+                        </div>
+                        <div class="input-group-append">
+                            <label class="input-group-text px-2">pozycji</label>
+                            <a href="{% url 'paperList' %}">
+                                <button type="button" class="btn btn-warning">Wyczyść</button>
+                            </a>
+                            <input class="btn btn-primary" type="submit" value="Wyszukaj">
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </form>
 
-
-        <div class="row text-right">
-            <div class="col text-left" style="font-size:13px;">
-                <span class="text-secondary"> ( Słowa kluczowe podawaj z przecinkami ) </span>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a href="{% url 'paperCreate' %}">
+                    <button type="button" class="btn btn-success">Dodaj referat</button>
+                </a>
             </div>
-
-            <div class="col">
-                <a href="{% url 'paperList' %}"><input class="btn btn-warning" type="submit"
-                                                       value="Wyczyść"></input></a>
-            </div>
-
-
         </div>
-
 
         <div class="row">
-            <div class="col text-center">
-                <hr>
-                <form action="{% url 'paperCreate' %}">
-                    <input type="submit" class="btn btn-success w-25" value="Dodaj referat" name="New Paper"/>
-                </form>
-                <hr>
-            </div>
-        </div>
-
-
-        <div class="col-md-12 text-center">
-            {% if papers %}
-                <ul>
-                    <br id="info_list">
-
+            <div class="col-md-12">
+                {% if papers %}
                     {% for paper in papers %}
-                        <li style="list-style-type:none;border-style:solid;border-color:#2cd3db;">
-
-                            <div class="row mt-0">
-                                <div class="col text-left">
-                                    <a class="nav-link" style="font-size:25px;"
-                                       href="{% url 'paperDetail' paper.id %}">{{ paper.title }}</a>
+                        <div class="m-4 p-3 border border-primary rounded">
+                            <div class="row">
+                                <div class="col-md-7 text-left">
+                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}">
+                                        <h3><span class="badge badge-primary">{{ paper.title }}</span></h3>
+                                    </a>
                                 </div>
 
-                                <div class="col mt-3 text-left ml-4">
-                                    <h7 style="">Data dodania: {{ paper.add_date|date:"d/m/Y G:i" }}</h7>
+                                <div class="col-md-4 text-left">
+                                    <label>Data dodania: {{ paper.add_date|date:"d.m.Y G:i" }}</label>
                                     <br>
-                                    <h7 style="">Data modyfikacji: {{ paper.last_edit_date|date:"d/m/Y G:i" }}</h7>
+                                    <label>Data modyfikacji: {{ paper.last_edit_date|date:"d.m.Y G:i" }}</label>
                                 </div>
                             </div>
 
-                            <hr style="background-color:#2cd3db;">
-
-                            <div class="row text-left ml-1">
-                                <div class="col text-left">
-                                    <h5>Autorzy:</h5>
-                                </div>
-                            </div>
-
-                            <ul>
-                                {% for author in paper.authors.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ author.first_name }} {{ author.last_name }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                                {% for author in paper.coauthor_set.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ author.name }} {{ author.surname }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <br>
-
-                            <div class="row text-left ml-1">
-                                <div class="col">
-                                    <h5>Recenzenci: </h5>
-                                </div>
-                            </div>
-
-                            <ul>
-                                {% for review in paper.review_set.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ review.author.first_name }} {{ review.author.last_name }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <br>
+                            <hr class="paper_hr">
 
                             <div class="row">
-                                <div class="col text-left ml-3">
-                                    <h6>Słowa kluczowe: </h6>
-                                    {{ paper.keywords }}
+                                <div class="col-md-6 my-2">
+                                    <h4>Autorzy:</h4>
+                                    <ul>
+                                        {% for author in paper.authors.all %}
+                                            <li>
+                                                <div class="row ml-1">
+                                                    {{ author.first_name }} {{ author.last_name }}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                        {% for author in paper.coauthor_set.all %}
+                                            <li>
+                                                <div class="row ml-1">
+                                                    {{ author.name }} {{ author.surname }}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
-                            </div>
-                            <br>
 
-                            <div class="row">
-                                <div class="col text-left ml-3">
+                                <div class="col-md-6 my-2">
+                                    <h4>Recenzenci:</h4>
+                                    {% if paper.review_set|length == 0 %}
+                                        brak
+                                    {% endif %}
+                                    <ul>
+                                        {% for review in paper.review_set.all %}
+                                            <li>
+                                                <div class="row ml-1">
+                                                    {{ review.author.first_name }} {{ review.author.last_name }}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-6 my-2">
+                                    <h4>Słowa kluczowe: </h4>
+                                    <span class="text-muted">{{ paper.keywords }}</span>
+                                </div>
+
+                                <div class="col-md-6 my-2">
+                                    <h4>Status: </h4>
                                     {% if paper.approved == True %}
-                                        <p class="text-success"> Gotowy </p>
+                                        <span class="text-success">Gotowy</span>
                                     {% else %}
-                                        <p style="color:#ccb910;"> W przygotowaniu </p>
+                                        <span class="text-warning">W przygotowaniu</span>
                                     {% endif %}
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col text-left ml-3">
-                                    <p>Liczba przesłanych plików:
-                                        {{ paper.uploadedfile_set.all.count }}
-                                    </p>
+                                <div class="col-md-6 my-2">
+                                    <h4>Przesłane pliki:</h4>
+                                    {% if paper.uploadedfile_set.all|length == 0 %}
+                                        brak
+                                    {% endif %}
+                                    <ul>
+                                        {% for itm in paper.uploadedfile_set.all %}
+                                            <li>
+                                                <div class="row ml-1">
+                                                    {{ itm.filename }}
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
 
-                                {% if user|is_in_group:'reviewer' %}
-                                    <div class="col text-right mb-2">
-                                        <form action="{% url 'reviewList' paper.id %}">
-                                            <!-- for Mateusz, enable this button if review exists xD , using {{diable}} or {{enable}} passed by contex -->
-                                            <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
-                                                   value="Recenzje" enable/>
+                                <div class="col-md-6 my-2">
+                                    <h4>Liczba nowych wiadomości: TODO </h4>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="row">
+                            {% if user|is_in_group:'reviewer' %}
+                                <div class="col text-right mb-2">
+                                    <form action="{% url 'reviewList' paper.id %}">
+                                        <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
+                                               value="Recenzje" enable/>
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="row">
+
+                            {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
+                                <div class="col text-right mb-2">
+                                    {% if user|already_reviewed:paper %}
+                                        <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
+                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                   value="Twoja recenzja"/>
                                         </form>
-                                    </div>
-                                {% endif %}
 
-                            </div>
-
-                            <div class="row">
-                                <div class="col text-left ml-3">
-                                    <p style="">Liczba nowych wiadomości: TODO </p>
+                                    {% else %}
+                                        <form action="{% url 'reviewCreate' paper.id %}">
+                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                   value="Dodaj recenzję"/>
+                                        </form>
+                                    {% endif %}
                                 </div>
+                            {% endif %}
 
-                                {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
-                                    <div class="col text-right mb-2">
-                                        {% if user|already_reviewed:paper %}
-                                            <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
-                                                <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                       value="Twoja recenzja"/>
-                                            </form>
+                        </div>
 
-                                        {% else %}
-                                            <form action="{% url 'reviewCreate' paper.id %}">
-                                                <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                       value="Dodaj recenzję"/>
-                                            </form>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-
-                            </div>
-
-
-                        </li>
-                        <br></br>
+                        </div>
+                        <br>
                     {% endfor %}
 
                     {% with request.get_full_path as querystring %}
@@ -253,14 +347,13 @@
                         {% endif %}
                     {% endwith %}
 
-
-                </ul>
-            {% else %}
-                <p> Brak przesłanych referatów </p>
-            {% endif %}
+                {% else %}
+                    <p> Brak przesłanych referatów </p>
+                {% endif %}
             <br>
-        </div>
 
+        </div>
+    </div>
 
     </div>
 {% endblock %}

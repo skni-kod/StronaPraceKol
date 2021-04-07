@@ -144,7 +144,7 @@ class PaperCreationForm(forms.ModelForm):
                 HTML("<br>"),
             )
         )
-        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='BRAK')
+        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
 
 
 class PaperEditForm(forms.ModelForm):
@@ -201,7 +201,7 @@ class PaperEditForm(forms.ModelForm):
                 HTML("<br><br>"),
             )
         )
-        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='BRAK')
+        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
 
 
 class ReviewCreationForm(forms.ModelForm):

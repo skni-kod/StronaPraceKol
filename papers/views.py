@@ -9,21 +9,26 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .filters import PaperFilter
 from .forms import *
-
+from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
+from pprint import pprint
 
 class PaperListView(LoginRequiredMixin, ListView):
-    login_url = 'login'
     model = Paper
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
     ordering = ['-last_edit_date']
+    model = Paper
 
     def get_context_data(self, **kwargs):
 
         context = super(PaperListView, self).get_context_data(**kwargs)
-        context['title'] = 'referaty'
+        context['site_name'] = 'papers'
+        context['site_title'] = f'Referaty - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
-        papers = context['filter'].qs
+        # for select input
+        context['filter'].form['club'].field.widget.attrs['class'] = 'custom-select'
+
+        papers = context['filter'].qs.order_by('-last_edit_date')
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
@@ -35,9 +40,10 @@ class PaperListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        if self.request.user.groups.filter(name='reviewer').exists():
-            return Paper.objects.all().order_by('-last_edit_date')
-        return Paper.objects.filter(authors=self.request.user).order_by('-last_edit_date')
+        # FOR REVIEWER
+        # if self.request.user.groups.filter(name='reviewer').exists():
+        #     return Paper.objects.all().order_by('-last_edit_date')
+        return Paper.objects.filter(authors=self.request.user)
 
 
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):

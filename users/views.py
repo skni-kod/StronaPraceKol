@@ -99,7 +99,7 @@ class LoginView(auth_views.LoginView):
             context = {
                 'form': form,
                 'site_name': 'login',
-                'site_title': 'Logowanie - ' + SITE_NAME
+                'site_title': f'Logowanie - {SITE_NAME}'
             }
             return render(request, self.template_name, context)
 
@@ -118,7 +118,7 @@ class LogoutView(auth_views.LogoutView):
         context = super(LogoutView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context['site_name'] = 'logout'
-        context['site_title'] = 'Wylogowano - ' + SITE_NAME
+        context['site_title'] = f'Wylogowano - {SITE_NAME}'
         return context
 
 
@@ -133,7 +133,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context = super(ProfileView, self).get_context_data(**kwargs)
         # Create any data and add it to the context
         context['site_name'] = 'profile'
-        context['site_title'] = 'Ustawienia konta - ' + SITE_NAME
+        context['site_title'] = f'Ustawienia konta - {SITE_NAME}'
         return context
 
 

@@ -16,7 +16,7 @@ class StudentClub(models.Model):
 
     @classmethod
     def get_default_pk(cls):
-        club, created = cls.objects.get_or_create(name='Brak koła', acronym='BRAK')
+        club, created = cls.objects.get_or_create(name='Brak koła', acronym='Brak')
         return club.pk
 
 
