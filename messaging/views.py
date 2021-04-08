@@ -4,8 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from papers.models import Review
-from .models import Message, MessageSeen
+from papers.models import Review, Message, MessageSeen
 
 
 class TestView(TemplateView):

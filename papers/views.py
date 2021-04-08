@@ -7,10 +7,10 @@ from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
+from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
 from .forms import *
-from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
-from pprint import pprint
+
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -29,6 +29,10 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['filter'].form['club'].field.widget.attrs['class'] = 'custom-select'
 
         papers = context['filter'].qs.order_by('-last_edit_date')
+
+        for paper in papers:
+            paper.get_unread_messages = paper.get_unread_messages(self.request.user)
+
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
@@ -41,8 +45,9 @@ class PaperListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # FOR REVIEWER
-        # if self.request.user.groups.filter(name='reviewer').exists():
-        #     return Paper.objects.all().order_by('-last_edit_date')
+        if self.request.user.groups.filter(name='reviewer').exists():
+            return Paper.objects.all().order_by('-last_edit_date')
+        # FOR REGULAR USER
         return Paper.objects.filter(authors=self.request.user)
 
 
@@ -90,6 +95,9 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
+        context['site_name'] = 'papers'
+        context['site_title'] = f'Nowy referat - {SITE_NAME}'
+
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
             context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)

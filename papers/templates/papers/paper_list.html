@@ -165,16 +165,16 @@
                                     <ul>
                                         {% for author in paper.authors.all %}
                                             <li>
-                                                <div class="row ml-1">
-                                                    {{ author.first_name }} {{ author.last_name }}
-                                                </div>
+
+                                                {{ author.first_name }} {{ author.last_name }}
+
                                             </li>
                                         {% endfor %}
                                         {% for author in paper.coauthor_set.all %}
                                             <li>
-                                                <div class="row ml-1">
-                                                    {{ author.name }} {{ author.surname }}
-                                                </div>
+
+                                                {{ author.name }} {{ author.surname }}
+
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -188,9 +188,9 @@
                                     <ul>
                                         {% for review in paper.review_set.all %}
                                             <li>
-                                                <div class="row ml-1">
-                                                    {{ review.author.first_name }} {{ review.author.last_name }}
-                                                </div>
+
+                                                {{ review.author.first_name }} {{ review.author.last_name }}
+
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -227,50 +227,46 @@
                                 </div>
 
                                 <div class="col-md-6 my-2">
-                                    <h4>Liczba nowych wiadomości: TODO </h4>
+                                    <h4>Liczba nowych wiadomości: {{ paper.get_unread_messages }} </h4>
                                 </div>
 
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="row">
-                            {% if user|is_in_group:'reviewer' %}
-                                <div class="col text-right mb-2">
-                                    <form action="{% url 'reviewList' paper.id %}">
-                                        <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
-                                               value="Recenzje" enable/>
-                                    </form>
+                                <div class="col-md-12">
+                                    <h4>Opis:</h4>
+                                    <span>
+                                        {{ paper.description|safe }}
+                                    </span>
                                 </div>
-                            {% endif %}
 
-                        </div>
-
-                        <div class="row">
-
-                            {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
-                                <div class="col text-right mb-2">
-                                    {% if user|already_reviewed:paper %}
-                                        <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
-                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                   value="Twoja recenzja"/>
-                                        </form>
-
-                                    {% else %}
-                                        <form action="{% url 'reviewCreate' paper.id %}">
-                                            <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                                   value="Dodaj recenzję"/>
-                                        </form>
+                                <div class="col-md-6">
+                                    {% if user|is_in_group:'reviewer' %}
+                                        <div class="col text-right mb-2">
+                                            <form action="{% url 'reviewList' paper.id %}">
+                                                <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
+                                                       value="Recenzje" enable/>
+                                            </form>
+                                        </div>
                                     {% endif %}
                                 </div>
-                            {% endif %}
 
+                                {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
+                                    <div class="col-md-6">
+                                        {% if user|already_reviewed:paper %}
+                                            <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
+                                                <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                       value="Twoja recenzja"/>
+                                            </form>
+
+                                        {% else %}
+                                            <form action="{% url 'reviewCreate' paper.id %}">
+                                                <input type="submit" class="btn btn-info w-50 h-100 mr-2"
+                                                       value="Dodaj recenzję"/>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
 
-                        </div>
-                        <br>
                     {% endfor %}
 
                     {% with request.get_full_path as querystring %}
@@ -350,10 +346,10 @@
                 {% else %}
                     <p> Brak przesłanych referatów </p>
                 {% endif %}
-            <br>
+                <br>
 
+            </div>
         </div>
-    </div>
 
     </div>
 {% endblock %}
