@@ -6,10 +6,13 @@
     <div class="container">
 
         <div class="text-center">
-            {#            {% if user|is_in_group:'reviewer' %}#}
-            {#                <h2> Wszystkie referaty do Prac Kół Naukowych </h2>#}
-            {#            {% else %}#}
-            <h2>Przesłane referaty</h2>
+            {% if user.is_superuser %}
+                <h2>Referaty przesłane przez użytkowników</h2>
+            {% elif user|is_in_group:'reviewer' %}
+                <h2> Przydzielone referaty do wystawienia recenzji </h2>
+            {% else %}
+                <h2>Przesłane referaty</h2>
+            {% endif %}
         </div>
 
         <hr class="my-1">
@@ -130,13 +133,16 @@
             </div>
         </form>
 
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <a href="{% url 'paperCreate' %}">
-                    <button type="button" class="btn btn-success">Dodaj referat</button>
-                </a>
+        {% if not user|is_in_group:'reviewer' %}
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <a href="{% url 'paperCreate' %}">
+                        <button type="button" class="btn btn-success">Dodaj referat</button>
+                    </a>
+                </div>
             </div>
-        </div>
+        {% endif %}
+
 
         <div class="row">
             <div class="col-md-12">
@@ -146,7 +152,8 @@
                             <div class="row">
                                 <div class="col-md-7 text-left">
                                     <a class="nav-link" href="{% url 'paperDetail' paper.id %}">
-                                        <h3><span class="badge badge-primary">{{ paper.title|truncatechars:40 }}</span></h3>
+                                        <h3><span class="badge badge-primary">{{ paper.title|truncatechars:40 }}</span>
+                                        </h3>
                                     </a>
                                 </div>
 
@@ -182,23 +189,32 @@
 
                                 <div class="col-md-6 my-2">
                                     <h4>Recenzenci:</h4>
-                                    {% if paper.review_set|length == 0 %}
-                                        brak
-                                    {% endif %}
-                                    <ul>
-                                        {% for review in paper.review_set.all %}
-                                            <li>
-
-                                                {{ review.author.first_name }} {{ review.author.last_name }}
-
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
+{#                                    {% if paper.reviewers|length < 2 and paper.reviewers|length > 0 %}#}
+{#                                        {% if user.is_superuser %}#}
+{#                                            <!-- TODO: !-->#}
+{#                                            <a href="{% url 'paperList' %}">#}
+{#                                                <button type="button" class="btn btn-primary">#}
+{#                                                    Przypisz recenzentów#}
+{#                                                </button>#}
+{#                                            </a>#}
+{#                                        {% endif %}#}
+{#                                    {% else %}#}
+{#                                         <span class="badge badge-secondary">#}
+{#                                                    Brak#}
+{#                                                </span>#}
+{#                                    {% endif %}#}
+{#                                    <ul>#}
+{#                                        {% for review in paper.review_set.all %}#}
+{#                                            <li>#}
+{#                                                {{ review.author.first_name }} {{ review.author.last_name }}#}
+{#                                            </li>#}
+{#                                        {% endfor %}#}
+{#                                    </ul>#}
                                 </div>
 
                                 <div class="col-md-6 my-2">
                                     <h4>Słowa kluczowe: </h4>
-                                    <span class="text-muted">{{ paper.keywords }}</span>
+                                    <span class="text-muted">{{ paper.keywords|truncatechars:40 }}</span>
                                 </div>
 
                                 <div class="col-md-6 my-2">
@@ -213,27 +229,29 @@
                                 <div class="col-md-6 my-2">
                                     <h4>Przesłane pliki:</h4>
                                     {% if paper.uploadedfile_set.all|length == 0 %}
-                                        brak
+                                        <span class="badge badge-secondary"> Brak </span>
                                     {% endif %}
                                     <ul>
                                         {% for itm in paper.uploadedfile_set.all %}
                                             <li>
-                                                <div class="row ml-1">
-                                                    {{ itm.filename }}
-                                                </div>
+                                                {{ itm.filename }}
                                             </li>
                                         {% endfor %}
                                     </ul>
                                 </div>
 
                                 <div class="col-md-6 my-2">
-                                    <h4>Liczba nowych wiadomości: {{ paper.get_unread_messages }} </h4>
+                                    <h4>Liczba nowych wiadomości:
+                                        <span class="badge badge-secondary">
+                                            {{ paper.get_unread_messages }}
+                                        </span>
+                                    </h4>
                                 </div>
 
                                 <div class="col-md-12">
                                     <h4>Opis:</h4>
                                     <span>
-                                        {{ paper.description|safe }}
+                                        {{ paper.description|safe|truncatechars:500 }}
                                     </span>
                                 </div>
 
@@ -276,7 +294,8 @@
                                 {% if 'title' in  querystring %}
                                     {% if 'page' in querystring %}
 
-                                        <a class="btn btn-outline-info" href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
                                         <a class="btn btn-outline-info"
                                            href="{{ querystring|slice_page }}&page={{ papers.previous_page_number }}">Poprzednia</a>
                                     {% else %}
@@ -336,7 +355,8 @@
                                 {% else %}
                                     <a class="btn btn-outline-info"
                                        href="?page={{ papers.next_page_number }}">Następna</a>
-                                    <a class="btn btn-outline-info" href="?page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                    <a class="btn btn-outline-info"
+                                       href="?page={{ papers.paginator.num_pages }}">Ostatnia</a>
                                 {% endif %}
                             {% endif %}
 

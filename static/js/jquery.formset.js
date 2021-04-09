@@ -119,7 +119,6 @@
                     }
                 });
             }
-            // FIXME: Perhaps using $.data would be a better idea?
             options.formTemplate = template;
 
             if ($$.attr('tagName') == 'TR') {

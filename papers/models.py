@@ -32,6 +32,9 @@ class Paper(models.Model):
     last_edit_date = models.DateTimeField(default=timezone.now)
     approved = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f'{self.title[0:40]}'
+
     def get_unread_messages(self, user):
         cnt = 0
         for review in Review.objects.filter(paper=self):
@@ -99,8 +102,8 @@ class Message(models.Model):
     edit_date = models.DateTimeField(default=timezone.now)
     text = models.TextField()
 
-    def is_seen(self,user):
-        if MessageSeen.objects.filter(user=user,message=self).count() > 0:
+    def is_seen(self, user):
+        if MessageSeen.objects.filter(user=user, message=self).count() > 0:
             return True
         return False
 
