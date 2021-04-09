@@ -48,6 +48,65 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
+            <h5>Słowa kluczowe:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.keywords }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Koło naukowe:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.club.name }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Status:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            {% if paper.approved == True %}
+                <p class="text-success">Gotowy</p>
+            {% else %}
+                <p class="text-danger">W przygotowaniu</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Data dodania:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.add_date|date:"d/m/Y G:i" }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Data modyfikacji:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
             <h5>Recenzenci:&ensp; </h5>
         </div>
 
@@ -74,43 +133,6 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Słowa kluczowe:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.keywords }} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Status:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            {% if paper.approved == True %}
-                <p class="text-success"> Gotowy </p>
-            {% else %}
-                <p style="color:#ccb910;"> W przygotowaniu </p>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Koło naukowe:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.club.name }} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
             <h5>Przesłane pliki:&ensp; </h5>
         </div>
 
@@ -131,28 +153,6 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Data dodania:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.add_date|date:"d/m/Y G:i" }} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Data modyfikacji:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
-        </div>
-    </div>
-
     <div class="row text-center">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
@@ -163,7 +163,42 @@
         </div>
     </div>
 
+    <div class="row mb-2">
+        <div class="col-md-12 text-center">
+            <hr class="my-2">
+            <h4>Recenzje</h4>
+        </div>
+    </div>
 
+    <div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                        role="tab" aria-controls="home" aria-selected="true">Home
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                        role="tab" aria-controls="profile" aria-selected="false">Profile
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+                        role="tab" aria-controls="contact" aria-selected="false">Contact
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">asdsdadas</div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">saddas</div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">qweqeeqwqwe</div>
+        </div>
+    </div>
+    </div>
+
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     {% if user in paper.authors.all %}
         <div class="row text-center">

@@ -39,6 +39,8 @@ class Paper(models.Model):
         cnt = 0
         for review in Review.objects.filter(paper=self):
             for message in Message.objects.filter(review=review):
+                if message.author == user:
+                    continue
                 if not message.is_seen(user):
                     cnt += 1
         return cnt
@@ -103,7 +105,7 @@ class Message(models.Model):
     text = models.TextField()
 
     def is_seen(self, user):
-        if MessageSeen.objects.filter(user=user, message=self).count() > 0:
+        if MessageSeen.objects.filter(reader=user, message=self).count() > 0:
             return True
         return False
 

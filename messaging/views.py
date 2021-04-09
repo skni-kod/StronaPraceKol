@@ -93,7 +93,11 @@ def has_user_access_to_messages(user, review):
         return False
 
     if user.is_authenticated:
-        return True
+        if review.author == user:
+            return True
+        if user in review.paper.authors.all():
+            return True
+
     else:
         return False
 
