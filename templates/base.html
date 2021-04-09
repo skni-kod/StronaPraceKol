@@ -67,6 +67,14 @@
                 <ul class="navbar-nav ml-auto">
 
                     {% if user.is_authenticated %}
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin">
+                                    Panel adminstracyjny
+                                </a>
+                            </li>
+                        {% endif %}
+
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' %}">
                                 Zalogowano jako: {{ user.username }}

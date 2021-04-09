@@ -23,7 +23,7 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),
     path('papers/', include('papers.urls')),
     path('user/', include('users.urls')),
-    path('admin/', admin.site.urls, name='admin-panel'),
+    path('admin/', admin.site.urls),
     path('messaging/', include('messaging.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]

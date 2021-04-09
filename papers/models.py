@@ -32,6 +32,17 @@ class Paper(models.Model):
     approved = models.BooleanField(default=False)
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=1)
 
+    def __str__(self):
+        return f'{self.title[0:40]}'
+
+    def get_unread_messages(self, user):
+        cnt = 0
+        for review in Review.objects.filter(paper=self):
+            for message in Message.objects.filter(review=review):
+                if not message.is_seen(user):
+                    cnt += 1
+        return cnt
+
 
 class CoAuthor(models.Model):
     name = models.CharField(max_length=32)
@@ -82,6 +93,31 @@ def check_empty_author_relation(instance, **kwargs):
                     paper.original_author_id = author.pk
                     paper.save()
                     break
+
+
+class Message(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    add_date = models.DateTimeField(default=timezone.now)
+    edit_date = models.DateTimeField(default=timezone.now)
+    text = models.TextField()
+
+    def is_seen(self, user):
+        if MessageSeen.objects.filter(user=user, message=self).count() > 0:
+            return True
+        return False
+
+    def __str__(self):
+        return f'[{self.author.username}][{self.add_date.strftime("%d-%m-%Y %H:%M")}]: {self.text[0:30]}'
+
+
+class MessageSeen(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    reader = models.ForeignKey(User, on_delete=models.CASCADE)
+    seen_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.reader.username} seen: {self.message}'
 
 
 def delete_file_with_object(instance, **kwargs):
