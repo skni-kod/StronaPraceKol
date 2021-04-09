@@ -3,7 +3,7 @@ import re
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, formset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
@@ -98,7 +98,7 @@ class PaperCreationForm(forms.ModelForm):
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description']
-        exclude = ['authors']
+        exclude = ['authors', 'reviewers']
         labels = {
             'title': _('Tytuł'),
             'club': _('Koło'),
@@ -153,7 +153,7 @@ class PaperEditForm(forms.ModelForm):
     class Meta:
         model = Paper
         fields = ['title', 'club', 'approved', 'keywords', 'description']
-        exclude = ['authors']
+        exclude = ['authors', 'reviewers']
         labels = {
             'title': _('Tytuł'),
             'club': _('Koło'),
@@ -213,3 +213,16 @@ class ReviewCreationForm(forms.ModelForm):
         labels = {
             'text': _('Recenzja'),
         }
+
+
+class ReviewerAssignmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Paper
+        fields = ['reviewers']
+        labels = {'reviewers': _('Recenzenci'), }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['reviewers'].queryset = User.objects.filter(groups__name='reviewer')
+
