@@ -59,7 +59,6 @@ def slice_page(path):
         while True:
             tmp = path.find('&page=', index)
             if tmp != -1:
-                index
                 break
             else:
                 index -= 1

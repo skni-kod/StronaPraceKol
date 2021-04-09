@@ -22,15 +22,15 @@ class StudentClub(models.Model):
 
 class Paper(models.Model):
     title = models.CharField(max_length=128)
-    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk,
-                             on_delete=models.SET_DEFAULT)  # set default on delete
-    authors = models.ManyToManyField(User, blank=True)
+    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
+    authors = models.ManyToManyField(User, related_name='authors',  blank=True)
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=64)
     description = models.TextField()
     add_date = models.DateTimeField(default=timezone.now)
     last_edit_date = models.DateTimeField(default=timezone.now)
     approved = models.BooleanField(default=False)
+    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=1)
 
 
 class CoAuthor(models.Model):

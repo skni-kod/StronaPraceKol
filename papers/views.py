@@ -5,19 +5,18 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 
 from .filters import PaperFilter
 from .forms import *
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
-from pprint import pprint
+
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
     ordering = ['-last_edit_date']
-    model = Paper
 
     def get_context_data(self, **kwargs):
 
@@ -222,7 +221,7 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Review
     template_name = 'papers/add_review.html'
-    success_url = '/papers'  # TODO this might be change if we decide what is best
+    success_url = '/papers'
     form_class = ReviewCreationForm
 
     def test_func(self):
@@ -252,7 +251,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
     template_name = 'papers/add_review.html'
     form_class = ReviewCreationForm
-    success_url = '/papers'  # TODO change if needed
+    success_url = '/papers'
 
     def get_context_data(self, **kwargs):
         context = super(ReviewUpdateView, self).get_context_data(**kwargs)
@@ -289,7 +288,7 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('paperList')
 
 
-class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Review
     template_name = 'papers/user_review_list.html'
     context_object_name = 'reviews'
@@ -307,6 +306,21 @@ class UserReviewList(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('paperList')
 
     def get_context_data(self, **kwargs):
-        context = super(UserReviewList, self).get_context_data(**kwargs)
+        context = super(UserReviewListView, self).get_context_data(**kwargs)
         context['title'] = 'mojeRecenzje'
         return context
+
+
+class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+    template_name = 'papers/reviewer_assignment.html'
+    form_class = ReviewerAssignmentForm
+    success_url = '/papers/assignreviewers/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['papers'] = Paper.objects.all()  # TODO(mystyk): add filter which papers are ready to be reviewed
+        return context
+
+    def test_func(self):
+        # TODO(mystyk): Check if user is admin
+        return True
