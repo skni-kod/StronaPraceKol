@@ -146,7 +146,7 @@
                             <div class="row">
                                 <div class="col-md-7 text-left">
                                     <a class="nav-link" href="{% url 'paperDetail' paper.id %}">
-                                        <h3><span class="badge badge-primary">{{ paper.title }}</span></h3>
+                                        <h3><span class="badge badge-primary">{{ paper.title|truncatechars:40 }}</span></h3>
                                     </a>
                                 </div>
 

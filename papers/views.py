@@ -56,6 +56,12 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Paper
     context_object_name = 'paper'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
+        context['site_name'] = 'papers'
+        context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
+        return context
+
     def test_func(self):
         paper = self.get_object()
         if self.request.user in paper.authors.all() or self.request.user.groups.filter(name='reviewer').exists():
