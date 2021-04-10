@@ -3,12 +3,34 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-12 text-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
             <h4>Informacje o referacie</h4>
-            <hr class="my-2">
+        </div>
+        <div class="col-md-7 text-right">
+            <div class="row">
+                {% if user in paper.authors.all %}
+                    <div class="col-md-6">
+                        {% if user.pk == paper.original_author_id %}
+                            <a href="{% url 'paperDelete' paper.pk %}">
+                                <button type="button" class="btn btn-danger">
+                                    Usuń
+                                </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'paperEdit' paper.pk %}">
+                            <button type="button" class="btn btn-primary">
+                                Edytuj
+                            </button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-
+    <hr class="my-2">
 
     <div class="row">
         <div class="col-md-1"></div>
@@ -153,7 +175,7 @@
         </div>
     </div>
 
-    <div class="row text-center">
+    <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
             <h5>Opis:</h5>
@@ -163,93 +185,124 @@
         </div>
     </div>
 
-    <div class="row mb-2">
-        <div class="col-md-12 text-center">
-            <hr class="my-2">
+    <div class="row mt-5">
+        <div class="col-md-12 text-left offset-md-1">
             <h4>Recenzje</h4>
         </div>
     </div>
 
-    <div class="row">
-    <div class="col-md-12">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
-                        role="tab" aria-controls="home" aria-selected="true">Home
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-                        role="tab" aria-controls="profile" aria-selected="false">Profile
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
-                        role="tab" aria-controls="contact" aria-selected="false">Contact
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">asdsdadas</div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">saddas</div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">qweqeeqwqwe</div>
+    <hr class="my-2">
+
+    <div class="review_div">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs nav-fill">
+                <li class="nav-item"><a data-toggle="tab" href="#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#menu1" class="nav-link">Menu 1</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#menu2" class="nav-link">Menu 2</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <h3>HOME</h3>
+                    <p>Some content.</p>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <h3>Menu 1</h3>
+                    <p>
+                    </p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <h3>Menu 2</h3>
+                    <p>Some content in menu 2.</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-left offset-md-1">
+            <h4>Wiadomości</h4>
+        </div>
     </div>
 
+    <hr class="my-2">
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="row">
+          <div class="col-md-12">
+            <ul class="nav nav-tabs nav-fill">
+                {% if user.is_staff %}
+                <li class="nav-item"><a data-toggle="tab" href="#home" class="nav-link">Home</a></li>
+                {% endif %}
+                <li class="nav-item"><a data-toggle="tab" href="#menu1" class="nav-link">Menu 1</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#menu2" class="nav-link">Menu 2</a></li>
+            </ul>
 
-    {% if user in paper.authors.all %}
-        <div class="row text-center">
-
-            <div class="col text-right">
-
-                <a class="btn btn-link" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
-            </div>
-            {% if user.pk == paper.original_author_id %}
-                <div class="col text-left">
-
-                    <a class="btn btn-link text-danger" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <h3>HOME</h3>
+                    <p>Some content.</p>
                 </div>
+                <div id="menu1" class="tab-pane fade">
+                    <h3>Menu 1</h3>
+                    <p>
+                    </p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <h3>Menu 2</h3>
+                    <p>Some content in menu 2.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-md-4">
+            {% if prev %}
+                <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-warning btn-lg">Poprzedni referat</button>
+                </a>
             {% endif %}
         </div>
-    {% endif %}
-
-    <br>
-
-    {% if user in paper.authors.all or user|is_in_group:'reviewer' %}
-        <div class="row mb-2">
-            <div class="col text-center">
-                <form action="{% url 'reviewList' paper.id %}">
-                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>
-                </form>
-            </div>
+        <div class="col-md-4">
+            <a href="{% url 'paperList' %}">
+                <button type="button" class="btn btn-secondary btn-lg">Lista referatów</button>
+            </a>
         </div>
-    {% endif %}
-
-
-    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
-        <div class="row">
-            <div class="col text-center">
-                {% if user|already_reviewed:paper %} <!-- for Mateusz, if reviewer already add review -->
-                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
-                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>
-                    </form>
-                {% else %}
-                    <form action="{% url 'reviewCreate' paper.id %}">
-                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
-                    </form>
-                {% endif %}
-            </div>
-        </div>
-    {% endif %}
-    <div class="row mb-2">
-        <div class="col text-center mt-2">
-            <form action="{% url 'paperList' %}">
-                <input type="submit" class="btn btn-secondary w-25 h-100" value="Powrót"/>
-            </form>
+        <div class="col-md-4">
+            {% if next %}
+                <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-primary btn-lg">Następny referat</button>
+                </a>
+            {% endif %}
         </div>
     </div>
+
+    {#    {% if user in paper.authors.all or user|is_in_group:'reviewer' %}#}
+    {#        <div class="row mb-2">#}
+    {#            <div class="col text-center">#}
+    {#                <form action="{% url 'reviewList' paper.id %}">#}
+    {#                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    {% endif %}#}
+
+
+    {#    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}#}
+    {#        <div class="row">#}
+    {#            <div class="col text-center">#}
+    {#                {% if user|already_reviewed:paper %}#}
+    {#                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">#}
+    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>#}
+    {#                    </form>#}
+    {#                {% else %}#}
+    {#                    <form action="{% url 'reviewCreate' paper.id %}">#}
+    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>#}
+    {#                    </form>#}
+    {#                {% endif %}#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    {% endif %}#}
+
 
 {% endblock %}

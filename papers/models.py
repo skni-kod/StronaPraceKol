@@ -21,16 +21,17 @@ class StudentClub(models.Model):
 
 
 class Paper(models.Model):
+
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
-    authors = models.ManyToManyField(User, related_name='authors',  blank=True)
+    authors = models.ManyToManyField(User, related_name='authors', blank=True)
     original_author_id = models.IntegerField()
-    keywords = models.CharField(max_length=64)
+    keywords = models.CharField(max_length=128)
     description = models.TextField()
     add_date = models.DateTimeField(default=timezone.now)
     last_edit_date = models.DateTimeField(default=timezone.now)
     approved = models.BooleanField(default=False)
-    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=1)
+    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
 
     def __str__(self):
         return f'{self.title[0:40]}'
@@ -39,6 +40,8 @@ class Paper(models.Model):
         cnt = 0
         for review in Review.objects.filter(paper=self):
             for message in Message.objects.filter(review=review):
+                if not review.author == user and not message.author == user:
+                    break
                 if message.author == user:
                     continue
                 if not message.is_seen(user):

@@ -6,7 +6,7 @@
     <div class="container">
 
         <div class="text-center">
-            {% if user.is_superuser %}
+            {% if user.is_staff %}
                 <h2>Referaty przesłane przez użytkowników</h2>
             {% elif user|is_in_group:'reviewer' %}
                 <h2> Przydzielone referaty do wystawienia recenzji </h2>
@@ -151,7 +151,7 @@
                         <div class="m-4 p-3 border border-primary rounded">
                             <div class="row">
                                 <div class="col-md-7 text-left">
-                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}">
+                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id={{ forloop.counter }}{{ queryset_pks }}">
                                         <h3><span class="badge badge-primary">{{ paper.title|truncatechars:40 }}</span>
                                         </h3>
                                     </a>
@@ -189,27 +189,27 @@
 
                                 <div class="col-md-6 my-2">
                                     <h4>Recenzenci:</h4>
-{#                                    {% if paper.reviewers|length < 2 and paper.reviewers|length > 0 %}#}
-{#                                        {% if user.is_superuser %}#}
-{#                                            <!-- TODO: !-->#}
-{#                                            <a href="{% url 'paperList' %}">#}
-{#                                                <button type="button" class="btn btn-primary">#}
-{#                                                    Przypisz recenzentów#}
-{#                                                </button>#}
-{#                                            </a>#}
-{#                                        {% endif %}#}
-{#                                    {% else %}#}
-{#                                         <span class="badge badge-secondary">#}
-{#                                                    Brak#}
-{#                                                </span>#}
-{#                                    {% endif %}#}
-{#                                    <ul>#}
-{#                                        {% for review in paper.review_set.all %}#}
-{#                                            <li>#}
-{#                                                {{ review.author.first_name }} {{ review.author.last_name }}#}
-{#                                            </li>#}
-{#                                        {% endfor %}#}
-{#                                    </ul>#}
+                                    {% if paper.reviewers|length < 2 and paper.reviewers|length >= 0 %}
+                                        {% if user.is_staff %}
+                                            <!-- TODO: Add reviewer link !-->
+                                            <a href="{% url 'paperList' %}">
+                                                <button type="button" class="btn btn-primary">
+                                                    Przypisz recenzentów
+                                                </button>
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge badge-secondary">
+                                            Brak
+                                        </span>
+                                    {% endif %}
+                                    <ul>
+                                        {% for review in paper.review_set.all %}
+                                            <li>
+                                                {{ review.author.first_name }} {{ review.author.last_name }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
 
                                 <div class="col-md-6 my-2">
