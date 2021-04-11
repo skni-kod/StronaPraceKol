@@ -1,5 +1,6 @@
 $().ready(function () {
-    //setInterval(GetMessage, GetMessageInterval);
+    setInterval(GetMessage, GetMessageInterval);
+
     $(".message_link").on('click', function(event){
          $("#messages_box").html('');
         ReviewerId = $(this).attr('data-reviewer');
@@ -9,5 +10,3 @@ $().ready(function () {
         RenderMessages();
     });
 });
-
-/*  TODO: add get message interval*/

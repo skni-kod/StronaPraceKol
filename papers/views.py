@@ -365,9 +365,10 @@ class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['papers'] = Paper.objects.all()  # TODO(mystyk): add filter which papers are ready to be reviewed
+        context['papers'] = Paper.objects.filter(approved=True)
         return context
 
     def test_func(self):
-        # TODO(mystyk): Check if user is admin
-        return True
+        if self.request.user.is_staff:
+            return True
+        return False
