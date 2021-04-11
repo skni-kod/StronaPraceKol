@@ -193,28 +193,45 @@
 
     <hr class="my-2">
 
-    <div class="review_div">
+    <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-tabs nav-fill">
-                <li class="nav-item"><a data-toggle="tab" href="#home" class="nav-link">Home</a></li>
-                <li class="nav-item"><a data-toggle="tab" href="#menu1" class="nav-link">Menu 1</a></li>
-                <li class="nav-item"><a data-toggle="tab" href="#menu2" class="nav-link">Menu 2</a></li>
+                {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a data-toggle="tab" href="#admin-add-reviewers" class="nav-link">
+                            Przypisz recenzentów
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <li class="nav-item">
+                            <a data-toggle="tab" href="#review-{{ reviewer.username }}" class="nav-link">
+                                {{ reviewer.first_name }} {{ reviewer.last_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
             </ul>
 
-            <div class="tab-content">
-                <div id="home" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                    <p>Some content.</p>
-                </div>
-                <div id="menu1" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>
-                    </p>
-                </div>
-                <div id="menu2" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
-                </div>
+            <div class="tab-content bg-white border border-light p-4">
+                {% if user.is_staff %}
+                    <div id="admin-add-reviewers" class="tab-pane fade">
+                        <h3>Menu 1</h3>
+                        <p>
+                            dsdfsfd
+                        </p>
+                    </div>
+                {% endif %}
+                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <div id="review-{{ reviewer.username }}" class="tab-pane fade">
+                            <h3>{{ reviewer.username}}</h3>
+                            <p>
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -226,34 +243,6 @@
     </div>
 
     <hr class="my-2">
-
-    <div class="row">
-          <div class="col-md-12">
-            <ul class="nav nav-tabs nav-fill">
-                {% if user.is_staff %}
-                <li class="nav-item"><a data-toggle="tab" href="#home" class="nav-link">Home</a></li>
-                {% endif %}
-                <li class="nav-item"><a data-toggle="tab" href="#menu1" class="nav-link">Menu 1</a></li>
-                <li class="nav-item"><a data-toggle="tab" href="#menu2" class="nav-link">Menu 2</a></li>
-            </ul>
-
-            <div class="tab-content">
-                <div id="home" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                    <p>Some content.</p>
-                </div>
-                <div id="menu1" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>
-                    </p>
-                </div>
-                <div id="menu2" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="row text-center">
         <div class="col-md-4">

@@ -9,7 +9,8 @@ let CanGetMessage = true;
 function SendMessage() {
     $.post(send_message_url,
         {
-            review_id: ReviewId,
+            paper_id: PaperId,
+            reviewer_id: ReviewerId,
             message_text: $('#input_message').val(),
         },
         function (data, status) {
@@ -29,7 +30,8 @@ function GetMessage() {
     CanGetMessage = false;
     $.post(get_messages_url,
         {
-            review_id: ReviewId,
+            paper_id: PaperId,
+            reviewer_id: ReviewerId,
             last_message_id: LastMessageId,
         },
         function (data, status) {
@@ -53,7 +55,7 @@ function RenderMessages() {
     let scroll = div.scrollHeight - Math.abs(div.scrollTop) === div.clientHeight;
 
     MessagesArray.forEach(function (item, index, array) {
-        if (item.author == username) {
+        if (item.author == Username) {
             tmpStr = OwnMessageHTML;
         } else {
             tmpStr = ForeignMessageHTML;

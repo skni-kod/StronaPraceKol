@@ -60,6 +60,8 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
+
+        print(str(context['paper']))
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
         paper_iter = 0
