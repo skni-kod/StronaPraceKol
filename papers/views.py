@@ -5,7 +5,10 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.utils.decorators import method_decorator
+from braces.views import CsrfExemptMixin
 
 from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
@@ -53,7 +56,8 @@ class PaperListView(LoginRequiredMixin, ListView):
         return Paper.objects.all().filter(authors=self.request.user)
 
 
-class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+#@method_decorator(csrf_exempt, name='dispatch')
+class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
     login_url = 'login'
     model = Paper
     context_object_name = 'paper'
@@ -61,7 +65,6 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
-        print(str(context['paper']))
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
         paper_iter = 0

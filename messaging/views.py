@@ -3,29 +3,8 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
 
 from papers.models import Message, MessageSeen, Paper
-
-
-class TestView(TemplateView):
-    template_name = "messaging/messagebox.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        paper = Paper.objects.filter(pk=self.kwargs['paper_pk']).first()
-
-        if paper is None:
-            return context
-        user = self.request.user
-
-        if not has_user_access_to_messages(user, paper):
-            return context
-
-        context['username'] = user.username
-        context['paper_id'] = self.kwargs['paper_pk']
-        context['reviewer_id'] = self.kwargs['reviewer_pk']
-        return context
 
 
 @csrf_exempt

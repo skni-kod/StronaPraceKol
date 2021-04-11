@@ -125,6 +125,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
     '/static/',
     BASE_DIR / 'messaging/static/messaging',
+    BASE_DIR / 'papers/static/papers',
 ]
 
 # for crispy forms

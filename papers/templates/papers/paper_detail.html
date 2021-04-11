@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
+
+{% block header %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/messaging.css' %}">
+{% endblock %}
+
 {% block content %}
 
     <div class="row">
@@ -226,7 +232,7 @@
                 {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
                     {% for reviewer in paper.reviewers.all %}
                         <div id="review-{{ reviewer.username }}" class="tab-pane fade">
-                            <h3>{{ reviewer.username}}</h3>
+                            <h3>{{ reviewer.username }}</h3>
                             <p>
                             </p>
                         </div>
@@ -244,11 +250,64 @@
 
     <hr class="my-2">
 
-    <div class="row text-center">
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-tabs nav-fill">
+                {% if user|is_in_group:'reviewer' %}
+                    <li class="nav-item">
+                        <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                           data-reviewer="{{ user.pk }}">
+                            Konwersacja z autorem
+                        </a>
+                    </li>
+                {% else %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <li class="nav-item">
+                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                               data-reviewer="{{ reviewer.pk }}">
+                                {{ reviewer.first_name }} {{ reviewer.last_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content bg-white border border-light p-4">
+                <div id="messagebox" class="tab-pane fade messagebox active">
+                    <div id="messages_box" class="container"></div>
+                    <div class="input-group">
+                         <textarea id="input_message" placeholder="Wprowadź wiadomość"
+                                   aria-describedby="send_message_button"
+                                   class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <button id="send_message_button" class="btn btn-primary">Wyślij</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        send_message_url = "{% url 'send_message' %}";
+        get_messages_url = "{% url 'get_messages' %}";
+        render_message_url = "{% url 'render_messages' %}";
+        Username = "{{ user.username }}";
+        PaperId = "{{ paper.pk }}";
+        ReviewerId = 0;
+    </script>
+
+    <script src="{% static  'js/messaging.js' %}"></script>
+    <script src="{% static  'js/papers.js' %}"></script>
+
+    <div class="row text-center my-5">
         <div class="col-md-4">
             {% if prev %}
                 <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
-                    <button type="button" class="btn btn-warning btn-lg">Poprzedni referat</button>
+                    <button type="button" class="btn btn-warning btn-lg">Poprzedni</button>
                 </a>
             {% endif %}
         </div>
@@ -260,7 +319,7 @@
         <div class="col-md-4">
             {% if next %}
                 <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
-                    <button type="button" class="btn btn-primary btn-lg">Następny referat</button>
+                    <button type="button" class="btn btn-primary btn-lg">Następny</button>
                 </a>
             {% endif %}
         </div>
