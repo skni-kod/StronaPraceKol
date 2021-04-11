@@ -21,7 +21,16 @@ def get_message(request):
 
     if has_user_access_to_messages(user, paper):
         last_message_id = int(request.POST['last_message_id'])
-        messages = Message.objects.filter(paper=paper, pk__gt=last_message_id).order_by('created_at')
+        reviewer = User.objects.filter(pk=request.POST['reviewer_id']).first()
+
+        if reviewer is None or reviewer not in paper.reviewers.all():
+            response = HttpResponse()
+            response.status_code = 401
+            return response
+
+        messages = Message.objects.filter(paper=paper, pk__gt=last_message_id, reviewer=reviewer).order_by('created_at')
+
+
         data = dict()
         for message in messages:
             tmp = {'author': f'{message.author.username}',

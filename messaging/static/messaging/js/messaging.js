@@ -64,7 +64,9 @@ function RenderMessages() {
         tmpStr = tmpStr.replace('[text]', item.text);
         tmpStr = tmpStr.replace('[date]', item.date);
         $("#messages_box").append(tmpStr);
+        console.debug(tmpStr);
     });
+
 
     if (MessagesArray.length > 0 && scroll == true) {
         scrollSmoothToBottom('messages_box');
@@ -85,7 +87,8 @@ $().ready(function () {
         if ($('#input_message').val().length > 0) {
             SendMessage();
         }
-    })
+    });
+
 
     $.post(render_message_url,
         {
@@ -107,13 +110,4 @@ $().ready(function () {
             }
         });
 
-
-    GetMessage();
-    RenderMessages();
-    setTimeout(function () {
-        scrollSmoothToBottom('messages_box');
-    }, 500);
-
-    setInterval(GetMessage, GetMessageInterval);
-    setInterval(RenderMessages, GetMessageInterval);
 });
