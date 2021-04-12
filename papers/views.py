@@ -12,7 +12,6 @@ from .filters import PaperFilter
 from .forms import *
 
 
-
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
     template_name = 'papers/paper_list.html'
