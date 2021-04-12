@@ -23,24 +23,28 @@ class StudentClub(models.Model):
 class Paper(models.Model):
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
-    authors = models.ManyToManyField(User, related_name='authors',  blank=True)
+    authors = models.ManyToManyField(User, related_name='authors', blank=True)
     original_author_id = models.IntegerField()
-    keywords = models.CharField(max_length=64)
+    keywords = models.CharField(max_length=128)
     description = models.TextField()
     add_date = models.DateTimeField(default=timezone.now)
     last_edit_date = models.DateTimeField(default=timezone.now)
     approved = models.BooleanField(default=False)
-    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=1)
+    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
 
     def __str__(self):
         return f'{self.title[0:40]}'
 
     def get_unread_messages(self, user):
+        if user not in self.reviewers.all() and user not in self.authors.all():
+            return 0
+
         cnt = 0
-        for review in Review.objects.filter(paper=self):
-            for message in Message.objects.filter(review=review):
-                if not message.is_seen(user):
-                    cnt += 1
+        for message in Message.objects.filter(paper=self):
+            if message.author == user:
+                continue
+            if not message.is_seen(user):
+                cnt += 1
         return cnt
 
 
@@ -87,6 +91,9 @@ class Review(models.Model):
     final_grade = models.ForeignKey(Grade, related_name='final_grade', on_delete=models.SET_NULL, blank=True,
                                     null=True, limit_choices_to={'tag': 'final_grade'})
 
+    def __str__(self):
+        return f'[{self.author}] - {self.paper}'
+
 
 class Announcement(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -115,24 +122,24 @@ def check_empty_author_relation(instance, **kwargs):
 
 class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
-    add_date = models.DateTimeField(default=timezone.now)
-    edit_date = models.DateTimeField(default=timezone.now)
+    paper = models.ForeignKey(Paper, related_name='paper', default=None, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(User, related_name='reviewer', default=None, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
     text = models.TextField()
 
     def is_seen(self, user):
-        if MessageSeen.objects.filter(user=user, message=self).count() > 0:
+        if MessageSeen.objects.filter(reader=user, message=self).count() > 0:
             return True
         return False
 
     def __str__(self):
-        return f'[{self.author.username}][{self.add_date.strftime("%d-%m-%Y %H:%M")}]: {self.text[0:30]}'
+        return f'[{self.author.username}][{self.created_at.strftime("%d-%m-%Y %H:%M")}]: {self.text[0:30]}'
 
 
 class MessageSeen(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
     reader = models.ForeignKey(User, on_delete=models.CASCADE)
-    seen_date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.reader.username} seen: {self.message}'

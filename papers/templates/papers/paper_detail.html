@@ -1,14 +1,42 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
+
+{% block header %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/messaging.css' %}">
+{% endblock %}
+
 {% block content %}
 
     <div class="row">
-        <div class="col-md-12 text-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
             <h4>Informacje o referacie</h4>
-            <hr class="my-2">
+        </div>
+        <div class="col-md-7 text-right">
+            <div class="row">
+                {% if user in paper.authors.all %}
+                    <div class="col-md-6">
+                        {% if user.pk == paper.original_author_id %}
+                            <a href="{% url 'paperDelete' paper.pk %}">
+                                <button type="button" class="btn btn-danger">
+                                    Usuń
+                                </button>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <a href="{% url 'paperEdit' paper.pk %}">
+                            <button type="button" class="btn btn-primary">
+                                Edytuj
+                            </button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-
+    <hr class="my-2">
 
     <div class="row">
         <div class="col-md-1"></div>
@@ -48,6 +76,65 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
+            <h5>Słowa kluczowe:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.keywords }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Koło naukowe:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.club.name }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Status:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            {% if paper.approved == True %}
+                <p class="text-success">Gotowy</p>
+            {% else %}
+                <p class="text-danger">W przygotowaniu</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Data dodania:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.add_date|date:"d/m/Y G:i" }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Data modyfikacji:&ensp; </h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
             <h5>Recenzenci:&ensp; </h5>
         </div>
 
@@ -68,43 +155,6 @@
 
             {% endif %}
 
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Słowa kluczowe:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.keywords }} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Status:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            {% if paper.approved == True %}
-                <p class="text-success"> Gotowy </p>
-            {% else %}
-                <p style="color:#ccb910;"> W przygotowaniu </p>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Koło naukowe:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.club.name }} </p>
         </div>
     </div>
 
@@ -134,28 +184,6 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Data dodania:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.add_date|date:"d/m/Y G:i" }} </p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
-            <h5>Data modyfikacji:&ensp; </h5>
-        </div>
-
-        <div class="col-md-8 text-left">
-            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
-        </div>
-    </div>
-
-    <div class="row text-center">
-        <div class="col-md-1"></div>
-        <div class="col-md-3 text-left">
             <h5>Opis:</h5>
         </div>
         <div class="col-md-8">
@@ -163,58 +191,166 @@
         </div>
     </div>
 
-
-
-    {% if user in paper.authors.all %}
-        <div class="row text-center">
-
-            <div class="col text-right">
-
-                <a class="btn btn-link" href="{% url 'paperEdit' paper.pk %}">Edytuj referat</a>
-            </div>
-            {% if user.pk == paper.original_author_id %}
-                <div class="col text-left">
-
-                    <a class="btn btn-link text-danger" href="{% url 'paperDelete' paper.pk %}">Usuń referat</a>
-                </div>
-            {% endif %}
+    <div class="row mt-5">
+        <div class="col-md-12 text-left offset-md-1">
+            <h4>Recenzje</h4>
         </div>
-    {% endif %}
+    </div>
 
-    <br>
+    <hr class="my-2">
 
-    {% if user in paper.authors.all or user|is_in_group:'reviewer' %}
-        <div class="row mb-2">
-            <div class="col text-center">
-                <form action="{% url 'reviewList' paper.id %}">
-                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>
-                </form>
-            </div>
-        </div>
-    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs nav-fill">
+                {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a data-toggle="tab" href="#admin-add-reviewers" class="nav-link">
+                            Przypisz recenzentów
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <li class="nav-item">
+                            <a data-toggle="tab" href="#review-{{ reviewer.username }}" class="nav-link">
+                                {{ reviewer.first_name }} {{ reviewer.last_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
 
-
-    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}
-        <div class="row">
-            <div class="col text-center">
-                {% if user|already_reviewed:paper %} <!-- for Mateusz, if reviewer already add review -->
-                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">
-                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>
-                    </form>
-                {% else %}
-                    <form action="{% url 'reviewCreate' paper.id %}">
-                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>
-                    </form>
+            <div class="tab-content bg-white border border-light p-4">
+                {% if user.is_staff %}
+                    <div id="admin-add-reviewers" class="tab-pane fade">
+                        <h3>Menu 1</h3>
+                        <p>
+                            dsdfsfd
+                        </p>
+                    </div>
+                {% endif %}
+                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <div id="review-{{ reviewer.username }}" class="tab-pane fade">
+                            <h3>{{ reviewer.username }}</h3>
+                            <p>
+                            </p>
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>
-    {% endif %}
-    <div class="row mb-2">
-        <div class="col text-center mt-2">
-            <form action="{% url 'paperList' %}">
-                <input type="submit" class="btn btn-secondary w-25 h-100" value="Powrót"/>
-            </form>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-left offset-md-1">
+            <h4>Wiadomości</h4>
         </div>
     </div>
+
+    <hr class="my-2">
+
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-tabs nav-fill">
+                {% if user|is_in_group:'reviewer' %}
+                    <li class="nav-item">
+                        <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                           data-reviewer="{{ user.pk }}">
+                            Konwersacja z autorem
+                        </a>
+                    </li>
+                {% else %}
+                    {% for reviewer in paper.reviewers.all %}
+                        <li class="nav-item">
+                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                               data-reviewer="{{ reviewer.pk }}">
+                                {{ reviewer.first_name }} {{ reviewer.last_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content bg-white border border-light p-4">
+                <div id="messagebox" class="tab-pane fade messagebox">
+                    <div id="messages_box" class="container"></div>
+                    <div class="input-group">
+                         <textarea id="input_message" placeholder="Wprowadź wiadomość"
+                                   aria-describedby="send_message_button"
+                                   class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <button id="send_message_button" class="btn btn-primary">Wyślij</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        send_message_url = "{% url 'send_message' %}";
+        get_messages_url = "{% url 'get_messages' %}";
+        render_message_url = "{% url 'render_messages' %}";
+        Username = "{{ user.username }}";
+        PaperId = "{{ paper.pk }}";
+        ReviewerId = 0;
+    </script>
+
+    <script src="{% static  'js/messaging.js' %}"></script>
+    <script src="{% static  'js/papers.js' %}"></script>
+
+    <div class="row text-center my-5">
+        <div class="col-md-4">
+            {% if prev %}
+                <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-warning btn-lg">Poprzedni</button>
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'paperList' %}">
+                <button type="button" class="btn btn-secondary btn-lg">Lista referatów</button>
+            </a>
+        </div>
+        <div class="col-md-4">
+            {% if next %}
+                <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-primary btn-lg">Następny</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {#    {% if user in paper.authors.all or user|is_in_group:'reviewer' %}#}
+    {#        <div class="row mb-2">#}
+    {#            <div class="col text-center">#}
+    {#                <form action="{% url 'reviewList' paper.id %}">#}
+    {#                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    {% endif %}#}
+
+
+    {#    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}#}
+    {#        <div class="row">#}
+    {#            <div class="col text-center">#}
+    {#                {% if user|already_reviewed:paper %}#}
+    {#                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">#}
+    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>#}
+    {#                    </form>#}
+    {#                {% else %}#}
+    {#                    <form action="{% url 'reviewCreate' paper.id %}">#}
+    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>#}
+    {#                    </form>#}
+    {#                {% endif %}#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    {% endif %}#}
+
 
 {% endblock %}
