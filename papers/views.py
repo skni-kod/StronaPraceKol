@@ -5,9 +5,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
-from django.utils.decorators import method_decorator
+#from django.utils.decorators import method_decorator
 from braces.views import CsrfExemptMixin
 
 from StronaProjektyKol.settings import SITE_NAME
