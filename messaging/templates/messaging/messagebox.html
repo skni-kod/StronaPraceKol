@@ -1,9 +1,3 @@
-{% extends 'base.html' %}
-{% block header %}
-    {% load static %}
-
-    <link rel="stylesheet" href="{% static 'css/messaging.css' %}">
-{% endblock %}
 
 {% block content %}
 
@@ -23,8 +17,9 @@
         send_message_url = "{% url 'send_message' %}";
         get_messages_url = "{% url 'get_messages' %}";
         render_message_url = "{% url 'render_messages' %}";
-        username = "{{ username }}";
-        ReviewId = '{{ review_id }}';
+        Username = "{{ username }}";
+        ReviewerId = "{{ reviewer_id }}";
+        PaperId = "{{ paper_id }}";
     </script>
     <script src="{% static  'js/messaging.js' %}"></script>
 

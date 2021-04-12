@@ -5,7 +5,10 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.utils.decorators import method_decorator
+from braces.views import CsrfExemptMixin
 
 from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
@@ -29,9 +32,12 @@ class PaperListView(LoginRequiredMixin, ListView):
 
         papers = context['filter'].qs.order_by('-last_edit_date')
 
+        queryset_pks = ''
         for paper in papers:
+            queryset_pks += f'&qspk={paper.pk}'
             paper.get_unread_messages = paper.get_unread_messages(self.request.user)
 
+        context['queryset_pks'] = queryset_pks
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
@@ -45,20 +51,47 @@ class PaperListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # FOR REVIEWER
         if self.request.user.groups.filter(name='reviewer').exists():
-            return Paper.objects.all().order_by('-last_edit_date')
+            return Paper.objects.all().filter(reviewers=self.request.user)
         # FOR REGULAR USER
-        return Paper.objects.filter(authors=self.request.user)
+        return Paper.objects.all().filter(authors=self.request.user)
 
 
-class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+#@method_decorator(csrf_exempt, name='dispatch')
+class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
     login_url = 'login'
     model = Paper
     context_object_name = 'paper'
 
     def get_context_data(self, *args, **kwargs):
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
+
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
+        paper_iter = 0
+
+        GET_DATA = self.request.GET
+
+        if 'id' in GET_DATA:
+            paper_iter = int(GET_DATA['id'])
+        if 'qspk' in GET_DATA:
+            qs_list = [int(i) for i in GET_DATA.getlist('qspk')]
+            queryset_pks = ''
+            for itm in qs_list:
+                queryset_pks += f'&qspk={itm}'
+            context['queryset_pks'] = queryset_pks
+
+            if 1 < paper_iter <= len(qs_list):
+                var = Paper.objects.filter(pk=qs_list[paper_iter - 2]).first()
+                if var is not None:
+                    context['prev'] = var.pk
+                    context['prev_id'] = paper_iter - 1
+
+            if 1 <= paper_iter < len(qs_list):
+                var = Paper.objects.filter(pk=qs_list[paper_iter]).first()
+                if var is not None:
+                    context['next'] = var.pk
+                    context['next_id'] = paper_iter + 1
+
         return context
 
     def test_func(self):
@@ -332,9 +365,10 @@ class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['papers'] = Paper.objects.all()  # TODO(mystyk): add filter which papers are ready to be reviewed
+        context['papers'] = Paper.objects.filter(approved=True)
         return context
 
     def test_func(self):
-        # TODO(mystyk): Check if user is admin
-        return True
+        if self.request.user.is_staff:
+            return True
+        return False

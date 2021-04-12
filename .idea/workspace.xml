@@ -145,8 +145,6 @@
       <workItem from="1617280658469" duration="3348000" />
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
-      <workItem from="1617978315565" duration="6302000" />
-      <workItem from="1618215348357" duration="2963000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -190,7 +188,56 @@
       <option name="project" value="LOCAL" />
       <updated>1617979817609</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactor paper detail">
+      <created>1617992864463</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1617992864463</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Paper detail merge with messaging,and review detail">
+      <created>1618007142930</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1618007142930</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Paper detail merge with messaging,and review detail">
+      <created>1618007178736</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1618007178736</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add paper details navigation">
+      <created>1618089953668</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1618089953668</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Refactor messaging app">
+      <created>1618132569842</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1618132569842</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add message box to paper detail">
+      <created>1618137772982</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1618137772982</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Bug fix messages box">
+      <created>1618143444588</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1618143444588</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,7 +262,12 @@
     <MESSAGE value="Reformat whole project" />
     <MESSAGE value="Refactor papers list" />
     <MESSAGE value="Refactor paper detail" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor paper detail" />
+    <MESSAGE value="Paper detail merge with messaging,and review detail" />
+    <MESSAGE value="Add paper details navigation" />
+    <MESSAGE value="Refactor messaging app" />
+    <MESSAGE value="Add message box to paper detail" />
+    <MESSAGE value="Bug fix messages box" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fix messages box" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
