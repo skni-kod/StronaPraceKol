@@ -217,6 +217,12 @@ class ReviewCreationForm(forms.ModelForm):
 
 class ReviewerAssignmentForm(forms.ModelForm):
 
+    def clean_reviewers(self):
+        reviewers = self.cleaned_data['reviewers']
+        if len(reviewers) > 2:
+            raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
+        return reviewers
+
     class Meta:
         model = Paper
         fields = ['reviewers']
