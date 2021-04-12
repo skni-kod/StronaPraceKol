@@ -209,14 +209,9 @@ class ReviewCreationForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade']
+        fields = ['text']
         labels = {
             'text': _('Recenzja'),
-            'correspondence': _('Ocena zgodności z tematyką konferencji'),
-            'originality': _('Ocena oryginalności'),
-            'merits': _('Ocena poprawności merytorycznej'),
-            'presentation': _('Ocena jakości prezentacji'),
-            'final_grade': _('Ocena końcowa'),
         }
 
 
