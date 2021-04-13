@@ -3,15 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/migrations/0003_auto_20210412_1506.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/custom_layout_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/custom_layout_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/formset.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper_author_formset.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/jquery.formset.js" beforeDir="false" afterPath="$PROJECT_DIR$/papers/static/papers/js/jquery.formset.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +70,7 @@
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\users\templates\users" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\papers\static\papers\js" />
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\templates\registration" />
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\messaging\templates\messaging" />
       <recent name="C:\Users\jakub\Documents\GitHub\StronaProjektyKol\messaging\templates" />
@@ -150,7 +149,7 @@
       <workItem from="1617280658469" duration="3348000" />
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
-      <workItem from="1618301749227" duration="29134000" />
+      <workItem from="1618301749227" duration="32316000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -257,7 +256,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618336292832</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Refactor filters">
+      <created>1618342471967</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1618342471967</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

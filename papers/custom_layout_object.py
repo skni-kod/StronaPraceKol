@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 
 class Formset(LayoutObject):
-    template = "papers/formset.html"
+    template = "papers/add_paper_author_formset.html"
 
     def __init__(self, formset_name_in_context, template=None):
         self.formset_name_in_context = formset_name_in_context

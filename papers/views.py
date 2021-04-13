@@ -65,7 +65,6 @@ class PaperListView(LoginRequiredMixin, ListView):
         return Paper.objects.all().filter(authors=self.request.user)
 
 
-# @method_decorator(csrf_exempt, name='dispatch')
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
     login_url = 'login'
     model = Paper
@@ -153,6 +152,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadedFileFormSet()
+
         return context
 
     def form_valid(self, form):
