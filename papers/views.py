@@ -55,12 +55,12 @@ class PaperListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        # FOR REVIEWER
-        if self.request.user.groups.filter(name='reviewer').exists():
-            return Paper.objects.all().filter(reviewers=self.request.user)
         # FOR ADMIN
         if self.request.user.is_staff:
             return Paper.objects.all()
+        # FOR REVIEWER
+        if self.request.user.groups.filter(name='reviewer').exists():
+            return Paper.objects.all().filter(reviewers=self.request.user)
         # FOR REGULAR USER
         return Paper.objects.all().filter(authors=self.request.user)
 

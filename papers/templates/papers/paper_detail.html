@@ -264,8 +264,8 @@
             <div class="col-md-3">
                 <ul class="nav nav-tabs nav-fill">
                     {% if user|is_in_group:'reviewer' %}
-                        <li class="nav-item">
-                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                        <li class="nav-item m-2">
+                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
                                data-reviewer="{{ user.pk }}">
                                 Konwersacja z autorem
                             </a>
@@ -273,7 +273,7 @@
                     {% else %}
                         {% for reviewer in paper.reviewers.all %}
                             <li class="nav-item">
-                                <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
+                                <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
                                    data-reviewer="{{ reviewer.pk }}">
                                     {{ reviewer.first_name }} {{ reviewer.last_name }}
                                 </a>

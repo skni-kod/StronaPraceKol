@@ -1,15 +1,14 @@
+from functools import reduce
+from operator import or_
+
 import django_filters
 from django.db.models import Count, Q
-from operator import and_, or_
-from functools import reduce
 from django_filters import CharFilter, ModelChoiceFilter, ChoiceFilter
 from django_filters.constants import EMPTY_VALUES
 from django_filters.widgets import CSVWidget
 
 from .models import Paper, StudentClub, Review, Grade
-from django.contrib.auth.models import User
 
-from pprint import pprint
 
 class MultiValueCharFilter(django_filters.BaseCSVFilter, django_filters.CharFilter):
     """
@@ -90,7 +89,7 @@ class PaperFilter(django_filters.FilterSet):
         ('2', 'Dwie')
     }
     # TODO: When making migration with empty table it causes error
-    FINAL_GRADE_CHOICE = [(obj.value,obj.name) for obj in Grade.objects.filter(tag='final_grade')]
+    FINAL_GRADE_CHOICE = [(obj.value, obj.name) for obj in Grade.objects.filter(tag='final_grade')]
 
     title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł referatu')
 
@@ -118,23 +117,29 @@ class PaperFilter(django_filters.FilterSet):
     final_grade = ChoiceFilter(choices=FINAL_GRADE_CHOICE, field_name='final_grade', label='Ocena końcowa',
                                method='final_grade_func')
 
-    def author_surname_func(self,queryset, val1, val2):
+    def author_surname_func(self, queryset, val1, val2):
         return queryset.filter(reduce(or_, [Q(authors__last_name__icontains=c) for c in val2])).distinct()
 
     def is_approved(self, queryset, val1, val2):
-        return queryset.filter(approved=val2)
+        return queryset.filter(approved=val2).distinct()
 
     def reviewers_check(self, queryset, val1, val2):
-        return queryset.annotate(reviewers_num=Count('reviewers')).filter(reviewers_num=val2)
+        return queryset.annotate(reviewers_num=Count('reviewers')).filter(reviewers_num=val2).distinct()
 
-    def final_grade_func(self,queryset, val1, val2):
+    def final_grade_func(self, queryset, val1, val2):
         return queryset.filter(Q(id__in=Review.objects.filter(final_grade__value=val2))).distinct()
 
     def reviewers_lastname(self, queryset, val1, val2):
         return queryset.filter(reduce(or_, [Q(reviewers__last_name__icontains=c) for c in val2])).distinct()
 
     def reviews_count_func(self, queryset, val1, val2):
-        return queryset.annotate(reviews_count=Count(Q(id__in=Review.objects.all()))).filter(reviews_count=val2)
+        to_exclude = []
+        val2 = int(val2)
+        for itm in queryset.all():
+            if not Review.objects.filter(paper__id=itm.id).count() == val2:
+                to_exclude.append(itm)
+
+        return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
 
     class Meta:
         model = Paper
