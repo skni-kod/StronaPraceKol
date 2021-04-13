@@ -68,10 +68,29 @@ class UploadedFile(models.Model):
         return os.path.basename(self.file.name)
 
 
+class Grade(models.Model):
+    name = models.CharField(max_length=32)
+    value = models.CharField(max_length=16, default='')
+    tag = models.CharField(max_length=16)
+
+    def __str__(self):
+        return f'[{self.tag}] {self.name}'
+
+
 class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     text = models.TextField()
+    correspondence = models.ForeignKey(Grade, related_name='correspondence', on_delete=models.SET_NULL, blank=True,
+                                       null=True, limit_choices_to={'tag': 'correspondence'})
+    originality = models.ForeignKey(Grade, related_name='originality', on_delete=models.SET_NULL, blank=True,
+                                    null=True, limit_choices_to={'tag': 'originality'})
+    merits = models.ForeignKey(Grade, related_name='merits', on_delete=models.SET_NULL, blank=True,
+                               null=True, limit_choices_to={'tag': 'merits'})
+    presentation = models.ForeignKey(Grade, related_name='presentation', on_delete=models.SET_NULL, blank=True,
+                                     null=True, limit_choices_to={'tag': 'presentation'})
+    final_grade = models.ForeignKey(Grade, related_name='final_grade', on_delete=models.SET_NULL, blank=True,
+                                    null=True, limit_choices_to={'tag': 'final_grade'})
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'

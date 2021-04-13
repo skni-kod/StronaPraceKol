@@ -58,25 +58,7 @@
                                    aria-describedby="input_{{ field.name }}"
                                    name="{{ field.name }}"
                                    id="{{ field.id_for_label }}"
-                                   {% if field.value|length > 0 %}value="
-                                           {% for itm in field.value %}{{ itm }},{% endfor %}"{% endif %}
-                                   {% if field.field.required %}required{% endif %}>
-                        </div>
-                    </div>
-                {% endwith %}
-
-                {% with field=filter.form.author_name %}
-                    {{ field.errors }}
-                    <div class="col-md-6">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                                   aria-label="{{ field.help_text }}"
-                                   aria-describedby="input_{{ field.name }}"
-                                   name="{{ field.name }}"
-                                   id="{{ field.id_for_label }}"
+                                   value="{% if not field.value is None %}{{ field.value|join:',' }}{% endif %}"
                                    {% if field.field.required %}required{% endif %}>
                         </div>
                     </div>
@@ -94,6 +76,7 @@
                                    aria-describedby="input_{{ field.name }}"
                                    name="{{ field.name }}"
                                    id="{{ field.id_for_label }}"
+                                   value="{% if not field.value is None %}{{ field.value|join:',' }}{% endif %}"
                                    {% if field.field.required %}required{% endif %}>
                         </div>
                     </div>
@@ -111,10 +94,84 @@
                     </div>
                 {% endwith %}
 
+                {% with field=filter.form.approved %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endwith %}
 
-                <div class="col-md-6 text-center">
+                {% with field=filter.form.reviewers_field %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.reviewer_surname %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   value="{% if not field.value is None %}{{ field.value|join:',' }}{% endif %}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.reviews_count %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.final_grade %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endwith %}
+
+
+                <div class="col-md-12 text-center">
+
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
+                            {% if not user|is_in_group:'reviewer' %}
+                                <a href="{% url 'paperCreate' %}">
+                                    <button type="button" class="btn btn-success">
+                                        Dodaj referat
+                                    </button>
+                                </a>
+                            {% endif %}
                             <label class="input-group-text">Znaleziono: </label>
                         </div>
                         <div class="form-control">
@@ -133,18 +190,6 @@
             </div>
         </form>
 
-        {% if not user|is_in_group:'reviewer' %}
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <a href="{% url 'paperCreate' %}">
-                        <button type="button" class="btn btn-success">
-                            Dodaj referat
-                        </button>
-                    </a>
-                </div>
-            </div>
-        {% endif %}
-
 
         <div class="row">
             <div class="col-md-12">
@@ -153,7 +198,8 @@
                         <div class="m-4 p-3 border border-primary rounded">
                             <div class="row">
                                 <div class="col-md-7 text-left">
-                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id={{ forloop.counter }}{{ queryset_pks }}">
+                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id=
+                                            {{ forloop.counter }}{{ queryset_pks }}">
                                         <h3>
                                             <span class="badge badge-primary">
                                                 {{ paper.title|truncatechars:40 }}
@@ -199,7 +245,8 @@
                                 <div class="col-md-6 my-2">
                                     <h4>Recenzenci:</h4>
                                     {% if paper.reviewers.all|length < 2 and paper.reviewers.all|length >= 0 and user.is_staff %}
-                                        <a href="{% url 'paperDetail' paper.id %}?id={{ forloop.counter }}{{ queryset_pks }}">
+                                        <a href="{% url 'paperDetail' paper.id %}?id=
+                                                {{ forloop.counter }}{{ queryset_pks }}">
                                             <button type="button" class="btn btn-primary">
                                                 Przypisz recenzentów
                                             </button>
@@ -372,7 +419,13 @@
                     {% endwith %}
 
                 {% else %}
-                    <p> Brak przesłanych referatów </p>
+                    <div class="row text-center">
+                        <div class="col">
+                            <span class="badge badge-secondary">
+                                <h3>Nie znaleziono</h3>
+                            </span>
+                        </div>
+                    </div>
                 {% endif %}
                 <br>
 

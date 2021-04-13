@@ -1,17 +1,18 @@
+from braces.views import CsrfExemptMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
+from django.db.models import Count
 from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
-#from django.utils.decorators import method_decorator
-from braces.views import CsrfExemptMixin
 
 from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
 from .forms import *
+from pprint import pprint
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -21,13 +22,18 @@ class PaperListView(LoginRequiredMixin, ListView):
     ordering = ['-last_edit_date']
 
     def get_context_data(self, **kwargs):
-
         context = super(PaperListView, self).get_context_data(**kwargs)
+
         context['site_name'] = 'papers'
         context['site_title'] = f'Referaty - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
+
         # for select input
         context['filter'].form['club'].field.widget.attrs['class'] = 'custom-select'
+        context['filter'].form['approved'].field.widget.attrs['class'] = 'custom-select'
+        context['filter'].form['reviewers_field'].field.widget.attrs['class'] = 'custom-select'
+        context['filter'].form['reviews_count'].field.widget.attrs['class'] = 'custom-select'
+        context['filter'].form['final_grade'].field.widget.attrs['class'] = 'custom-select'
 
         papers = context['filter'].qs.order_by('-last_edit_date')
 
@@ -45,17 +51,21 @@ class PaperListView(LoginRequiredMixin, ListView):
             context['papers'] = paginator.page(1)
         except EmptyPage:
             context['papers'] = paginator.page(paginator.num_pages)
+
         return context
 
     def get_queryset(self):
         # FOR REVIEWER
         if self.request.user.groups.filter(name='reviewer').exists():
             return Paper.objects.all().filter(reviewers=self.request.user)
+        # FOR ADMIN
+        if self.request.user.is_staff:
+            return Paper.objects.all()
         # FOR REGULAR USER
         return Paper.objects.all().filter(authors=self.request.user)
 
 
-#@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
     login_url = 'login'
     model = Paper
@@ -63,6 +73,8 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
     def get_context_data(self, *args, **kwargs):
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
+
+        context['reviews'] = Review.objects.filter(paper=context['paper'])
 
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
@@ -360,11 +372,12 @@ class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
     template_name = 'papers/reviewer_assignment.html'
     form_class = ReviewerAssignmentForm
-    success_url = '/papers/assignreviewers/'
+    success_url = '/papers/reviews/assign/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['papers'] = Paper.objects.filter(approved=True)
+        context['papers'] = Paper.objects.annotate(reviewers_num=Count('reviewers')).filter(approved=True,
+                                                                                            reviewers_num__lt=2)
         return context
 
     def test_func(self):
