@@ -89,7 +89,7 @@ class PaperFilter(django_filters.FilterSet):
         ('1', 'Jedna'),
         ('2', 'Dwie')
     }
-
+    # TODO: When making migration with empty table it causes error
     FINAL_GRADE_CHOICE = [(obj.value,obj.name) for obj in Grade.objects.filter(tag='final_grade')]
 
     title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł referatu')
@@ -128,33 +128,13 @@ class PaperFilter(django_filters.FilterSet):
         return queryset.annotate(reviewers_num=Count('reviewers')).filter(reviewers_num=val2)
 
     def final_grade_func(self,queryset, val1, val2):
-        return queryset.filter(Q(reviews__final_grade__value=val2)).distinct()
-        # to_exclude = []
-        # for itm in queryset.all():
-        #     if Review.objects.filter(paper__id=itm.id, final_grade__value=val2).count() == 0:
-        #         to_exclude.append(itm)
-        #
-        # return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
+        return queryset.filter(Q(id__in=Review.objects.filter(final_grade__value=val2))).distinct()
 
     def reviewers_lastname(self, queryset, val1, val2):
-        to_exclude = []
-        for itm in queryset.all():
-            for val in val2:
-                if itm.reviewers.filter(last_name__icontains=val):
-                    break
-            else:
-                to_exclude.append(itm)
-
-        return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
+        return queryset.filter(reduce(or_, [Q(reviewers__last_name__icontains=c) for c in val2])).distinct()
 
     def reviews_count_func(self, queryset, val1, val2):
-        to_exclude = []
-        val2 = int(val2)
-        for itm in queryset.all():
-            if not Review.objects.filter(paper__id=itm.id).count() == val2:
-                to_exclude.append(itm)
-
-        return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
+        return queryset.annotate(reviews_count=Count(Q(id__in=Review.objects.all()))).filter(reviews_count=val2)
 
     class Meta:
         model = Paper
