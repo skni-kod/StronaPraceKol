@@ -18,7 +18,7 @@
                     <div class="card-body overflow-auto">
                         {% with field=form.title %}
                             {{ field.errors }}
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="input_title">{{ field.label }}</span>
@@ -29,7 +29,7 @@
                                            aria-describedby="input_{{ field.name }}"
                                            name="{{ field.name }}"
                                            id="{{ field.id_for_label }}"
-                                           {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                           {% if not field.value is None %}value="{{ field.value }}"{% endif %}
                                            {% if field.field.required %}required{% endif %}>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
 
                         {% with field=form.club %}
                             {{ field.errors }}
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"
@@ -52,7 +52,7 @@
 
                         {% with field=form.keywords %}
                             {{ field.errors }}
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="input_title">{{ field.label }}</span>
@@ -63,7 +63,7 @@
                                            aria-describedby="input_{{ field.name }}"
                                            name="{{ field.name }}"
                                            id="{{ field.id_for_label }}"
-                                           {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                           {% if not field.value is None %}value="{{ field.value|join:' ' }}"{% endif %}
                                            {% if field.field.required %}required{% endif %}>
                                 </div>
                             </div>
@@ -81,11 +81,16 @@
                             </div>
                         {% endwith %}
 
-                        <div class="row text-center">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <a href="{% url 'paperList' %}">
-                                <button type="button" class="btn btn-warning">Anuluj</button>
+                        <hr class="my-2">
+
+                        <div class="row text-center my-4">
+                            <div class="col-md-4 offset-md-4">
+                                 <a href="{% url 'paperList' %}">
+                                <button type="button" class="mx-4 btn btn-warning">Anuluj</button>
                             </a>
+                            <button type="submit" class="mx-4 btn btn-primary">Zapisz</button>
+                            </div>
+
                         </div>
                     </div>
                 </form>

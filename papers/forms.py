@@ -65,10 +65,7 @@ class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
         fields = ['name', 'surname', 'email']
-        labels = {
-            'name': _('Imię'),
-            'surname': _('Nazwisko')
-        }
+        labels = dict(name=_('Imię'), surname=_('Nazwisko'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -100,7 +97,8 @@ class PaperCreationForm(forms.ModelForm):
         model = Paper
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
-        labels = dict(title=_('Tytuł'), club=_('Koło'), keywords=_('Słowa kluczowe'), description=_('Opis'))
+        labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
+        help_texts = dict(title=_('Tytuł referatu'),keywords=_('Pojedyncze słowa oddzielone spacją'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -171,9 +169,7 @@ class ReviewCreationForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['text']
-        labels = {
-            'text': _('Recenzja'),
-        }
+        labels = dict(text=_('Recenzja'))
 
 
 class ReviewerAssignmentForm(forms.ModelForm):
