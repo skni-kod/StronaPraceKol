@@ -2,17 +2,20 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <form method="post" id="admin-assign-reviewers-form">
-        {% csrf_token %}
-        {{ form.reviewers.errors }}
-        {{ form.reviewers }}
-    </form>
-
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" id="admin-assign-reviewers-form">
+                {% csrf_token %}
+                {{ form.reviewers.errors }}
+                {{ form.reviewers }}
+            </form>
+        </div>
+    </div>
 {% endblock %}

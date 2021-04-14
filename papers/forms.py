@@ -206,7 +206,6 @@ class ReviewCreationForm(forms.ModelForm):
         }
 
 
-
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         cnt = Paper.objects.filter(reviewers=obj).count()
@@ -222,10 +221,10 @@ class ReviewerAssignmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['reviewers'].widget.attrs = {'id': 'admin-assign-reviewers-select'}
+        self.fields['reviewers'].widget.attrs = {'id': 'admin-assign-reviewers-select','size':'10','class': 'custom-select'}
 
     def clean_reviewers(self):
         reviewers = self.cleaned_data['reviewers']
         if reviewers.count() > 2:
-            raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
+            raise forms.ValidationError('Nie można przypisać więcej niż dwóch recenzentów')
         return reviewers

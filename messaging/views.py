@@ -23,6 +23,8 @@ def get_message(request):
         last_message_id = int(request.POST['last_message_id'])
         reviewer = User.objects.filter(pk=request.POST['reviewer_id']).first()
 
+        print(reviewer)
+        print(paper.reviewers.all())
         if reviewer is None or reviewer not in paper.reviewers.all():
             response = HttpResponse()
             response.status_code = 401

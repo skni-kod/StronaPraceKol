@@ -239,7 +239,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Paper
-    template_name = 'papers/delete_paper.html'
+    template_name = 'papers/paper_delete.html'
     success_url = '/papers'
 
     def test_func(self):
@@ -328,7 +328,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Review
-    template_name = 'papers/delete_review.html'
+    template_name = 'papers/paper_delete.html'
     success_url = '/papers'
 
     def test_func(self):
