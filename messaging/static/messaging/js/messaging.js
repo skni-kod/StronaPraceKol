@@ -64,7 +64,6 @@ function RenderMessages() {
         tmpStr = tmpStr.replace('[text]', item.text);
         tmpStr = tmpStr.replace('[date]', item.date);
         $("#messages_box").append(tmpStr);
-        console.debug(tmpStr);
     });
 
 

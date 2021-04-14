@@ -213,7 +213,7 @@ class ReviewerChoiceField(forms.ModelMultipleChoiceField):
 
 
 class ReviewerAssignmentForm(forms.ModelForm):
-    reviewers = ReviewerChoiceField(queryset=User.objects.filter(groups__name='reviewer'), label='Recenzent')
+    reviewers = ReviewerChoiceField(queryset=User.objects.filter(groups__name='reviewer'), label='Recenzent', required=False)
 
     class Meta:
         model = Paper
@@ -221,6 +221,7 @@ class ReviewerAssignmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['reviewers'].widget.attrs = {'id': 'admin-assign-reviewers-select'}
 
     def clean_reviewers(self):
         reviewers = self.cleaned_data['reviewers']

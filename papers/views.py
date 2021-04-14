@@ -372,8 +372,13 @@ class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
 class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Paper
-    template_name = 'papers/reviewer_assignment.html'
+    template_name = 'papers/reviewer_assign.html'
     form_class = ReviewerAssignmentForm
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Zapisano zmiany')
+        super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return ''

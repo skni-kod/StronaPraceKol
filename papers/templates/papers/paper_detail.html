@@ -228,7 +228,12 @@
                         <div class="tab-content bg-white border border-light p-4">
                             {% if user.is_staff %}
                                 <div id="admin-assign-reviewers" class="tab-pane fade">
+                                    Wybierz
+                                    <div id="admin-assign-reviewers-div">
 
+                                    </div>
+                                    <button id="admin-assign-reviewers-submit" type="button" class="btn">Zapisz</button>
+                                    <button id="admin-assign-reviewers-clear" type="button" class="btn">Wyczyść</button>
                                 </div>
                             {% endif %}
                             {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}

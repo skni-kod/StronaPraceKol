@@ -13,6 +13,6 @@ urlpatterns = [
     path('paper/<int:pk>/addreview/', views.ReviewCreateView.as_view(), name='reviewCreate'),
     path('paper/<int:paper>/review/<int:pk>/edit/', views.ReviewUpdateView.as_view(), name='reviewEdit'),
     path('paper/<int:paper>/review/<int:pk>/delete/', views.ReviewDeleteView.as_view(), name='reviewDelete'),
-    path('reviews/', views.UserReviewListView.as_view(), name='userReviewList'),
     path('paper/<int:pk>/review/assign/', views.ReviewerAssignmentView.as_view(), name='reviewerAssignment'),
+    path('reviews/', views.UserReviewListView.as_view(), name='userReviewList'),
 ]
