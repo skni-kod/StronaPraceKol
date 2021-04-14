@@ -188,7 +188,7 @@ class PaperEditForm(forms.ModelForm):
 
                          HTML("<br>"),
                          HTML('<div class="row offset-1">'),
-                         Formset('coAuthors')),
+                         Formset('coAuthors', 'papers/add_paper_author_formset.html')),
                 HTML('</div>'),
             )
         )
@@ -204,7 +204,6 @@ class ReviewCreationForm(forms.ModelForm):
         labels = {
             'text': _('Recenzja'),
         }
-
 
 
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):
@@ -228,3 +227,65 @@ class ReviewerAssignmentForm(forms.ModelForm):
         if reviewers.count() > 2:
             raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
         return reviewers
+
+
+class CoAuthorDynamicForm(forms.ModelForm):
+
+    class Meta:
+        model = Paper
+        exclude = '__all__'  # If that doesn't work exclude all fields explicitly
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        coAuthors = CoAuthor.objects.filter(paper=self.instance)
+        for i in range(len(coAuthors) + 1):
+            name_field_name = f'coAuthor_{i}_name'
+            surname_field_name = f'coAuthor_{i}_surname'
+            email_field_name = f'coAuthor_{i}_email'
+            self.fields[name_field_name] = forms.CharField(required=True)
+            self.fields[surname_field_name] = forms.CharField(required=True)
+            self.fields[email_field_name] = forms.EmailField(required=False)
+            try:
+                self.initial[name_field_name] = coAuthors[i].name
+                self.initial[surname_field_name] = coAuthors[i].surname
+                self.initial[email_field_name] = coAuthors[i].email
+            except IndexError:
+                self.initial[name_field_name] = ''
+                self.initial[surname_field_name] = ''
+                self.initial[email_field_name] = ''
+        # create extra blank fields
+        name_field_name = f'coAuthor_{i+1}_name'
+        surname_field_name = f'coAuthor_{i+1}_surname'
+        email_field_name = f'coAuthor_{i+1}_email'
+        self.fields[name_field_name] = forms.CharField(required=True)
+        self.fields[surname_field_name] = forms.CharField(required=True)
+        self.fields[email_field_name] = forms.EmailField(required=False)
+
+    def clean(self):
+        coAuthors = set()
+        i = 0
+        name_field_name = f'coAuthor_{i}_name'
+        surname_field_name = f'coAuthor_{i}_surname'
+        email_field_name = f'coAuthor_{i}_email'
+        while self.cleaned_data.get(name_field_name):
+            coAuthors.add([self.cleaned_data[name_field_name],
+                           self.cleaned_data[surname_field_name],
+                           self.cleaned_data[email_field_name]])
+            i += 1
+            name_field_name = f'coAuthor_{i}_name'
+            surname_field_name = f'coAuthor_{i}_surname'
+            email_field_name = f'coAuthor_{i}_email'
+        self.cleaned_data['coAuthors'] = coAuthors
+
+    def save(self):
+        paper = self.instance
+        paper.coauthor_set.all().delete()
+        for coAuthor in self.cleaned_data['coAuthors']:
+            CoAuthor.objects.create(name=coAuthor[0],
+                                    surname=coAuthor[1],
+                                    email=coAuthor[2])
+
+    def get_coauthor_fields(self):
+        for field_name in self.data:
+            if field_name.startswith('coAuthor_'):
+                yield self[field_name]
