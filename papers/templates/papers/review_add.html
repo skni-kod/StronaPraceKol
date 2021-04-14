@@ -1,24 +1,10 @@
 {% load crispy_forms_tags %}
 {% load custom_papers_tags %}
-{% block content %}
-    <div class="container">
 
-        <div class="row text-center">
-            <div class="col">
-                <form action="{% url 'paperDetail' paper.id %}">
-                    <input type="submit" class="btn btn-link" value="{{ paper.title }}" name="Log"/>
-                </form>
-
-            </div>
-        </div>
-
-        <hr>
-
-        {% if review %}
+            {% if review %}
             <div class="row text-center">
                 <div class="col mt-1">
                     <form method='POST' class="post-form">
-
                         {% csrf_token %}
                         {{ form|crispy }}
                         <hr>
@@ -66,8 +52,3 @@
 
 
         {% endif %}
-
-
-    </div>
-
-{% endblock %}

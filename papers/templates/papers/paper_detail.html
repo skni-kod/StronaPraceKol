@@ -191,67 +191,70 @@
         </div>
     </div>
 
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-left offset-md-1">
+            <h4>Recenzje</h4>
+        </div>
+    </div>
+
+    <hr class="my-2">
+
     <div class="row">
         <div class="col-md-12">
-            <div class="row my-4">
-                <div class="col-md-3 text-left">
-                    <h4>Recenzje</h4>
-                </div>
-                <div class="col-md-8">
-                    {% if reviews|length < 1 and not user.is_staff and not user|is_in_group:'reviewer' %}
-                        <span class="badge bg-secondary">Brak recenzji</span>
-                    {% else %}
-                        <ul class="nav nav-pills">
-                            {% if user.is_staff %}
-                                <li class="nav-item m-2">
-                                    <a data-toggle="tab" href="#admin-assign-reviewers"
-                                       class="badge bg-info text-dark p-2">
-                                        <h5>Przypisz recenzentów</h5>
-                                    </a>
-                                </li>
-                            {% endif %}
-                            {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
-                                {% for reviewer in paper.reviewers.all %}
-                                    <li class="nav-item m-2">
-                                        <a data-toggle="tab" href="#review-{{ reviewer.username }}"
-                                           class="badge bg-info text-dark p-2">
-                                            <h5>{{ reviewer.first_name }} {{ reviewer.last_name }}</h5>
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
-                        </ul>
+            {% if reviews|length < 1 and not user.is_staff and not user|is_in_group:'reviewer' %}
+                <span class="badge bg-secondary">Brak recenzji</span>
+            {% else %}
+                <ul class="nav nav-pills justify-content-center">
+                    {% if user.is_staff %}
+                        <li class="nav-item m-2">
+                            <a data-toggle="tab" href="#admin-assign-reviewers"
+                               class="badge bg-info text-dark p-2">
+                                <h5>Przypisz recenzentów</h5>
+                            </a>
+                        </li>
                     {% endif %}
-                </div>
-            </div>
+                    {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                        {% for reviewer in paper.reviewers.all %}
+                            <li class="nav-item m-2">
+                                <a data-toggle="tab" href="#review-{{ reviewer.username }}"
+                                   class="badge bg-info text-dark p-2">
+                                    <h5>{{ reviewer.first_name }} {{ reviewer.last_name }}</h5>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
-                        <div class="tab-content bg-white border border-light p-4">
-                            {% if user.is_staff %}
-                                <div id="admin-assign-reviewers" class="tab-pane fade text-center">
+        <div class="col-md-12">
+            <div class="col-md-10 offset-md-1">
+                {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
+                    <div class="tab-content p-4">
+                        {% if user.is_staff %}
+                            <div id="admin-assign-reviewers" class="tab-pane fade text-center">
                                     <span class="text-muted">
                                         Aby wybrać kilku recenzentów(maksymalnie 2) należy przytrzymać klawisz Control.
                                         <br>
                                         Liczba w nawiazie przy nazwisku oznacza ilość przypisanych już prac do recenzenta
                                     </span>
-                                    <div id="admin-assign-reviewers-div" class="my-4"></div>
-                                    <button id="admin-assign-reviewers-submit" type="button" class="btn btn-primary">
-                                        Zapisz
-                                    </button>
-                                    <button id="admin-assign-reviewers-clear" type="button" class="btn btn-primary">
-                                        Wyczyść
-                                    </button>
-                                </div>
-                            {% endif %}
+                                <div id="admin-assign-reviewers-div" class="my-4"></div>
+                                <button id="admin-assign-reviewers-submit" type="button" class="btn btn-primary">
+                                    Zapisz
+                                </button>
+                                <button id="admin-assign-reviewers-clear" type="button" class="btn btn-primary">
+                                    Wyczyść
+                                </button>
+                            </div>
+                        {% endif %}
 
-                            {% for reviewer in paper.reviewers.all %}
-                                <div id="review-{{ reviewer.username }}" class="tab-pane fade review-box" data-reviewer="{{ reviewer.pk }}"></div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
+                        {% for reviewer in paper.reviewers.all %}
+                            <div id="review-{{ reviewer.username }}" class="tab-pane fade review-box"
+                                 data-reviewer="{{ reviewer.pk }}"></div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -289,9 +292,9 @@
                 </ul>
             </div>
             <div class="col-md-9">
-                <div class="tab-content bg-white border border-light p-4">
+                <div class="tab-content p-4">
                     <div class="tab-pane fade messagebox">
-                        <div id="messages_box" class="container"></div>
+                        <div id="messages_box" class="bg-white container p-4"></div>
                         <div class="input-group">
                          <textarea id="input_message" placeholder="Wprowadź wiadomość"
                                    aria-describedby="send_message_button"

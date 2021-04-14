@@ -5,8 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -279,6 +278,8 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['site_name'] = 'reviews'
+        context['site_title'] = f'Recenzje - {SITE_NAME}'
         return context
 
     def test_func(self):
@@ -298,13 +299,13 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = ReviewCreationForm
 
     def test_func(self):
+        user = self.request.user
         paper = Paper.objects.get(pk=self.kwargs.get('paper'))
-        if self.request.user not in paper.authors.all() and self.request.user.groups.filter(name='reviewer').exists():
-            for review in paper.review_set.all():
-                if review.author == self.request.user:
-                    return False
-            return True
-        return False
+
+        if user in paper.authors.all() or (self.request.user.groups.filter(
+                name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
+            return False
+        return True
 
     def get_context_data(self, **kwargs):
         context = super(ReviewCreateView, self).get_context_data(**kwargs)
@@ -415,7 +416,8 @@ def userReviewShow(request, **kwargs):
 
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
-    if paper is None or reviewer is None or (user.groups.filter(name='reviewer').exists() and user not in paper.reviewers.all() and not user.is_staff):
+    if paper is None or reviewer is None or (
+            user.groups.filter(name='reviewer').exists() and user not in paper.reviewers.all() and not user.is_staff):
         return HttpResponse(status=404)
     if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user not in paper.authors.all():
         return HttpResponse(status=404)
@@ -426,9 +428,6 @@ def userReviewShow(request, **kwargs):
         if user == reviewer:
             return redirect('reviewCreate', kwargs['paper'])
         else:
-            #TODO: create new view with information: "No review"
-            return redirect('contact')
+            return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
-
-
