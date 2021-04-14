@@ -6,11 +6,14 @@
 
         <div class="row">
             <div class="col text-center">
-                <h1> Czy na pewno chcesz usunąć recenzję referatu: <span class="text-danger">{{ paper.title }}?</span>
-                </h1>
-                <hr>
-                {{ review.text|safe }}
-                <hr>
+                <h3>
+                    Czy na pewno usunąć recenzję od {{ review.author.first_name }} {{ review.author.last_name }}
+                    do referatu:
+                    <span class="text-danger">
+                            {{ paper.title }}
+                    </span>
+                </h3>
+                <hr class="my-2">
             </div>
         </div>
 
@@ -18,15 +21,14 @@
             <div class="col">
                 <form method='POST'>
                     {% csrf_token %}
-                    <input type="submit" class="btn btn-danger btn-block" value="Usun recenzję"/>
+                    <input type="submit" class="btn btn-danger btn-block" value="Tak usuń"/>
                 </form>
             </div>
 
             <div class="col">
-                <form action='{% url "paperList" %}'>
-                    {% csrf_token %}
+                <a href="{% url 'paperDetail' paper.id %}">
                     <input type="submit" class="btn btn-warning btn-block" value="Anuluj"/>
-                </form>
+                </a>
             </div>
         </div>
 
