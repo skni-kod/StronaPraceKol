@@ -48,21 +48,31 @@
                 </div>
 
                 <div class="col text-left">
-                    <p> {{ user.email }} </p>
+                    {% if user.email|length == 0 %}
+                        <p> Nie podano </p>
+                    {% else %}
+                        <p> {{ user.email }} </p>
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col">
-                    <form action="{% url 'passwordChange' %}">
-                        <input type="submit" class="btn btn-link" value="Zmień hasło"/>
-                    </form>
+            <div class="row mt-5">
+                <div class="col-md-3 offset-md-1">
+                    <a href="{% url 'passwordChange' %}">
+                        <button type="button" class="btn btn-info">Zmień hasło</button>
+                    </a>
                 </div>
 
-                <div class="col">
-                    <form action="{% url 'accountDelete' %}">
-                        <input type="submit" class="btn btn-link text-danger" value="Usuń konto"/>
-                    </form>
+                <div class="col-md-3 offset-md-1">
+                    <a href="{% url 'accountDelete' %}">
+                        <button type="button" class="btn btn-danger">Usuń konto</button>
+                    </a>
+                </div>
+
+                <div class="col-md-3 offset-md-1">
+                    <a href="{% url 'logout' %}">
+                        <button type="button" class="btn btn-info">Wyloguj</button>
+                    </a>
                 </div>
             </div>
 

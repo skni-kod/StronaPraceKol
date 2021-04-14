@@ -12,7 +12,7 @@ class StudentClub(models.Model):
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.acronym
+        return self.name
 
     @classmethod
     def get_default_pk(cls):
@@ -70,10 +70,11 @@ class UploadedFile(models.Model):
 
 class Grade(models.Model):
     name = models.CharField(max_length=32)
+    value = models.CharField(max_length=16, default='')
     tag = models.CharField(max_length=16)
 
     def __str__(self):
-        return self.name
+        return f'[{self.tag}] {self.name}'
 
 
 class Review(models.Model):
@@ -82,7 +83,7 @@ class Review(models.Model):
     text = models.TextField()
     correspondence = models.ForeignKey(Grade, related_name='correspondence', on_delete=models.SET_NULL, blank=True,
                                        null=True, limit_choices_to={'tag': 'correspondence'})
-    originality = models.ForeignKey(Grade, related_name='originality',  on_delete=models.SET_NULL, blank=True,
+    originality = models.ForeignKey(Grade, related_name='originality', on_delete=models.SET_NULL, blank=True,
                                     null=True, limit_choices_to={'tag': 'originality'})
     merits = models.ForeignKey(Grade, related_name='merits', on_delete=models.SET_NULL, blank=True,
                                null=True, limit_choices_to={'tag': 'merits'})

@@ -65,10 +65,7 @@ class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
         fields = ['name', 'surname', 'email']
-        labels = {
-            'name': _('Imię'),
-            'surname': _('Nazwisko')
-        }
+        labels = dict(name=_('Imię'), surname=_('Nazwisko'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -94,57 +91,19 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 class PaperCreationForm(forms.ModelForm):
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
+    coAuthors = Formset('coAuthors')
 
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
-        labels = {
-            'title': _('Tytuł'),
-            'club': _('Koło'),
-            'keywords': _('Słowa kluczowe'),
-            'description': _('Krótki opis'),
-        }
+        labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
+        help_texts = dict(title=_('Tytuł referatu'),keywords=_('Pojedyncze słowa oddzielone spacją'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = True
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3 create-label'
-        self.helper.field_class = 'col-md-9'
-        self.helper.layout = Layout(
-            Div(
-                Field('title'),
-                Field('club'),
-                Field('keywords'),
-                Field('description'),
-                HTML("<br><hr>"),
-
-                Fieldset('Współautorzy',
-                         HTML("<br><div class='row'>"),
-                         HTML("<div class='col offset-2'>"),
-                         Formset('coAuthors'),
-                         HTML("</div>"),
-                         HTML("</div>"),
-
-                         ),
-
-                HTML("<br><hr>"),
-
-                Fieldset('Pliki',
-                         HTML("<br><div class='row'>"),
-                         HTML("<div class='col offset-4'>"),
-                         Formset('files', 'papers/upload_files_formset.html')),
-                HTML("</div>"),
-                HTML("</div>"),
-
-                HTML("<hr><br>"),
-                ButtonHolder(Submit('submit', 'Dodaj')),
-                HTML("<br>"),
-            )
-        )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
+        self.fields['club'].widget.attrs['class'] = 'custom-select'
 
 
 class PaperEditForm(forms.ModelForm):
@@ -209,15 +168,8 @@ class ReviewCreationForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade']
-        labels = {
-            'text': _('Recenzja'),
-            'correspondence': _('Ocena zgodności z tematyką konferencji'),
-            'originality': _('Ocena oryginalności'),
-            'merits': _('Ocena poprawności merytorycznej'),
-            'presentation': _('Ocena jakości prezentacji'),
-            'final_grade': _('Ocena końcowa'),
-        }
+        fields = ['text']
+        labels = dict(text=_('Recenzja'))
 
 
 class ReviewerAssignmentForm(forms.ModelForm):

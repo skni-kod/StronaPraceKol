@@ -191,114 +191,127 @@
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-12 text-left offset-md-1">
-            <h4>Recenzje</h4>
-        </div>
-    </div>
-
-    <hr class="my-2">
-
     <div class="row">
         <div class="col-md-12">
-            <ul class="nav nav-tabs nav-fill">
-                {% if user.is_staff %}
-                    <li class="nav-item">
-                        <a data-toggle="tab" href="#admin-add-reviewers" class="nav-link">
-                            Przypisz recenzentów
-                        </a>
-                    </li>
-                {% endif %}
-                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
-                    {% for reviewer in paper.reviewers.all %}
-                        <li class="nav-item">
-                            <a data-toggle="tab" href="#review-{{ reviewer.username }}" class="nav-link">
-                                {{ reviewer.first_name }} {{ reviewer.last_name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                {% endif %}
-            </ul>
-
-            <div class="tab-content bg-white border border-light p-4">
-                {% if user.is_staff %}
-                    <div id="admin-add-reviewers" class="tab-pane fade">
-                        <h3>Menu 1</h3>
-                        <p>
-                            dsdfsfd
-                        </p>
-                    </div>
-                {% endif %}
-                {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
-                    {% for reviewer in paper.reviewers.all %}
-                        <div id="review-{{ reviewer.username }}" class="tab-pane fade">
-                            <h3>{{ reviewer.username }}</h3>
-                            <p>
-                            </p>
+            <div class="row my-4">
+                <div class="col-md-3 text-left">
+                    <h4>Recenzje</h4>
+                </div>
+                <div class="col-md-8">
+                    {% if reviews|length < 1 and not user.is_staff and not user|is_in_group:'reviewer' %}
+                        <span class="badge bg-secondary">Brak recenzji</span>
+                    {% else %}
+                        <ul class="nav nav-pills">
+                            {% if user.is_staff %}
+                                <li class="nav-item">
+                                    <a data-toggle="tab" href="#admin-add-reviewers" class="badge bg-info text-dark pt-2 px-2">
+                                        <h5>Przypisz recenzentów</h5>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                                {% for review in reviews %}
+                                    <li class="nav-item">
+                                        <a data-toggle="tab" href="#review-{{ review.author.username }}" class="badge bg-info text-dark pt-2 px-2">
+                                            <h5>{{ review.author.first_name }} {{ review.author.last_name }}</h5>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
+                        <div class="tab-content bg-white border border-light p-4">
+                            {% if user.is_staff %}
+                                <div id="admin-add-reviewers" class="tab-pane fade">
+                                    <h3>Menu 1</h3>
+                                    <p>
+                                        dsdfsfd
+                                    </p>
+                                </div>
+                            {% endif %}
+                            {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                                {% for reviewer in paper.reviewers.all %}
+                                    <div id="review-{{ reviewer.username }}" class="tab-pane fade">
+                                        <h3>{{ reviewer.username }}</h3>
+                                        <p>
+                                        </p>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                         </div>
-                    {% endfor %}
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-12 text-left offset-md-1">
-            <h4>Wiadomości</h4>
+    {% if paper.reviewers.all|length > 0 %}
+
+        <div class="row mt-5">
+            <div class="col-md-12 text-left offset-md-1">
+                <h4>Wiadomości</h4>
+            </div>
         </div>
-    </div>
 
-    <hr class="my-2">
+        <hr class="my-2">
 
-    <div class="row">
-        <div class="col-md-3">
-            <ul class="nav nav-tabs nav-fill">
-                {% if user|is_in_group:'reviewer' %}
-                    <li class="nav-item">
-                        <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
-                           data-reviewer="{{ user.pk }}">
-                            Konwersacja z autorem
-                        </a>
-                    </li>
-                {% else %}
-                    {% for reviewer in paper.reviewers.all %}
-                        <li class="nav-item">
-                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link"
-                               data-reviewer="{{ reviewer.pk }}">
-                                {{ reviewer.first_name }} {{ reviewer.last_name }}
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-tabs nav-fill">
+                    {% if user|is_in_group:'reviewer' %}
+                        <li class="nav-item m-2">
+                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
+                               data-reviewer="{{ user.pk }}">
+                                Konwersacja z autorem
                             </a>
                         </li>
-                    {% endfor %}
-                {% endif %}
-            </ul>
-        </div>
-        <div class="col-md-9">
-            <div class="tab-content bg-white border border-light p-4">
-                <div id="messagebox" class="tab-pane fade messagebox">
-                    <div id="messages_box" class="container"></div>
-                    <div class="input-group">
+                    {% else %}
+                        {% for reviewer in paper.reviewers.all %}
+                            <li class="nav-item">
+                                <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
+                                   data-reviewer="{{ reviewer.pk }}">
+                                    {{ reviewer.first_name }} {{ reviewer.last_name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content bg-white border border-light p-4">
+                    <div id="messagebox" class="tab-pane fade messagebox">
+                        <div id="messages_box" class="container"></div>
+                        <div class="input-group">
                          <textarea id="input_message" placeholder="Wprowadź wiadomość"
                                    aria-describedby="send_message_button"
                                    class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <button id="send_message_button" class="btn btn-primary">Wyślij</button>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <button id="send_message_button" class="btn btn-primary">Wyślij</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        send_message_url = "{% url 'send_message' %}";
-        get_messages_url = "{% url 'get_messages' %}";
-        render_message_url = "{% url 'render_messages' %}";
-        Username = "{{ user.username }}";
-        PaperId = "{{ paper.pk }}";
-        ReviewerId = 0;
-    </script>
+        <script>
+            send_message_url = "{% url 'send_message' %}";
+            get_messages_url = "{% url 'get_messages' %}";
+            render_message_url = "{% url 'render_messages' %}";
+            Username = "{{ user.username }}";
+            PaperId = "{{ paper.pk }}";
+            ReviewerId = 0;
+        </script>
+
+    {% endif %}
+
 
     <script src="{% static  'js/messaging.js' %}"></script>
     <script src="{% static  'js/papers.js' %}"></script>
