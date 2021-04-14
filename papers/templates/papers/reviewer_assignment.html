@@ -2,12 +2,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
 <form method="post">
     {% csrf_token %}
     {{ form.reviewers.errors }}
     {{  form.reviewers }}
     <input type="submit" value="Zapisz">
 </form>
-
 {% endblock %}

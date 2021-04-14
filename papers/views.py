@@ -74,7 +74,6 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
         paper_iter = 0
