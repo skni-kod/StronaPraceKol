@@ -14,84 +14,8 @@
         <div class="row text-center">
             <div class="col-md-12">
                 <form method="POST" class="post-form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="card-body overflow-auto">
-                        {% with field=form.title %}
-                            {{ field.errors }}
-                            <div class="col-md-12">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input_title">{{ field.label }}</span>
-                                    </div>
-
-                                    <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                                           aria-label="{{ field.help_text }}"
-                                           aria-describedby="input_{{ field.name }}"
-                                           name="{{ field.name }}"
-                                           id="{{ field.id_for_label }}"
-                                           {% if not field.value is None %}value="{{ field.value }}"{% endif %}
-                                           {% if field.field.required %}required{% endif %}>
-                                </div>
-                            </div>
-                        {% endwith %}
-
-                        {% with field=form.club %}
-                            {{ field.errors }}
-                            <div class="col-md-12">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"
-                                              id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                    </div>
-                                    {{ field }}
-                                </div>
-                            </div>
-                        {% endwith %}
-
-                        {{ field.coAuthors }}
-
-                        {% with field=form.keywords %}
-                            {{ field.errors }}
-                            <div class="col-md-12">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input_title">{{ field.label }}</span>
-                                    </div>
-
-                                    <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                                           aria-label="{{ field.help_text }}"
-                                           aria-describedby="input_{{ field.name }}"
-                                           name="{{ field.name }}"
-                                           id="{{ field.id_for_label }}"
-                                           {% if not field.value is None %}value="{{ field.value|join:' ' }}"{% endif %}
-                                           {% if field.field.required %}required{% endif %}>
-                                </div>
-                            </div>
-                        {% endwith %}
-
-                        {% with field=form.description %}
-                            <div class="row">
-                                {{ field.errors }}
-                                <div class="col-md-2">
-                                    <span class="badge badge-secondary"><h5>{{ field.label }}</h5></span>
-                                </div>
-                                <div class="col-md-10">
-                                    {{ field }}
-                                </div>
-                            </div>
-                        {% endwith %}
-
-                        <hr class="my-2">
-
-                        <div class="row text-center my-4">
-                            <div class="col-md-4 offset-md-4">
-                                 <a href="{% url 'paperList' %}">
-                                <button type="button" class="mx-4 btn btn-warning">Anuluj</button>
-                            </a>
-                            <button type="submit" class="mx-4 btn btn-primary">Zapisz</button>
-                            </div>
-
-                        </div>
+                    <div class="overflow-auto">
+                        {% crispy form %}
                     </div>
                 </form>
 

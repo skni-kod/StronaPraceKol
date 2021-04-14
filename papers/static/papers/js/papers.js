@@ -9,4 +9,17 @@ $().ready(function () {
         GetMessage();
         RenderMessages();
     });
+
+    $.get('review/assign/',
+        {
+            paper_id: PaperId,
+            reviewer_id: ReviewerId,
+            last_message_id: LastMessageId,
+        },
+        function (data, status) {
+            if (status == 'success') {
+                $('#admin-assign-reviewers').html(data)
+            }
+            CanGetMessage = true;
+        });
 });

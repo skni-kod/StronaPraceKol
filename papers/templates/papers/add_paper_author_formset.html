@@ -3,7 +3,7 @@
 
 <style type="text/css">
     .delete-row {
-       /* align-self: center; */
+       align-self: center;
     }
 </style>
 
@@ -13,16 +13,75 @@
     {% for hidden in form.hidden_fields %}
         {{ hidden|as_crispy_field }}
     {% endfor %}
+
+                {% with field=form.name %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+    {% with field=form.surname %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+
+
+    {% with field=form.email %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+    {{ form.DELETE|as_crispy_field }}
+
+
     {% crispy form %}
 {% endfor %}
-
 <br>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="{% static 'js/../../static/papers/js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
     $('.formset_row-{{ formset.prefix }}').formset({
         addText: '<div class="btn btn-primary">Dodaj</div>',
-        deleteText: '<div class="btn btn-primary">Usuń</div>',
+        deleteText: '<span><div class="btn btn-primary">Usuń</div></span>',
         prefix: '{{ formset.prefix }}',
     });
 </script>

@@ -1,5 +1,5 @@
 #messages_box {
-    max-height: 650px;
-    height: 650px;
+    max-height: 450px;
+    height: 450px;
     overflow: scroll;
 }
