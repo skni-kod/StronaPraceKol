@@ -283,7 +283,8 @@ class CoAuthorDynamicForm(forms.ModelForm):
         for coAuthor in self.cleaned_data['coAuthors']:
             CoAuthor.objects.create(name=coAuthor[0],
                                     surname=coAuthor[1],
-                                    email=coAuthor[2])
+                                    email=coAuthor[2],
+                                    paper=self.instance)
 
     def get_coauthor_fields(self):
         for field_name in self.data:
