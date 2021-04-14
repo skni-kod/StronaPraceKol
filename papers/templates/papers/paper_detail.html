@@ -204,7 +204,7 @@
                         <ul class="nav nav-pills">
                             {% if user.is_staff %}
                                 <li class="nav-item">
-                                    <a data-toggle="tab" href="#admin-add-reviewers" class="badge bg-info text-dark pt-2 px-2">
+                                    <a data-toggle="tab" href="#admin-assign-reviewers" class="badge bg-info text-dark pt-2 px-2">
                                         <h5>Przypisz recenzentów</h5>
                                     </a>
                                 </li>
@@ -227,11 +227,8 @@
                     {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
                         <div class="tab-content bg-white border border-light p-4">
                             {% if user.is_staff %}
-                                <div id="admin-add-reviewers" class="tab-pane fade">
-                                    <h3>Menu 1</h3>
-                                    <p>
-                                        dsdfsfd
-                                    </p>
+                                <div id="admin-assign-reviewers" class="tab-pane fade">
+
                                 </div>
                             {% endif %}
                             {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
@@ -284,7 +281,7 @@
             </div>
             <div class="col-md-9">
                 <div class="tab-content bg-white border border-light p-4">
-                    <div id="messagebox" class="tab-pane fade messagebox">
+                    <div class="tab-pane fade messagebox">
                         <div id="messages_box" class="container"></div>
                         <div class="input-group">
                          <textarea id="input_message" placeholder="Wprowadź wiadomość"

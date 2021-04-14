@@ -108,8 +108,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         paper = self.get_object()
         if self.request.user in paper.authors.all() or self.request.user.groups.filter(name='reviewer').exists():
             return True
-        else:
-            return False
+        return False
 
     def handle_no_permission(self):
         return redirect('paperList')
@@ -145,6 +144,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
         context['site_title'] = f'Nowy referat - {SITE_NAME}'
+        #context['coAuthors'] = Formset('coAuthors')
+        #context['files'] =  Formset('files', 'papers/upload_files_formset.html')
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
@@ -369,15 +370,16 @@ class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return context
 
 
-class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Paper
     template_name = 'papers/reviewer_assignment.html'
     form_class = ReviewerAssignmentForm
-    success_url = '/papers/reviews/assign/'
+
+    def get_success_url(self):
+        return ''
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['papers'] = Paper.objects.annotate(reviewers_num=Count('reviewers')).filter(approved=True,
-                                                                                            reviewers_num__lt=2)
         return context
 
     def test_func(self):

@@ -1,10 +1,8 @@
 from crispy_forms.layout import LayoutObject, TEMPLATE_PACK
 from django.template.loader import render_to_string
-
+from pprint import  pprint
 
 class Formset(LayoutObject):
-    template = "papers/add_paper_author_formset.html"
-
     def __init__(self, formset_name_in_context, template=None):
         self.formset_name_in_context = formset_name_in_context
         self.fields = []

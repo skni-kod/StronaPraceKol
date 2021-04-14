@@ -3,7 +3,7 @@ import re
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
 from django import forms
-from django.forms.models import inlineformset_factory, formset_factory
+from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
@@ -65,7 +65,10 @@ class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
         fields = ['name', 'surname', 'email']
-        labels = dict(name=_('Imię'), surname=_('Nazwisko'))
+        labels = {
+            'name': _('Imię'),
+            'surname': _('Nazwisko')
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -91,19 +94,52 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 class PaperCreationForm(forms.ModelForm):
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
-    coAuthors = Formset('coAuthors')
 
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł referatu'),keywords=_('Pojedyncze słowa oddzielone spacją'))
+        help_texts = dict(title=_('Tytuł'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = True
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-md-3 create-label'
+        self.helper.field_class = 'col-md-9'
+        self.helper.layout = Layout(
+            Div(
+                Field('title'),
+                Field('club'),
+                Field('keywords'),
+                Field('description'),
+                HTML("<br><hr>"),
+
+                Fieldset('Współautorzy',
+                         HTML("<div class='row'>"),
+                         HTML("<div class='col-md-9 offset-md-2'>"),
+                         Formset('coAuthors', 'papers/add_paper_author_formset.html'),
+                         HTML("</div>"),
+                         HTML("</div>"),
+                         ),
+
+                HTML("<hr class='my-2'>"),
+
+                Fieldset('Pliki',
+                         HTML("<div class='row'>"),
+                         HTML("<div class='col-md-6 offset-md-2'>"),
+                         Formset('files', 'papers/upload_files_formset.html')),
+                HTML("</div>"),
+                HTML("</div>"),
+
+                HTML("<hr><br>"),
+                ButtonHolder(Submit('submit', 'Dodaj')),
+                HTML("<br>"),
+            )
+        )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
-        self.fields['club'].widget.attrs['class'] = 'custom-select'
 
 
 class PaperEditForm(forms.ModelForm):
@@ -154,10 +190,6 @@ class PaperEditForm(forms.ModelForm):
                          HTML('<div class="row offset-1">'),
                          Formset('coAuthors')),
                 HTML('</div>'),
-
-                HTML("<hr><br>"),
-                ButtonHolder(Submit('submit', 'Zapisz zmiany')),
-                HTML("<br><br>"),
             )
         )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
@@ -169,23 +201,29 @@ class ReviewCreationForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['text']
-        labels = dict(text=_('Recenzja'))
+        labels = {
+            'text': _('Recenzja'),
+        }
+
+
+class ReviewerChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        cnt = Paper.objects.filter(reviewers=obj).count()
+        return f'{obj.first_name} {obj.last_name} ({cnt})'
 
 
 class ReviewerAssignmentForm(forms.ModelForm):
-
-    def clean_reviewers(self):
-        reviewers = self.cleaned_data['reviewers']
-        if len(reviewers) > 2:
-            raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
-        return reviewers
+    reviewers = ReviewerChoiceField(queryset=User.objects.filter(groups__name='reviewer'), label='Recenzent')
 
     class Meta:
         model = Paper
         fields = ['reviewers']
-        labels = {'reviewers': _('Recenzenci'), }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['reviewers'].queryset = User.objects.filter(groups__name='reviewer')
 
+    def clean_reviewers(self):
+        reviewers = self.cleaned_data['reviewers']
+        if reviewers.count() > 2:
+            raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
+        return reviewers

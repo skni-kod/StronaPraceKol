@@ -1,14 +1,13 @@
-{% extends "base.html" %}
 {% load custom_papers_tags %}
 {% load crispy_forms_tags %}
+
 {% block content %}
-    {{ context }}
-    {% for paper in papers %}
-        {{ paper }}
-        <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Zapisz">
-    </form>
-    {% endfor %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.reviewers.errors }}
+    {{  form.reviewers }}
+    <input type="submit" value="Zapisz">
+</form>
+
 {% endblock %}

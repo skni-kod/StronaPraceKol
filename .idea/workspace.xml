@@ -3,9 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messaging/static/messaging/css/messaging.css" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/static/messaging/css/messaging.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/custom_layout_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/custom_layout_object.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/static/papers/js/papers.js" beforeDir="false" afterPath="$PROJECT_DIR$/papers/static/papers/js/papers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper_author_formset.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/add_paper_author_formset.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/reviewer_assignment.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/reviewer_assignment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,6 +154,7 @@
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
       <workItem from="1618301749227" duration="33331000" />
+      <workItem from="1618380544964" duration="13688000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
