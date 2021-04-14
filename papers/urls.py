@@ -14,5 +14,5 @@ urlpatterns = [
     path('paper/<int:paper>/review/<int:pk>/edit/', views.ReviewUpdateView.as_view(), name='reviewEdit'),
     path('paper/<int:paper>/review/<int:pk>/delete/', views.ReviewDeleteView.as_view(), name='reviewDelete'),
     path('reviews/', views.UserReviewListView.as_view(), name='userReviewList'),
-    path('reviews/assign/', views.ReviewerAssignmentView.as_view(), name='reviewerAssignment'),
+    path('paper/<int:pk>/reviews/assign/', views.ReviewerAssignmentView.as_view(), name='reviewerAssignment'),
 ]

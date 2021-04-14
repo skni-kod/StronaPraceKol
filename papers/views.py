@@ -74,7 +74,6 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-
         context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
         paper_iter = 0
@@ -369,10 +368,11 @@ class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return context
 
 
-class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, FormView):
+class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Paper
     template_name = 'papers/reviewer_assignment.html'
     form_class = ReviewerAssignmentForm
-    success_url = '/papers/reviews/assign/'
+    success_url = '/papers'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

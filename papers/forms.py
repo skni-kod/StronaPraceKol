@@ -172,20 +172,19 @@ class ReviewCreationForm(forms.ModelForm):
         labels = dict(text=_('Recenzja'))
 
 
+class ReviewerChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
+
+
 class ReviewerAssignmentForm(forms.ModelForm):
 
-    def clean_reviewers(self):
-        reviewers = self.cleaned_data['reviewers']
-        if len(reviewers) > 2:
-            raise forms.ValidationError('Nie możesz przypisać więcej niż 2 recenzentów')
-        return reviewers
+    reviewers = ReviewerChoiceField(queryset=User.objects.filter(groups__name='reviewer'), label='Recenzent')
 
     class Meta:
         model = Paper
         fields = ['reviewers']
-        labels = {'reviewers': _('Recenzenci'), }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['reviewers'].queryset = User.objects.filter(groups__name='reviewer')
 
