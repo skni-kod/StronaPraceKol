@@ -1,4 +1,5 @@
 $().ready(function () {
+    CanGetMessage = false;
     setInterval(GetMessage, GetMessageInterval);
 
     $(".message_link").on('click', function (event) {
@@ -10,12 +11,25 @@ $().ready(function () {
         RenderMessages();
     });
 
-    $.get('review/assign/', {},
-        function (data, status) {
-            if (status == 'success') {
-                $('#admin-assign-reviewers-div').html(data);
-            }
-        });
+
+    $(".review-box").each(function (index, element) {
+        $.get('review/' + $(this).attr('data-reviewer'), {},
+            function (data, status) {
+                if (status == 'success') {
+                    $(element).html(data);
+                }
+            });
+    });
+
+    if (is_staff == true) {
+        $.get('review/assign/', {},
+            function (data, status) {
+                if (status == 'success') {
+                    $('#admin-assign-reviewers-div').html(data);
+                }
+            });
+    };
+
 
     $('#admin-assign-reviewers-submit').click(function () {
         var fd = new FormData(document.getElementById('admin-assign-reviewers-form'));

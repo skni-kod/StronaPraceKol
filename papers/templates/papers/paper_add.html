@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h2>Nowy referat</h2>
+            </div>
+        </div>
+
+        <hr class="my-3">
+
+        <div class="row text-center">
+            <div class="col-md-12">
+                <form method="POST" class="post-form" enctype="multipart/form-data">
+                    <div class="overflow-auto">
+                        {% crispy form %}
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

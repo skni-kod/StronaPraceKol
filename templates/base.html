@@ -56,7 +56,7 @@
 
                     {% if user|is_in_group:'reviewer' %}
                         <li class="nav-item {% if site_name == 'reviews' %} active {% endif %}">
-                            <a class="nav-link" href="{% url 'userReviewList' %}">Moje recenzje</a>
+                            <a class="nav-link" href="{% url 'reviewList' %}">Moje recenzje</a>
                         </li>
                     {% endif %}
 
@@ -67,7 +67,7 @@
                 <ul class="navbar-nav">
 
                     {% if user.is_authenticated %}
-                        {% if user.is_staff %}
+                        {% if user.is_superuser %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin">
                                     Panel adminstracyjny
@@ -77,13 +77,15 @@
 
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'profile' %}">
-                                Zalogowano jako: <br> {{ user.first_name }} {{ user.last_name }}
+                                Zalogowano jako:
+                                <br>
+                                {{ user.first_name }} {{ user.last_name }}
                             </a>
                         </li>
 
 
                         <li class="nav-item {% if site_name == 'profile' %} active {% endif %}">
-                            <a class="nav-link" href="{% url 'profile' %}"> Profil</a>
+                            <a class="nav-link" href="{% url 'profile' %}">Profil</a>
                         </li>
 
                         <li class="nav-item">
@@ -127,14 +129,6 @@
                 {% block content %}{% endblock %}
             </div>
         </div>
-
-
-        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.selectpicker').selectpicker();
-            });
-        </script>
 
         <div id="footer">
             <div class="container">

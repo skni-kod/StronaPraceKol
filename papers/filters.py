@@ -136,7 +136,13 @@ class PaperFilter(django_filters.FilterSet):
         to_exclude = []
         val2 = int(val2)
         for itm in queryset.all():
-            if not Review.objects.filter(paper__id=itm.id).count() == val2:
+            ids = []
+            reviews = Review.objects.filter(paper__id=itm.id).all()
+            for review in reviews:
+                if review.author not in itm.reviewers.all():
+                    ids.append(review.pk)
+            reviews = reviews.filter(Q(id__in=[obj for obj in ids]))
+            if not reviews.count() == val2:
                 to_exclude.append(itm)
 
         return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))

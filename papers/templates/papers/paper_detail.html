@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Tytuł:&ensp; </h5>
+            <h5>Tytuł:</h5>
         </div>
         <div class="col-md-8 text-left">
             <p> {{ paper.title }} </p>
@@ -51,7 +51,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Autorzy:&ensp; </h5>
+            <h5>Autorzy:</h5>
         </div>
         <div class="col-md-8 text-left">
             <ul>
@@ -76,7 +76,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Słowa kluczowe:&ensp; </h5>
+            <h5>Słowa kluczowe:</h5>
         </div>
 
         <div class="col-md-8 text-left">
@@ -87,7 +87,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Koło naukowe:&ensp; </h5>
+            <h5>Koło naukowe:</h5>
         </div>
 
         <div class="col-md-8 text-left">
@@ -98,7 +98,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Status:&ensp; </h5>
+            <h5>Status:</h5>
         </div>
 
         <div class="col-md-8 text-left">
@@ -113,7 +113,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Data dodania:&ensp; </h5>
+            <h5>Data dodania:</h5>
         </div>
 
         <div class="col-md-8 text-left">
@@ -124,30 +124,30 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Data modyfikacji:&ensp; </h5>
+            <h5>Data modyfikacji:</h5>
         </div>
 
         <div class="col-md-8 text-left">
-            <p> {{ paper.last_edit_date|date:"d/m/Y G:i" }} </p>
+            <p> {{ paper.updated_at|date:"d/m/Y G:i" }} </p>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Recenzenci:&ensp; </h5>
+            <h5>Recenzenci:</h5>
         </div>
 
-        <div class="col text-left">
+        <div class="col-md-8 text-left">
 
             {% if paper.reviewers.all.count == 0 %}
                 <span class="text-muted">Brak</span>
             {% else %}
                 <ul>
-                    {% for review in paper.review_set.all %}
+                    {% for reviewer in paper.reviewers.all %}
                         <li>
                             <div class="row ml-1">
-                                {{ review.author.first_name }} {{ review.author.last_name }}
+                                {{ reviewer.first_name }} {{ reviewer.last_name }}
                             </div>
                         </li>
                     {% endfor %}
@@ -161,7 +161,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Przesłane pliki:&ensp; </h5>
+            <h5>Przesłane pliki:</h5>
         </div>
 
         <div class="col-md-8 text-left">
@@ -203,19 +203,19 @@
                     {% else %}
                         <ul class="nav nav-pills">
                             {% if user.is_staff %}
-                                <li class="nav-item">
+                                <li class="nav-item m-2">
                                     <a data-toggle="tab" href="#admin-assign-reviewers"
-                                       class="badge bg-info text-dark pt-2 px-2">
+                                       class="badge bg-info text-dark p-2">
                                         <h5>Przypisz recenzentów</h5>
                                     </a>
                                 </li>
                             {% endif %}
                             {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
-                                {% for review in reviews %}
-                                    <li class="nav-item">
-                                        <a data-toggle="tab" href="#review-{{ review.author.username }}"
-                                           class="badge bg-info text-dark pt-2 px-2">
-                                            <h5>{{ review.author.first_name }} {{ review.author.last_name }}</h5>
+                                {% for reviewer in paper.reviewers.all %}
+                                    <li class="nav-item m-2">
+                                        <a data-toggle="tab" href="#review-{{ reviewer.username }}"
+                                           class="badge bg-info text-dark p-2">
+                                            <h5>{{ reviewer.first_name }} {{ reviewer.last_name }}</h5>
                                         </a>
                                     </li>
                                 {% endfor %}
@@ -245,15 +245,10 @@
                                     </button>
                                 </div>
                             {% endif %}
-                            {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
-                                {% for reviewer in paper.reviewers.all %}
-                                    <div id="review-{{ reviewer.username }}" class="tab-pane fade">
-                                        <h3>{{ reviewer.username }}</h3>
-                                        <p>
-                                        </p>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
+
+                            {% for reviewer in paper.reviewers.all %}
+                                <div id="review-{{ reviewer.username }}" class="tab-pane fade review-box" data-reviewer="{{ reviewer.pk }}"></div>
+                            {% endfor %}
                         </div>
                     {% endif %}
                 </div>
@@ -278,7 +273,7 @@
                         <li class="nav-item m-2">
                             <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
                                data-reviewer="{{ user.pk }}">
-                                Konwersacja z autorem
+                                Konwersacja z autorami
                             </a>
                         </li>
                     {% else %}
@@ -323,7 +318,7 @@
 
     {% endif %}
 
-
+    <script>is_staff = {{ user.is_staff|lower }};</script>
     <script src="{% static  'js/messaging.js' %}"></script>
     <script src="{% static  'js/papers.js' %}"></script>
 

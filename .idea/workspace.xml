@@ -2,8 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/papers/templates/papers/review_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/delete_review.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/delete_review.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messaging/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/static/papers/js/papers.js" beforeDir="false" afterPath="$PROJECT_DIR$/papers/static/papers/js/papers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_paper_author_formset.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_add_author_formset.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/add_review.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/change_paper.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_edir.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/delete_review.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/reviewer_assign.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/reviewer_assign.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/user_review_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +163,7 @@
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
       <workItem from="1618301749227" duration="33331000" />
-      <workItem from="1618380544964" duration="19393000" />
+      <workItem from="1618380544964" duration="40370000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -286,7 +305,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618411269142</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Reformat review delete">
+      <created>1618411462621</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1618411462621</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -321,7 +347,8 @@
     <MESSAGE value="Reviewer assignment" />
     <MESSAGE value="Reviewer assign" />
     <MESSAGE value="Reviewer assign format view" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reviewer assign format view" />
+    <MESSAGE value="Reformat review delete" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reformat review delete" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

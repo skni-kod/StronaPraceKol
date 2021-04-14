@@ -4,22 +4,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
-from django.db.models import Count
-from django.http import FileResponse, HttpResponseRedirect
+from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
+from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
 from .forms import *
-from pprint import pprint
 
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
-    ordering = ['-last_edit_date']
+    ordering = ['-updated_at']
 
     def get_context_data(self, **kwargs):
         context = super(PaperListView, self).get_context_data(**kwargs)
@@ -35,14 +35,14 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['filter'].form['reviews_count'].field.widget.attrs['class'] = 'custom-select'
         context['filter'].form['final_grade'].field.widget.attrs['class'] = 'custom-select'
 
-        papers = context['filter'].qs.order_by('-last_edit_date')
-
+        papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:
             queryset_pks += f'&qspk={paper.pk}'
             paper.get_unread_messages = paper.get_unread_messages(self.request.user)
 
         context['queryset_pks'] = queryset_pks
+        context['papers_length'] = papers.count()
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
@@ -74,7 +74,6 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-        context['site_name'] = 'papers'
         context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
         paper_iter = 0
 
@@ -134,7 +133,7 @@ def paper_file_download(request, pk, item):
 
 
 class PaperCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'papers/add_paper.html'
+    template_name = 'papers/paper_add.html'
     model = Paper
     form_class = PaperCreationForm
     success_url = '/'
@@ -143,8 +142,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
         context['site_title'] = f'Nowy referat - {SITE_NAME}'
-        #context['coAuthors'] = Formset('coAuthors')
-        #context['files'] =  Formset('files', 'papers/upload_files_formset.html')
+        # context['coAuthors'] = Formset('coAuthors')
+        # context['files'] =  Formset('files', 'papers/upload_files_formset.html')
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
@@ -180,7 +179,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Paper
     form_class = PaperEditForm
-    template_name = 'papers/change_paper.html'
+    template_name = 'papers/paper_edir.html'
 
     def test_func(self):
         paper = self.get_object()
@@ -190,7 +189,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         paper = self.get_object()
-        paper.last_edit_date = timezone.now()
+        paper.updated_at = timezone.now()
         paper.save()
         if 'send-new-files' in request.POST:
             new_files = FileAppendForm(self.request.POST, self.request.FILES)
@@ -252,23 +251,16 @@ class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('paperList')
 
 
-class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class ReviewDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Review
-    context_object_name = 'reviews'
-    template_name = 'papers/review_list.html'
-
-    def get_queryset(self):
-        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
-        return Review.objects.filter(paper=paper)
-
-    def get_context_data(self, **kwargs):
-        context = super(ReviewListView, self).get_context_data(**kwargs)
-        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
-        return context
+    context_object_name = 'review'
+    template_name = 'papers/review_detail.html'
 
     def test_func(self):
-        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
-        if self.request.user.groups.filter(name='reviewer').exists() or self.request.user in paper.authors.all():
+        user = self.request.user
+        paper = self.get_object().paper
+        if user.is_staff or (user.groups.filter(
+                name='reviewer').exists() and user in paper.reviewers.all()) or user in paper.authors.all() or user == self.get_object().author:
             return True
         return False
 
@@ -276,14 +268,37 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('paperList')
 
 
+class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Review
+    context_object_name = 'reviews'
+    template_name = 'papers/review_list.html'
+    ordering = ['-updated_at']
+
+    def get_queryset(self):
+        return Review.objects.filter(author=self.request.user).all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.groups.filter(name='reviewer').exists():
+            return True
+        return False
+
+    def handle_no_permission(self):
+        return redirect('login')
+
+
 class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Review
-    template_name = 'papers/add_review.html'
+    template_name = 'papers/review_add.html'
     success_url = '/papers'
     form_class = ReviewCreationForm
 
     def test_func(self):
-        paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        paper = Paper.objects.get(pk=self.kwargs.get('paper'))
         if self.request.user not in paper.authors.all() and self.request.user.groups.filter(name='reviewer').exists():
             for review in paper.review_set.all():
                 if review.author == self.request.user:
@@ -293,7 +308,7 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReviewCreateView, self).get_context_data(**kwargs)
-        context['paper'] = Paper.objects.get(pk=self.kwargs.get('pk'))
+        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
         return context
 
     def handle_no_permission(self):
@@ -301,13 +316,13 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.paper = Paper.objects.get(pk=self.kwargs.get('pk'))
+        form.instance.paper = Paper.objects.get(pk=self.kwargs.get('paper'))
         return super(ReviewCreateView, self).form_valid(form)
 
 
 class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
-    template_name = 'papers/add_review.html'
+    template_name = 'papers/review_add.html'
     form_class = ReviewCreationForm
     success_url = '/papers'
 
@@ -328,7 +343,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Review
-    template_name = 'papers/paper_delete.html'
+    template_name = 'papers/review_delete.html'
     success_url = '/papers'
 
     def test_func(self):
@@ -390,3 +405,30 @@ class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
         if self.request.user.is_staff:
             return True
         return False
+
+
+@csrf_exempt
+def userReviewShow(request, **kwargs):
+    user = request.user
+    if not user.is_authenticated:
+        return False
+
+    paper = Paper.objects.get(pk=kwargs.get('paper'))
+    reviewer = User.objects.get(pk=kwargs.get('reviewer'))
+    if paper is None or reviewer is None or (user.groups.filter(name='reviewer').exists() and user not in paper.reviewers.all() and not user.is_staff):
+        return HttpResponse(status=404)
+    if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user not in paper.authors.all():
+        return HttpResponse(status=404)
+
+    review = Review.objects.filter(author=reviewer, paper=paper).first()
+
+    if review is None:
+        if user == reviewer:
+            return redirect('reviewCreate', kwargs['paper'])
+        else:
+            #TODO: create new view with information: "No review"
+            return redirect('contact')
+    else:
+        return redirect('reviewDetail', review.pk)
+
+

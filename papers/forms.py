@@ -120,7 +120,7 @@ class PaperCreationForm(forms.ModelForm):
                 Fieldset('Współautorzy',
                          HTML("<div class='row'>"),
                          HTML("<div class='col-md-9 offset-md-2'>"),
-                         Formset('coAuthors', 'papers/add_paper_author_formset.html'),
+                         Formset('coAuthors', 'papers/paper_add_author_formset.html'),
                          HTML("</div>"),
                          HTML("</div>"),
                          ),

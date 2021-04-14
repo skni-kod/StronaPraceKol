@@ -27,10 +27,10 @@ class Paper(models.Model):
     original_author_id = models.IntegerField()
     keywords = models.CharField(max_length=128)
     description = models.TextField()
-    add_date = models.DateTimeField(default=timezone.now)
-    last_edit_date = models.DateTimeField(default=timezone.now)
     approved = models.BooleanField(default=False)
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'{self.title[0:40]}'
@@ -62,7 +62,7 @@ def paper_directory_path(instance, filename):
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     file = models.FileField(upload_to=paper_directory_path, blank=True)
-    add_date = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def filename(self):
         return os.path.basename(self.file.name)
@@ -91,6 +91,8 @@ class Review(models.Model):
                                      null=True, limit_choices_to={'tag': 'presentation'})
     final_grade = models.ForeignKey(Grade, related_name='final_grade', on_delete=models.SET_NULL, blank=True,
                                     null=True, limit_choices_to={'tag': 'final_grade'})
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'
@@ -99,6 +101,7 @@ class Review(models.Model):
 class Announcement(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
 
 
 def check_empty_author_relation(instance, **kwargs):
