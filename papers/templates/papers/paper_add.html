@@ -14,9 +14,9 @@
 
         <div class="row text-center">
             <div class="col-12">
-             <div class="py-4">
-                <form method="POST" class="post-form" enctype="multipart/form-data">
-                    {% csrf_token %}
+                <div class="py-4">
+                    <form method="POST" class="post-form" enctype="multipart/form-data">
+                        {% csrf_token %}
 
                         {% with field=form.title %}
                             {% for error in field.errors %}
@@ -75,13 +75,39 @@
                             </div>
                         {% endwith %}
 
-                    {{ coAuthorsForm }}
+                        <div class="row mt-5">
+                            <div class="col-md-3">
+                                <h5>
+                                    Współautorzy
+                                </h5>
+                            </div>
+                        </div>
 
-                    <input type="submit" name="submit" class="btn btn-success" value="Zapisz" />
+                        <hr class="my-2">
+
+                        {{ coAuthorsForm }}
+
+                        <div class="row mt-5">
+                            <div class="col-md-3">
+                                <h5>
+                                    Pliki
+                                </h5>
+                            </div>
+                        </div>
+
+                        <hr class="my-2">
+
+                        {{ filesForm }}
+
+                        <div class="row mt-5 text-center">
+                            <div class="col">
+                                <input type="submit" name="submit" class="btn btn-success" value="Zapisz"/>
+                            </div>
+                        </div>
 
 
-                </form>
-             </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

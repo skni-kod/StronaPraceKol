@@ -36,7 +36,7 @@ class FileUploadForm(forms.ModelForm):
 
 
 UploadedFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
-                                            fields=['file'], extra=0, can_delete=True)
+                                            fields=['file'], extra=1, can_delete=True)
 
 
 class FileAppendForm(forms.ModelForm):
@@ -76,17 +76,6 @@ class CoAuthorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
-        #
-        # self.helper = FormHelper()
-        # self.helper.form_tag = False
-        # self.helper.layout = Layout(
-        #     Row(
-        #         Field('name'),
-        #         Field('surname'),
-        #         Field('email'),
-        #         css_class='formset_row-{}'.format(formtag_prefix)
-        #     )
-        # )
 
 
 CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,

@@ -124,11 +124,10 @@ def paper_file_download(request, pk, item):
     :return:
     """
     paper = Paper.objects.get(pk=pk)
-    if request.user in paper.authors.all() or request.user.groups.filter(name='reviewer').exists():
+    if request.user in paper.authors.all() or request.user.groups.filter(name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         response = FileResponse(document.file)
         response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(document.file.path)
-
         return response
     else:
         return redirect('paper-list')
@@ -147,20 +146,23 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
-            context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
+            context['files'] = FileAppendForm(self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet()
-            context['files'] = UploadedFileFormSet()
+            context['files'] = FileAppendForm()
 
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
+
+        context['filesForm'] = render_to_string('papers/upload_files_formset.html',
+                                                    {'formset': context['files']})
 
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
-        # files = context['files']
+        files = context['files']
         with transaction.atomic():
             form.instance.original_author_id = self.request.user.pk
             self.object = form.save()
@@ -168,10 +170,10 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
-            # if files.is_valid():
-            #     for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
-            #         file_instance = UploadedFile(file=f, paper=self.object)
-            #         file_instance.save()
+            if files.is_valid():
+                for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
+                    file_instance = UploadedFile(file=f, paper=self.object)
+                    file_instance.save()
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -211,6 +213,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(PaperEditView, self).get_context_data(**kwargs)
+        context['site_name'] = 'papers'
+        context['site_title'] = f'Edytuj referat - {SITE_NAME}'
+
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
             context['files'] = FileAppendForm(self.request.POST, self.request.FILES)

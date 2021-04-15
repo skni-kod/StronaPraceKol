@@ -133,6 +133,36 @@ STATICFILES_DIRS = [
 # for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+SUMMERNOTE_CONFIG = {
+    'iframe': False,
+
+    # You can put custom Summernote settings
+    'summernote': {
+        # As an example, using Summernote Air-mode
+        'airMode': False,
+
+        # Change editor size
+        'width': '100%',
+        'height': '480',
+
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
+
+        'lang': 'pl-PL',
+        'disable_attachment': True,
+    },
+
+}
+
 # for decorators (login_required) which require user to be logged, it's redirect to login
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
