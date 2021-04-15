@@ -10,6 +10,7 @@ from django_summernote.widgets import SummernoteWidget
 from .custom_layout_object import Formset
 from .models import *
 
+
 ### FILE FORMS
 
 class FileUploadForm(forms.ModelForm):
@@ -60,6 +61,7 @@ class FileAppendForm(forms.ModelForm):
                 css_class='formset_row-{}'.format(formtag_prefix)
             )
         )
+
 
 ## CO AUTHOR FORMS
 
@@ -262,13 +264,23 @@ class PaperEditForm(forms.ModelForm):
 
 
 ### REVIEW FORMS
+class GradeChoiceField(forms.ModelChoiceField):
+    required=True
+    def label_from_instance(self, obj):
+        return f'{obj.name}'
+
 
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
+    correspondence = GradeChoiceField(queryset=Grade.objects.filter(tag='correspondence'))
+    originality = GradeChoiceField(queryset=Grade.objects.filter(tag='originality'))
+    merits = GradeChoiceField(queryset=Grade.objects.filter(tag='merits'))
+    presentation = GradeChoiceField(queryset=Grade.objects.filter(tag='presentation'))
+    final_grade = GradeChoiceField(queryset=Grade.objects.filter(tag='final_grade'))
 
     class Meta:
         model = Review
-        fields = ['text']
+        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade','text']
 
 
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):

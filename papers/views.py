@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -252,7 +254,7 @@ class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('paperList')
 
 
-class ReviewDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class ReviewDetailView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Review
     context_object_name = 'review'
     template_name = 'papers/review_detail.html'
@@ -299,7 +301,7 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('login')
 
 
-class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
+class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Review
     template_name = 'papers/review_add.html'
     success_url = reverse_lazy('reviewSuccess')
@@ -310,6 +312,8 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMi
         user = self.request.user
         paper = Paper.objects.get(pk=self.kwargs.get('paper'))
 
+        if user in [itm.author for itm in paper.review_set.all()]:
+            return False
         if user in paper.authors.all() or (self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
@@ -329,14 +333,16 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMi
         return super(ReviewCreateView, self).form_valid(form)
 
 
-class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class ReviewUpdateView(SuccessMessageMixin, CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
     template_name = 'papers/review_add.html'
     form_class = ReviewCreationForm
-    success_url = ''
+    success_url = reverse_lazy('reviewSuccess')
+    success_message = "Poprawnie wprowadzono zmiany"
 
     def get_context_data(self, **kwargs):
         context = super(ReviewUpdateView, self).get_context_data(**kwargs)
+        context['paper'] = super().get_object().paper
         return context
 
     def test_func(self):

@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_delete.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templatetags/custom_papers_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templatetags/custom_papers_tags.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,6 +60,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.django.DjangoModulesConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -148,7 +150,7 @@
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
       <workItem from="1618301749227" duration="33331000" />
-      <workItem from="1618380544964" duration="56208000" />
+      <workItem from="1618380544964" duration="65466000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -332,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618486576980</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Finished, delete and success view">
+      <created>1618487374199</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1618487374199</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -373,7 +382,8 @@
     <MESSAGE value="Refactor review detail template, add grade color and dynamic choice" />
     <MESSAGE value="Add review delete" />
     <MESSAGE value="Fix dynamic review box" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix dynamic review box" />
+    <MESSAGE value="Finished, delete and success view" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished, delete and success view" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

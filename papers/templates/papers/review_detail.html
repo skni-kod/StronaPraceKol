@@ -10,12 +10,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">{{ grade.get_tag_display_text }}</span>
                         </div>
-                        <select class="custom-select" id="{{ grade.tag }}">
-                            {% for option in grades|in_tag:grade.tag %}
-                                <option {% if option.value == grade.value and option.tag == grade.tag %}selected{% endif %}
-                                        value="{{ option.value }}"
-                                        class="text-{{ option.display_color }}">{{ option.name }}</option>
-                            {% endfor %}
+                        <select class="custom-select text-{{ grade.display_color }}" id="{{ grade.tag }}">
+                            <option value="{{ grade.value }}" >{{ grade.name }}</option>
                         </select>
                     </div>
                 </div>
