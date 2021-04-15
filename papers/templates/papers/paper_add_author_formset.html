@@ -12,16 +12,15 @@
 
 <hr class="my-2">
 
+
+<div class="btn btn-primary" id="add_coauthor_btn">Dodaj współautora</div>
 {{ formset.management_form|crispy }}
 
 {% for form in formset.forms %}
-    {% for hidden in form.hidden_fields %}
-        {{ hidden|as_crispy_field }}
-    {% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }} {% endfor %}
 
-    <div class="btn btn-primary" id="add_coauthor_btn">Dodaj współautora</div>
 
-    <div class="formset_row-{{ formset.prefix }}">
+    <div class="formset_row-{{ formset.prefix }} dynamic-form">
         <div class="row my-2">
 
             <div class="input-group">
@@ -29,33 +28,33 @@
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                    <span class="input-group-text">{{ field.label }}</span>
                     <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                           aria-label="{{ field.help_text }}"
-                           aria-describedby="input_{{ field.name }}"
-                           name="{{ field.name }}">
+                           id="{{ field.id_for_label }}"
+                           name="{{ field.html_name }}"
+                           value="{{ field.value|default_if_none:'' }}">
                 {% endwith %}
 
                 {% with field=form.surname %}
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                    <span class="input-group-text">{{ field.label }}</span>
                     <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                           aria-label="{{ field.help_text }}"
-                           aria-describedby="input_{{ field.name }}"
-                           name="{{ field.name }}">
+                           id="{{ field.id_for_label }}"
+                           name="{{ field.html_name }}"
+                           value="{{ field.value|default_if_none:'' }}">
                 {% endwith %}
 
                 {% with field=form.email %}
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text" id="input_title">{{ field.label }}</span>
-                    <input type="text" class="form-control" placeholder="{{ field.help_text }}"
-                           aria-label="{{ field.help_text }}"
-                           aria-describedby="input_{{ field.name }}"
-                           name="{{ field.name }}">
+                    <span class="input-group-text">{{ field.label }}</span>
+                    <input type="email" class="form-control" placeholder="{{ field.help_text }}"
+                           id="{{ field.id_for_label }}"
+                           name="{{ field.html_name }}"
+                           value="{{ field.value|default_if_none:'' }}">
                 {% endwith %}
 
                 <div class="input-group-append">

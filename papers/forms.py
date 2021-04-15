@@ -1,13 +1,12 @@
 import re
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Row
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
 
-from .custom_layout_object import Formset
 from .models import *
 
 
@@ -31,13 +30,13 @@ class FileUploadForm(forms.ModelForm):
         self.helper.layout = Layout(
             Row(
                 Field('file'),
-                css_class='formset_row-{}'.format(formtag_prefix)
+                css_class=f'formset_row-{formtag_prefix}'
             )
         )
 
 
 UploadedFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
-                                            fields=['file'], extra=1, can_delete=True)
+                                            fields=['file'], extra=0, can_delete=True)
 
 
 class FileAppendForm(forms.ModelForm):
@@ -76,19 +75,18 @@ class CoAuthorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
-
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Row(
-                Field('name'),
-                Field('surname'),
-                Field('email'),
-                css_class='formset_row-{}'.format(formtag_prefix)
-            )
-        )
+        #
+        # self.helper = FormHelper()
+        # self.helper.form_tag = False
+        # self.helper.layout = Layout(
+        #     Row(
+        #         Field('name'),
+        #         Field('surname'),
+        #         Field('email'),
+        #         css_class='formset_row-{}'.format(formtag_prefix)
+        #     )
+        # )
 
 
 CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
@@ -96,71 +94,7 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
                                         can_delete=True)
 
 
-class CoAuthorDynamicForm(forms.ModelForm):
-    class Meta:
-        model = Paper
-        exclude = ('title', 'club', 'authors', 'original_author_id',
-                   'keywords', 'description', 'approved', 'reviewers', 'created_at', 'updated_at')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        coAuthors = CoAuthor.objects.filter(paper=self.instance)
-        for i in range(len(coAuthors) + 1):
-            name_field_name = f'coAuthor_{i}_name'
-            surname_field_name = f'coAuthor_{i}_surname'
-            email_field_name = f'coAuthor_{i}_email'
-            self.fields[name_field_name] = forms.CharField(required=True)
-            self.fields[surname_field_name] = forms.CharField(required=True)
-            self.fields[email_field_name] = forms.EmailField(required=False)
-            try:
-                self.initial[name_field_name] = coAuthors[i].name
-                self.initial[surname_field_name] = coAuthors[i].surname
-                self.initial[email_field_name] = coAuthors[i].email
-            except IndexError:
-                self.initial[name_field_name] = ''
-                self.initial[surname_field_name] = ''
-                self.initial[email_field_name] = ''
-        # create extra blank fields
-        name_field_name = f'coAuthor_{i + 1}_name'
-        surname_field_name = f'coAuthor_{i + 1}_surname'
-        email_field_name = f'coAuthor_{i + 1}_email'
-        self.fields[name_field_name] = forms.CharField(required=True)
-        self.fields[surname_field_name] = forms.CharField(required=True)
-        self.fields[email_field_name] = forms.EmailField(required=False)
-
-    def clean(self):
-        coAuthors = set()
-        i = 0
-        name_field_name = f'coAuthor_{i}_name'
-        surname_field_name = f'coAuthor_{i}_surname'
-        email_field_name = f'coAuthor_{i}_email'
-        while self.cleaned_data.get(name_field_name):
-            coAuthors.add([self.cleaned_data[name_field_name],
-                           self.cleaned_data[surname_field_name],
-                           self.cleaned_data[email_field_name]])
-            i += 1
-            name_field_name = f'coAuthor_{i}_name'
-            surname_field_name = f'coAuthor_{i}_surname'
-            email_field_name = f'coAuthor_{i}_email'
-        self.cleaned_data['coAuthors'] = coAuthors
-
-    def save(self):
-        paper = self.instance
-        paper.coauthor_set.all().delete()
-        for coAuthor in self.cleaned_data['coAuthors']:
-            CoAuthor.objects.create(name=coAuthor[0],
-                                    surname=coAuthor[1],
-                                    email=coAuthor[2],
-                                    paper=self.instance)
-
-    def get_coauthor_fields(self):
-        for field_name in self.data:
-            if field_name.startswith('coAuthor_'):
-                yield self[field_name]
-
-
 ### PAPER FORMS
-
 class PaperCreationForm(forms.ModelForm):
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
 
@@ -173,41 +107,6 @@ class PaperCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = True
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3 create-label'
-        self.helper.field_class = 'col-md-9'
-        self.helper.layout = Layout(
-            Div(
-                Field('title'),
-                Field('club'),
-                Field('keywords'),
-                Field('description'),
-                HTML("<br><hr>"),
-
-                Fieldset('Współautorzy',
-                         HTML("<div class='row'>"),
-                         HTML("<div class='col-md-9 offset-md-2'>"),
-                         Formset('coAuthors', 'papers/paper_add_author_formset.html'),
-                         HTML("</div>"),
-                         HTML("</div>"),
-                         ),
-
-                HTML("<hr class='my-2'>"),
-
-                Fieldset('Pliki',
-                         HTML("<div class='row'>"),
-                         HTML("<div class='col-md-6 offset-md-2'>"),
-                         Formset('files', 'papers/upload_files_formset.html')),
-                HTML("</div>"),
-                HTML("</div>"),
-
-                HTML("<hr><br>"),
-                ButtonHolder(Submit('submit', 'Dodaj')),
-                HTML("<br>"),
-            )
-        )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
 
 

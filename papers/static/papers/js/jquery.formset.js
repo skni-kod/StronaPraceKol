@@ -112,7 +112,7 @@
             addButton.click(function () {
                 var formCount = parseInt($('#id_' + options.prefix + '-TOTAL_FORMS').val()),
                     row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
-                    buttonRow = $(this).parents('tr.' + options.formCssClass + '-add').get(0) || this;
+                    buttonRow = this;
                 applyExtraClasses(row, formCount);
                 row.insertAfter($(buttonRow)).show();
                 row.find('input,select,textarea,label').each(function () {
@@ -131,9 +131,7 @@
     /* Setup plugin defaults */
     $.fn.formset.defaults = {
         prefix: 'form',                  // The form prefix for your django formset
-        formTemplate: null,              // The jQuery selection cloned to generate new form instances
-        addText: 'add another',          // Text for the add link
-        deleteText: 'remove',            // Text for the delete link
+        formTemplate: '',              // The jQuery selection cloned to generate new form instances
         addCssClass: 'add-row',          // CSS class applied to the add link
         deleteCssClass: 'delete-row',    // CSS class applied to the delete link
         formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset

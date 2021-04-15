@@ -144,30 +144,30 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
         context['site_title'] = f'Nowy referat - {SITE_NAME}'
-        #context['coAuthors'] = CoAuthorFormSet()
-        #context['files'] = UploadedFileFormSet()
-        context['test'] = render_to_string('papers/paper_add_author_formset.html',{'formset':  CoAuthorFormSet()})
 
-        # if self.request.POST:
-        #     context['coAuthors'] = CoAuthorFormSet(self.request.POST)
-        #     context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
-        # else:
-        #     context['coAuthors'] = CoAuthorFormSet()
-        #     context['files'] = UploadedFileFormSet()
+        if self.request.POST:
+            context['coAuthors'] = CoAuthorFormSet(self.request.POST)
+            context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
+        else:
+            context['coAuthors'] = CoAuthorFormSet()
+            context['files'] = UploadedFileFormSet()
+
+        context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
+                                                    {'formset': context['coAuthors']})
 
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
-        files = context['files']
+        # files = context['files']
         with transaction.atomic():
             form.instance.original_author_id = self.request.user.pk
             self.object = form.save()
             form.instance.authors.add(self.request.user)
-            # if coAuthors.is_valid():
-            #     coAuthors.instance = self.object
-            #     coAuthors.save()
+            if coAuthors.is_valid():
+                coAuthors.instance = self.object
+                coAuthors.save()
             # if files.is_valid():
             #     for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
             #         file_instance = UploadedFile(file=f, paper=self.object)
@@ -218,6 +218,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = FileAppendForm()
         context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+        context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
+                                                    {'formset': context['coAuthors']})
+
         return context
 
     def form_valid(self, form):

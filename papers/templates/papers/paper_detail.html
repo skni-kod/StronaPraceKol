@@ -65,7 +65,7 @@
                 {% for author in paper.coauthor_set.all %}
                     <li>
                         <div class="row ml-1">
-                            {{ author.name }} {{ author.surname }}
+                            <a href="mailto:{{ author.email }}">{{ author.name }} {{ author.surname }}</a>
                         </div>
                     </li>
                 {% endfor %}
@@ -344,33 +344,5 @@
             {% endif %}
         </div>
     </div>
-
-    {#    {% if user in paper.authors.all or user|is_in_group:'reviewer' %}#}
-    {#        <div class="row mb-2">#}
-    {#            <div class="col text-center">#}
-    {#                <form action="{% url 'reviewList' paper.id %}">#}
-    {#                    <input type="submit" class="btn btn-warning w-25 h-100" value="Zobacz wszystkie recenzje"/>#}
-    {#                </form>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    {% endif %}#}
-
-
-    {#    {% if user|is_in_group:'reviewer' and user not in paper.authors.all %}#}
-    {#        <div class="row">#}
-    {#            <div class="col text-center">#}
-    {#                {% if user|already_reviewed:paper %}#}
-    {#                    <form action="{% url 'reviewEdit' paper.id user|get_user_review_id:paper %}">#}
-    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Zobacz swoją recenzję"/>#}
-    {#                    </form>#}
-    {#                {% else %}#}
-    {#                    <form action="{% url 'reviewCreate' paper.id %}">#}
-    {#                        <input type="submit" class="btn btn-info w-25 h-100" value="Dodaj recenzję"/>#}
-    {#                    </form>#}
-    {#                {% endif %}#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    {% endif %}#}
-
 
 {% endblock %}
