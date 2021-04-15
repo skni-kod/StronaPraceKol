@@ -1,24 +1,95 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
 {% block content %}
     <div class="container">
 
         <div class="row text-center">
             <div class="col-md-12">
-                <h2>Nowy referat</h2>
+                <h2>Dodaj referat</h2>
             </div>
         </div>
 
-        <hr class="my-3">
+        <hr class="my-2">
 
         <div class="row text-center">
-            <div class="col-md-12">
+            <div class="col-md-12 p-1 overflow-auto">
                 <form method="POST" class="post-form" enctype="multipart/form-data">
-                    <div class="overflow-auto">
-                        {% crispy form %}
-                    </div>
-                </form>
+                    {% csrf_token %}
 
+                    {% with field=form.title %}
+                        {% for error in field.errors %}
+                            <span class="text-danger">{{ error|escape }}</span>
+                        {% endfor %}
+                        <div class="col-md-8 offset-md-2">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                                </div>
+                                {% render_field field placeholder=field.help_text class='form-control' %}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.keywords %}
+                        {% for error in field.errors %}
+                            <span class="text-danger">{{ error|escape }}</span>
+                        {% endfor %}
+                        <div class="col-md-8 offset-md-2">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                                </div>
+                                {% render_field field placeholder=field.help_text class='form-control' %}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.club %}
+                        <div class="col-md-8 offset-md-2">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"
+                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
+                                </div>
+                                {{ field|add_class:'custom-select' }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.description %}
+                        <div class="col-md-8 offset-md-2">
+                            <h5 class="text-left">
+                            <span class="badge badge-secondary">
+                                Opis
+                            </span>
+                            </h5>
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"
+                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
+                                </div>
+                                {{ field }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    <div class="row justify-content-center mt-2">
+                        <div class="text-center col-md-4">
+                            <input id="review-edit-submit" type="submit" class="btn btn-success" value="Zapisz">
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>

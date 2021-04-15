@@ -4,6 +4,10 @@
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_add.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +149,7 @@
       <workItem from="1617284597499" duration="56000" />
       <workItem from="1617885067456" duration="9094000" />
       <workItem from="1618301749227" duration="33331000" />
-      <workItem from="1618380544964" duration="66818000" />
+      <workItem from="1618380544964" duration="68429000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -350,7 +354,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618501954698</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Update review edit">
+      <created>1618503293782</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1618503293782</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -369,7 +380,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update requirements.txt, update base.html" />
     <MESSAGE value="Make some refactor" />
     <MESSAGE value="Refactor users." />
     <MESSAGE value="Reformat whole project" />
@@ -394,7 +404,8 @@
     <MESSAGE value="Finished, delete and success view" />
     <MESSAGE value="Add/edit review reworked" />
     <MESSAGE value="Update requirements.txt" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update requirements.txt" />
+    <MESSAGE value="Update review edit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update review edit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

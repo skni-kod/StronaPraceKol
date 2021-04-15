@@ -168,45 +168,10 @@ class PaperCreationForm(forms.ModelForm):
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł'))
+        help_texts = dict(title=_('Tytuł'),keywords=_('Słowa oddzielone spacją'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = True
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3 create-label'
-        self.helper.field_class = 'col-md-9'
-        self.helper.layout = Layout(
-            Div(
-                Field('title'),
-                Field('club'),
-                Field('keywords'),
-                Field('description'),
-                HTML("<br><hr>"),
-
-                Fieldset('Współautorzy',
-                         HTML("<div class='row'>"),
-                         HTML("<div class='col-md-9 offset-md-2'>"),
-                         Formset('coAuthors', 'papers/paper_add_author_formset.html'),
-                         HTML("</div>"),
-                         HTML("</div>"),
-                         ),
-
-                HTML("<hr class='my-2'>"),
-
-                Fieldset('Pliki',
-                         HTML("<div class='row'>"),
-                         HTML("<div class='col-md-6 offset-md-2'>"),
-                         Formset('files', 'papers/upload_files_formset.html')),
-                HTML("</div>"),
-                HTML("</div>"),
-
-                HTML("<hr><br>"),
-                ButtonHolder(Submit('submit', 'Dodaj')),
-                HTML("<br>"),
-            )
-        )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
 
 

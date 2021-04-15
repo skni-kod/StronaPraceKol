@@ -144,9 +144,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Nowy referat - {SITE_NAME}'
-        # context['coAuthors'] = Formset('coAuthors')
-        # context['files'] =  Formset('files', 'papers/upload_files_formset.html')
+        context['site_title'] = f'Dodaj referat - {SITE_NAME}'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
