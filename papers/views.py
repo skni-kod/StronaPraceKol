@@ -147,29 +147,30 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context['site_title'] = f'Dodaj referat - {SITE_NAME}'
 
         if self.request.POST:
-            context['coAuthors'] = CoAuthorFormSet(self.request.POST)
-            context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
+            context['coAuthors'] = CoAuthorDynamicForm(self.request.POST)
+            #context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
         else:
-            context['coAuthors'] = CoAuthorFormSet()
-            context['files'] = UploadedFileFormSet()
+            context['coAuthors'] = CoAuthorDynamicForm()
+            #context['files'] = CoAuthorDynamicForm()
 
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
-        files = context['files']
+        #files = context['files']
         with transaction.atomic():
             form.instance.original_author_id = self.request.user.pk
             self.object = form.save()
             form.instance.authors.add(self.request.user)
+
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
-            if files.is_valid():
-                for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
-                    file_instance = UploadedFile(file=f, paper=self.object)
-                    file_instance.save()
+            # if files.is_valid():
+            #     for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
+            #         file_instance = UploadedFile(file=f, paper=self.object)
+            #         file_instance.save()
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -179,8 +180,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
 class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Paper
-    form_class = PaperEditForm
-    template_name = 'papers/paper_edir.html'
+    form_class = PaperCreationForm
+    template_name = 'papers/paper_add.html'
 
     def test_func(self):
         paper = self.get_object()

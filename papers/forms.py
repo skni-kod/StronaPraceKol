@@ -1,13 +1,12 @@
 import re
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Fieldset, Div, Row, HTML, ButtonHolder, Submit
+from crispy_forms.layout import Layout, Field, Row
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.widgets import SummernoteWidget
 
-from .custom_layout_object import Formset
 from .models import *
 
 
@@ -99,7 +98,8 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 class CoAuthorDynamicForm(forms.ModelForm):
     class Meta:
         model = Paper
-        exclude = '__all__'  # If that doesn't work exclude all fields explicitly
+        exclude = ('title', 'club', 'authors', 'original_author_id',
+                   'keywords', 'description', 'approved', 'reviewers', 'created_at', 'updated_at')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -168,63 +168,10 @@ class PaperCreationForm(forms.ModelForm):
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł'),keywords=_('Słowa oddzielone spacją'))
+        help_texts = dict(title=_('Tytuł'), keywords=_('Słowa oddzielone spacją'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
-
-
-class PaperEditForm(forms.ModelForm):
-    description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
-
-    class Meta:
-        model = Paper
-        fields = ['title', 'club', 'approved', 'keywords', 'description']
-        exclude = ['authors', 'reviewers']
-        labels = {
-            'title': _('Tytuł'),
-            'club': _('Koło'),
-            'approved': _('Zatwierdź'),
-            'keywords': _('Słowa kluczowe'),
-            'description': _('Krótki opis'),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = True
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3 create-label'
-        self.helper.field_class = 'col-md-9'
-        self.helper.layout = Layout(
-            Div(
-                Field('title'),
-                Field('club'),
-                Field('keywords'),
-                Field('description'),
-
-                HTML('<div class="row">'),
-                Field('approved'),
-                HTML('</div>'),
-
-                HTML('<div class="row text-left ml-2">'),
-                HTML('<span class="text-danger">( Pole to wskazuje recenzentowi, że referat jest gotowy )</span>'),
-                HTML('</div>'),
-                HTML('<hr>'),
-
-                HTML('<div class="row>'),
-                HTML('<div class="col>'),
-                Fieldset('Współautorzy',
-                         HTML('</div>'),
-                         HTML('</div>'),
-
-                         HTML("<br>"),
-                         HTML('<div class="row offset-1">'),
-                         Formset('coAuthors', 'papers/add_paper_author_formset.html')),
-                HTML('</div>'),
-            )
-        )
         self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
 
 
@@ -244,10 +191,14 @@ def get_grade_label(tag):
 
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
-    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),required=True, queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(label=get_grade_label('originality'),required=True, queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(label=get_grade_label('merits'),required=True, queryset=Grade.objects.filter(tag='merits'))
-    presentation = GradeChoiceField(label=get_grade_label('presentation'),required=True, queryset=Grade.objects.filter(tag='presentation'))
+    correspondence = GradeChoiceField(label=get_grade_label('correspondence'), required=True,
+                                      queryset=Grade.objects.filter(tag='correspondence'))
+    originality = GradeChoiceField(label=get_grade_label('originality'), required=True,
+                                   queryset=Grade.objects.filter(tag='originality'))
+    merits = GradeChoiceField(label=get_grade_label('merits'), required=True,
+                              queryset=Grade.objects.filter(tag='merits'))
+    presentation = GradeChoiceField(label=get_grade_label('presentation'), required=True,
+                                    queryset=Grade.objects.filter(tag='presentation'))
     final_grade = GradeChoiceField(label=get_grade_label('final_grade'), required=True,
                                    queryset=Grade.objects.filter(tag='final_grade'))
 

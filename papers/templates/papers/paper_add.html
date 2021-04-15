@@ -18,6 +18,43 @@
                 <form method="POST" class="post-form" enctype="multipart/form-data">
                     {% csrf_token %}
 
+                    <div class="row">
+
+                        {% for field in coAuthors.fields %}
+                            {% if "_email" in field %}
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Adres email</span>
+                                        </div>
+                                        <input name="{{ field }}" type="text" class="form-control" value="{{ field }}">
+                                    </div>
+                                </div>
+                            {% elif "_name" in field %}
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Imię</span>
+                                        </div>
+                                        <input name="{{ field }}" type="text" class="form-control" value="{{ field }}">
+                                    </div>
+                                </div>
+                            {% elif "_surname" in field %}
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Nazwisko</span>
+                                        </div>
+                                        <input name="{{ field }}" type="text" class="form-control" value="{{ field }}">
+                                    </div>
+                                </div>
+                            {% else %}
+
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
                     {% with field=form.title %}
                         {% for error in field.errors %}
                             <span class="text-danger">{{ error|escape }}</span>
@@ -66,20 +103,14 @@
                     {% with field=form.description %}
                         <div class="col-md-8 offset-md-2">
                             <h5 class="text-left">
-                            <span class="badge badge-secondary">
-                                Opis
-                            </span>
+                                <span class="badge badge-secondary">
+                                    {{ field.label }}
+                                </span>
                             </h5>
                             {% for error in field.errors %}
                                 <span class="text-danger">{{ error|escape }}</span>
                             {% endfor %}
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field }}
-                            </div>
+                            {{ field }}
                         </div>
                     {% endwith %}
 
@@ -93,5 +124,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $('.interest-list-new').on('input', function () {
+            let $this = $(this)
+            let $clone = $this.clone()
+            let name = $clone.attr('name')
+            let n = parseInt(name.split('_')[1]) + 1
+            name = 'interest_' + n
+            $clone.val('')
+            $clone.attr('name', name)
+            $clone.appendTo($this.parent())
+            $this.removeClass('interest-list-new')
+            $this.off('input', arguments.callee)
+            $clone.on('input', arguments.callee)
+        })
+        $form.find("input[name^=coauthor_set]:not(.interest-list-new)")
+            .on("blur", function () {
+                var value = $(this).val();
+                if (value === "") {
+                    $(this).hide();
+                }
+            })
+    </script>
 
 {% endblock %}

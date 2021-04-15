@@ -71,3 +71,4 @@ def slice_page(path):
 def in_tag(things, tag):
     return things.filter(tag=tag)
 
+
