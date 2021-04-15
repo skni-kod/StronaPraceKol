@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,6 +7,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
@@ -144,29 +143,31 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Dodaj referat - {SITE_NAME}'
+        context['site_title'] = f'Nowy referat - {SITE_NAME}'
+        #context['coAuthors'] = CoAuthorFormSet()
+        #context['files'] = UploadedFileFormSet()
+        context['test'] = render_to_string('papers/paper_add_author_formset.html',{'formset':  CoAuthorFormSet()})
 
-        if self.request.POST:
-            context['coAuthors'] = CoAuthorDynamicForm(self.request.POST)
-            #context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
-        else:
-            context['coAuthors'] = CoAuthorDynamicForm()
-            #context['files'] = CoAuthorDynamicForm()
+        # if self.request.POST:
+        #     context['coAuthors'] = CoAuthorFormSet(self.request.POST)
+        #     context['files'] = UploadedFileFormSet(self.request.POST, self.request.FILES)
+        # else:
+        #     context['coAuthors'] = CoAuthorFormSet()
+        #     context['files'] = UploadedFileFormSet()
 
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
-        #files = context['files']
+        files = context['files']
         with transaction.atomic():
             form.instance.original_author_id = self.request.user.pk
             self.object = form.save()
             form.instance.authors.add(self.request.user)
-
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            # if coAuthors.is_valid():
+            #     coAuthors.instance = self.object
+            #     coAuthors.save()
             # if files.is_valid():
             #     for f in self.request.FILES.getlist('uploadedfile_set-0-file'):
             #         file_instance = UploadedFile(file=f, paper=self.object)

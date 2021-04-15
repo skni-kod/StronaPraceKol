@@ -11,16 +11,6 @@ $().ready(function () {
         RenderMessages();
     });
 
-
-    // $(".review-box").each(function (index, element) {
-    //     $.get('review/' + $(this).attr('data-reviewer'), {},
-    //         function (data, status) {
-    //             if (status == 'success') {
-    //                 $(element).html(data);
-    //             }
-    //         });
-    // });
-
     $(".review-tab").click(function () {
         $.get('review/' + $(this).attr('data-reviewer'), {},
             function (data, status) {

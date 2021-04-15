@@ -35,20 +35,7 @@
             },
 
             insertDeleteLink = function (row) {
-                if (row.is('TR')) {
-                    // If the forms are laid out in table rows, insert
-                    // the remove button into the last table cell:
-                    row.children(':last').append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a>');
-                } else if (row.is('UL') || row.is('OL')) {
-                    // If they're laid out as an ordered/unordered list,
-                    // insert an <li> after the last list item:
-                    row.append('<li><a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a></li>');
-                } else {
-                    // Otherwise, just insert the remove button as the
-                    // last child element of the form's container:
-                    row.append('<a class="' + options.deleteCssClass + '" href="javascript:void(0)">' + options.deleteText + '</a>');
-                }
-                row.find('a.' + options.deleteCssClass).click(function () {
+                row.find('.remove_coauthor_button').click(function () {
                     var row = $(this).parents('.' + options.formCssClass),
                         del = row.find('input:hidden[id $= "-DELETE"]');
                     if (del.length) {
@@ -121,24 +108,13 @@
             }
             options.formTemplate = template;
 
-            if ($$.attr('tagName') == 'TR') {
-                // If forms are laid out as table rows, insert the
-                // "add" button in a new table row:
-                var numCols = $$.eq(0).children().length;
-                $$.parent().append('<tr><td colspan="' + numCols + '"><a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a></tr>');
-                addButton = $$.parent().find('tr:last a');
-                addButton.parents('tr').addClass(options.formCssClass + '-add');
-            } else {
-                // Otherwise, insert it immediately after the last form:
-                $$.filter(':last').after('<a class="' + options.addCssClass + '" href="javascript:void(0)">' + options.addText + '</a>');
-                addButton = $$.filter(':last').next();
-            }
+            addButton = $("#add_coauthor_btn");
             addButton.click(function () {
                 var formCount = parseInt($('#id_' + options.prefix + '-TOTAL_FORMS').val()),
                     row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
                     buttonRow = $(this).parents('tr.' + options.formCssClass + '-add').get(0) || this;
                 applyExtraClasses(row, formCount);
-                row.insertBefore($(buttonRow)).show();
+                row.insertAfter($(buttonRow)).show();
                 row.find('input,select,textarea,label').each(function () {
                     updateElementIndex($(this), options.prefix, formCount);
                 });
