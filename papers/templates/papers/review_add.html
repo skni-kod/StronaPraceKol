@@ -1,54 +1,57 @@
 {% load crispy_forms_tags %}
 {% load custom_papers_tags %}
-
-            {% if review %}
-            <div class="row text-center">
-                <div class="col mt-1">
-                    <form method='POST' class="post-form">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <hr>
-                        <input type="submit" class="btn btn-success" style="width:10%;" value="Zmień" name="Log"/>
-                    </form>
-                </div>
+<div class="box">
+    {% if review %}
+        <div class="row text-center">
+            <div class="col mt-1">
+                <form method='POST' class="post-form">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <hr>
+                    <input type="submit" class="btn btn-success" style="width:10%;" value="Zapisz" name="Log"/>
+                </form>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col text-center mt-1">
-                    <form action="{% url 'reviewDelete' paper.id review.id %}">
-                        <input type="submit" class="btn btn-danger" style="width:10%;" value="Usuń" name="Log"/>
-                    </form>
-                </div>
+
+        <a id="review_edit_cancel_btn">
+            <button type="button" class="btn btn-primary">Anuluj</button>
+        </a>
+
+
+    {% else %}
+        <div class="row text-center">
+            <div class="col">
+                <form method='POST' class="post-form">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <hr>
+                    <input type="submit" class="btn btn-success" style="width:10%;" value="Dodaj" name="Log"/>
+                </form>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="col text-center mt-1">
-                    <form action="{% url 'paperList' %}">
-                        <input type="submit" class="btn btn-warning" style="width:10%;" value="Powrót"/>
-                    </form>
-                </div>
+        <div class="row">
+            <div class="col text-center mt-1">
+                <form action="{% url 'paperList' %}">
+                    <input type="submit" class="btn btn-warning" style="width:10%;" value="Anuluj"/>
+                </form>
             </div>
+        </div>
 
 
-        {% else %}
-            <div class="row text-center">
-                <div class="col">
-                    <form method='POST' class="post-form">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <hr>
-                        <input type="submit" class="btn btn-success" style="width:10%;" value="Dodaj" name="Log"/>
-                    </form>
-                </div>
-            </div>
+    {% endif %}
+</div>
 
-            <div class="row">
-                <div class="col text-center mt-1">
-                    <form action="{% url 'paperList' %}">
-                        <input type="submit" class="btn btn-warning" style="width:10%;" value="Anuluj"/>
-                    </form>
-                </div>
-            </div>
-
-
-        {% endif %}
+{%  if review %}
+    <script>
+        $("#review_edit_cancel_btn").click(function () {
+            $.get("{% url 'reviewDetail' review.id %}", {},
+                function (data, status) {
+                    if (status == 'success') {
+                        $(".box").parent().html(data);
+                    }
+                });
+        });
+    </script>
+{% endif %}

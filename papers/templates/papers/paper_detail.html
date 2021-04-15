@@ -229,33 +229,31 @@
         </div>
 
         <div class="col-md-12">
-            <div class="col-md-10 offset-md-1">
-                {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
-                    <div class="tab-content p-4">
-                        {% if user.is_staff %}
-                            <div id="admin-assign-reviewers" class="tab-pane fade text-center">
+            {% if reviews|length > 0 or user.is_staff or user|is_in_group:'reviewer' %}
+                <div class="tab-content p-1">
+                    {% if user.is_staff %}
+                        <div id="admin-assign-reviewers" class="tab-pane fade text-center">
                                     <span class="text-muted">
                                         Aby wybrać kilku recenzentów(maksymalnie 2) należy przytrzymać klawisz Control.
                                         <br>
                                         Liczba w nawiazie przy nazwisku oznacza ilość przypisanych już prac do recenzenta
                                     </span>
-                                <div id="admin-assign-reviewers-div" class="my-4"></div>
-                                <button id="admin-assign-reviewers-submit" type="button" class="btn btn-primary">
-                                    Zapisz
-                                </button>
-                                <button id="admin-assign-reviewers-clear" type="button" class="btn btn-primary">
-                                    Wyczyść
-                                </button>
-                            </div>
-                        {% endif %}
+                            <div id="admin-assign-reviewers-div" class="my-4"></div>
+                            <button id="admin-assign-reviewers-submit" type="button" class="btn btn-primary">
+                                Zapisz
+                            </button>
+                            <button id="admin-assign-reviewers-clear" type="button" class="btn btn-primary">
+                                Wyczyść
+                            </button>
+                        </div>
+                    {% endif %}
 
-                        {% for reviewer in paper.reviewers.all %}
-                            <div id="review-{{ reviewer.username }}" class="tab-pane fade review-box"
-                                 data-reviewer="{{ reviewer.pk }}"></div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+                    {% for reviewer in paper.reviewers.all %}
+                        <div id="review-{{ reviewer.username }}" class="tab-pane fade review-box"
+                             data-reviewer="{{ reviewer.pk }}"></div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 

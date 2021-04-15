@@ -2,6 +2,7 @@ from braces.views import CsrfExemptMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
@@ -330,11 +331,10 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Review
     template_name = 'papers/review_add.html'
     form_class = ReviewCreationForm
-    success_url = '/papers'
+    success_url = ''
 
     def get_context_data(self, **kwargs):
         context = super(ReviewUpdateView, self).get_context_data(**kwargs)
-        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
         return context
 
     def test_func(self):
@@ -344,13 +344,14 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return False
 
     def handle_no_permission(self):
-        return redirect('paperList')
+        return render(self.request, template_name='papers/review_not_found.html')
 
 
-class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CsrfExemptMixin, DeleteView):
     model = Review
     template_name = 'papers/review_delete.html'
     success_url = '/papers'
+    success_message = 'Usunięto recenzję'
 
     def test_func(self):
         review = self.get_object()
@@ -360,11 +361,10 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super(ReviewDeleteView, self).get_context_data(**kwargs)
-        context['paper'] = Paper.objects.get(pk=self.kwargs.get('paper'))
         return context
 
     def handle_no_permission(self):
-        return redirect('paperList')
+        return render(self.request, template_name='papers/review_not_found.html')
 
 
 class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
