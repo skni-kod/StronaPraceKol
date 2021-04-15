@@ -349,7 +349,7 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return render(self.request, template_name='papers/review_not_found.html')
 
 
-class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CsrfExemptMixin, DeleteView):
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DeleteView):
     model = Review
     template_name = 'papers/review_delete.html'
     success_url = reverse_lazy('reviewSuccess')

@@ -11,21 +11,25 @@
         </div>
     </div>
 
-    {% if review %}
-        <a id="review-edit-cancel-btn">
-            <button type="button" class="btn btn-primary">Anuluj</button>
-        </a>
+    <div class="row justify-content-center mt-1">
+        <div class="text-center col-md-4">
+            {% if review %}
+                <a id="review-edit-cancel-btn">
+                    <button type="button" class="btn btn-primary">Anuluj</button>
+                </a>
+            {% endif %}
 
-    {% endif %}
+            <a id="review-edit-submit">
+                <button type="button" class="btn btn-success">Zapisz</button>
+            </a>
+        </div>
+    </div>
 
-    <a id="review-edit-submit">
-        <button type="button" class="btn btn-succss">Zapisz</button>
-    </a>
 
 </div>
 
-{% if review %}
-    <script>
+<script>
+    {% if review %}
         $("#review-edit-cancel-btn").click(function () {
             $.get("{% url 'reviewDetail' review.id %}", {},
                 function (data, status) {
@@ -34,21 +38,21 @@
                     }
                 });
         });
-    </script>
-{% endif %}
 
-<script>
-    $("#review-edit-submit").click(function () {
-        var fd = new FormData(document.getElementById('review-edit-form'));
-        $.ajax({
-            url: "{% url 'reviewCreate' paper.pk  %}",
-            data: fd,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function (data) {
-                $(".box").parent().html(data);
-            }
+    {% else %}
+        $("#review-edit-submit").click(function () {
+            var fd = new FormData(document.getElementById('review-edit-form'));
+            $.ajax({
+                url: "{% url 'reviewCreate' paper.pk  %}",
+                data: fd,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (data) {
+                    $(".box").parent().html(data);
+                }
+            });
         });
-    });
+
+    {% endif %}
 </script>
