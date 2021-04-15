@@ -3,18 +3,15 @@
     <div class="row">
         <div class="col text-center">
             <h3>
-                Czy na pewno usunąć recenzję do referatu:
+                Czy na pewno usunąć recenzję?
                 <br>
-                <span class="text-primary">
-                            {{ review.paper.title }}
-                    </span>
             </h3>
             <hr class="my-2">
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3 offset-md-2">
             <form method='POST' id="delete-review-form">
                 {% csrf_token %}
                 <button type="button" class="btn btn-danger btn-block" id="review-delete-button">
@@ -23,7 +20,7 @@
             </form>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-3 offset-md-2">
             <a id="review-delete-cancel-btn">
                 <button type="button" class="btn btn-warning btn-block">Anuluj</button>
             </a>

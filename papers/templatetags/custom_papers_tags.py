@@ -66,6 +66,7 @@ def slice_page(path):
     else:
         return path
 
+
 @register.filter(name='in_tag')
 def in_tag(things, tag):
     return things.filter(tag=tag)

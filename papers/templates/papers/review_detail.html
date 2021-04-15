@@ -4,20 +4,22 @@
 
     <div class="row my-1">
         {% for grade in review.aggregate_grades %}
-            <div class="col-md-6">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">{{ grade.get_tag_display_text }}</span>
+            {% if grade %}
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{{ grade.get_tag_display_text }}</span>
+                        </div>
+                        <select class="custom-select" id="{{ grade.tag }}">
+                            {% for option in grades|in_tag:grade.tag %}
+                                <option {% if option.value == grade.value and option.tag == grade.tag %}selected{% endif %}
+                                        value="{{ option.value }}"
+                                        class="text-{{ option.display_color }}">{{ option.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <select class="custom-select" id="{{ grade.tag }}">
-                        {% for option in grades|in_tag:grade.tag %}
-                            <option {% if option.value == grade.value and option.tag == grade.tag %}selected{% endif %}
-                                    value="{{ option.value }}"
-                                    class="text-{{ option.display_color }}">{{ option.name }}</option>
-                        {% endfor %}
-                    </select>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
         <div class="col-md-6 text-center">
             {% if review.author == user %}
@@ -54,7 +56,7 @@
             });
     });
 
-     $("#review_delete_button").click(function () {
+    $("#review_delete_button").click(function () {
         $.get("{% url 'reviewDelete' review.pk %}", {},
             function (data, status) {
                 if (status == 'success') {

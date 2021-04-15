@@ -7,8 +7,9 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from StronaProjektyKol.settings import SITE_NAME
 from .filters import PaperFilter
@@ -298,11 +299,12 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('login')
 
 
-class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Review
     template_name = 'papers/review_add.html'
-    success_url = '/papers'
+    success_url = reverse_lazy('reviewSuccess')
     form_class = ReviewCreationForm
+    success_message = "Poprawnie dodano!"
 
     def test_func(self):
         user = self.request.user
@@ -350,8 +352,12 @@ class ReviewUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CsrfExemptMixin, DeleteView):
     model = Review
     template_name = 'papers/review_delete.html'
-    success_url = '/papers'
+    success_url = reverse_lazy('reviewSuccess')
     success_message = 'Usunięto recenzję'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(ReviewDeleteView, self).delete(request, *args, **kwargs)
 
     def test_func(self):
         review = self.get_object()
@@ -365,6 +371,10 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMi
 
     def handle_no_permission(self):
         return render(self.request, template_name='papers/review_not_found.html')
+
+
+class ReviewSuccessView(LoginRequiredMixin, CsrfExemptMixin, TemplateView):
+    template_name = 'papers/review_success.html'
 
 
 class UserReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -431,7 +441,7 @@ def userReviewShow(request, **kwargs):
 
     if review is None:
         if user == reviewer:
-            return redirect('reviewCreate', kwargs['paper'])
+            return redirect('reviewCreate', paper.pk)
         else:
             return render(request, template_name='papers/review_not_found.html')
     else:
