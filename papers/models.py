@@ -69,9 +69,35 @@ class UploadedFile(models.Model):
 
 
 class Grade(models.Model):
+    BADGE_STYLES = (
+        ('primary', 'Primary'),
+        ('secondary', 'Secondary'),
+        ('success', 'Success'),
+        ('danger', 'Danger'),
+        ('warning', 'Warning'),
+        ('info', 'Info'),
+        ('light', 'Light'),
+        ('dark', 'Dark'),
+    )
+
+    GRADE_CATEGORIES = (
+        ('correspondence', 'Zgodność z tematyką'),
+        ('originality', 'Oryginalność'),
+        ('merits', 'Poprawność merytoryczna'),
+        ('presentation', 'Jakość prezentacji'),
+        ('final_grade', 'Ocena końcowa'),
+    )
+
+    def get_tag_display_text(self):
+        for itm in self.GRADE_CATEGORIES:
+            if itm[0] == self.tag:
+                return itm[1]
+        return ''
+
     name = models.CharField(max_length=32)
     value = models.CharField(max_length=16, default='')
-    tag = models.CharField(max_length=16)
+    tag = models.CharField(max_length=16, choices=GRADE_CATEGORIES)
+    display_color = models.CharField(max_length=16, default='primary', choices=BADGE_STYLES)
 
     def __str__(self):
         return f'[{self.tag}] {self.name}'
@@ -93,6 +119,9 @@ class Review(models.Model):
                                     null=True, limit_choices_to={'tag': 'final_grade'})
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+
+    def aggregate_grades(self):
+        return self.correspondence, self.originality, self.merits, self.presentation, self.final_grade
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'

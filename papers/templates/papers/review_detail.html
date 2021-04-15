@@ -1,12 +1,30 @@
-<div class="row">
-    <div class="col-md-2">
-        <span class="text-muter">
-            <h4>
-                Opis
-            </h4>
-        </span>
+{% load custom_papers_tags %}
+
+<div class="row my-1">
+    {% for grade in review.aggregate_grades %}
+        <div class="col-md-6">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">{{ grade.get_tag_display_text }}</span>
+                </div>
+                <select class="custom-select" id="{{ grade.tag }}">
+                    {% for option in grades|in_tag:grade.tag %}
+                        <option {% if option.value == grade.value and option.tag == grade.tag %}selected{% endif %} value="{{ option.value }}" class="text-{{ option.display_color }}">{{ option.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<hr class="my-2">
+
+<div class="row my-1">
+    <div class="col-md-2 text-left">
+        <h5>Treść recenzji:</h5>
     </div>
     <div class="col-md-10">
         {{ review.text|safe }}
     </div>
 </div>
+

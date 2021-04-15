@@ -75,7 +75,7 @@ class PaperFilter(django_filters.FilterSet):
     REVIEWERS_CHOICE = {
         ('0', 'Nie przydzielone'),
         ('1', '1 przydzielony'),
-        ('2', '2 przydzielonych')
+        ('2', '2 przydzielonye')
     }
 
     STATUS_CHOICE = {
@@ -88,8 +88,8 @@ class PaperFilter(django_filters.FilterSet):
         ('1', 'Jedna'),
         ('2', 'Dwie')
     }
-    # TODO: When making migration with empty table it causes error
-    FINAL_GRADE_CHOICE = [(obj.value, obj.name) for obj in Grade.objects.filter(tag='final_grade')]
+
+    FINAL_GRADE_CHOICE = lambda: [(obj.value, obj.name) for obj in Grade.objects.filter(tag='final_grade')]
 
     title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł referatu')
 

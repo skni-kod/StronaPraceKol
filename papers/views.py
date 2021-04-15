@@ -255,6 +255,11 @@ class ReviewDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     context_object_name = 'review'
     template_name = 'papers/review_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ReviewDetailView, self).get_context_data(**kwargs)
+        context['grades'] = Grade.objects.all()
+        return context
+
     def test_func(self):
         user = self.request.user
         paper = self.get_object().paper
@@ -313,7 +318,7 @@ class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return context
 
     def handle_no_permission(self):
-        return redirect('paperList')
+        return render(self.request, template_name='papers/review_not_found.html')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
