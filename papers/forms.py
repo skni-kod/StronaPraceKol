@@ -265,22 +265,30 @@ class PaperEditForm(forms.ModelForm):
 
 ### REVIEW FORMS
 class GradeChoiceField(forms.ModelChoiceField):
-    required=True
     def label_from_instance(self, obj):
         return f'{obj.name}'
 
 
+def get_grade_label(tag):
+    grade = Grade.objects.filter(tag=tag).first()
+
+    if grade is None:
+        return 'None'
+    return grade.get_tag_display_text()
+
+
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
-    correspondence = GradeChoiceField(queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(queryset=Grade.objects.filter(tag='merits'))
-    presentation = GradeChoiceField(queryset=Grade.objects.filter(tag='presentation'))
-    final_grade = GradeChoiceField(queryset=Grade.objects.filter(tag='final_grade'))
+    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),required=True, queryset=Grade.objects.filter(tag='correspondence'))
+    originality = GradeChoiceField(label=get_grade_label('originality'),required=True, queryset=Grade.objects.filter(tag='originality'))
+    merits = GradeChoiceField(label=get_grade_label('merits'),required=True, queryset=Grade.objects.filter(tag='merits'))
+    presentation = GradeChoiceField(label=get_grade_label('presentation'),required=True, queryset=Grade.objects.filter(tag='presentation'))
+    final_grade = GradeChoiceField(label=get_grade_label('final_grade'), required=True,
+                                   queryset=Grade.objects.filter(tag='final_grade'))
 
     class Meta:
         model = Review
-        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade','text']
+        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade', 'text']
 
 
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):
