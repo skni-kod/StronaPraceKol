@@ -30,13 +30,6 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['site_title'] = f'Referaty - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
 
-        # for select input
-        context['filter'].form['club'].field.widget.attrs['class'] = 'custom-select'
-        context['filter'].form['approved'].field.widget.attrs['class'] = 'custom-select'
-        context['filter'].form['reviewers_field'].field.widget.attrs['class'] = 'custom-select'
-        context['filter'].form['reviews_count'].field.widget.attrs['class'] = 'custom-select'
-        context['filter'].form['final_grade'].field.widget.attrs['class'] = 'custom-select'
-
         papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:

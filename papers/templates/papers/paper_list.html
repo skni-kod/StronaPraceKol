@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
 {% block content %}
 
     <div class="container">
@@ -9,7 +10,7 @@
             {% if user.is_staff %}
                 <h2>Referaty przesłane przez użytkowników</h2>
             {% elif user|is_in_group:'reviewer' %}
-                <h2> Przydzielone referaty do wystawienia recenzji </h2>
+                <h2>Przydzielone referaty do wystawienia recenzji </h2>
             {% else %}
                 <h2>Przesłane referaty</h2>
             {% endif %}
@@ -89,7 +90,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                            {{ field }}
+                             {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
@@ -101,7 +102,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                            {{ field }}
+                            {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
@@ -113,7 +114,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                            {{ field }}
+                            {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
@@ -143,7 +144,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                            {{ field }}
+                            {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
@@ -155,7 +156,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                            {{ field }}
+                            {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
