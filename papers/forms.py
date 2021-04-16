@@ -16,54 +16,20 @@ class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
         fields = ['file']
-        labels = {'file': _('Pliki')}
-        help_texts = {'file': _('Pliki możesz dodać później w zakładce edycji referatu')}
         widgets = {'file': forms.ClearableFileInput(attrs={'multiple': True})}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
 
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Row(
-                Field('file'),
-                css_class=f'formset_row-{formtag_prefix}'
-            )
-        )
 
-
-UploadedFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
+UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                             fields=['file'], extra=1, can_delete=True)
 
 
-class FileAppendForm(forms.ModelForm):
-    class Meta:
-        model = UploadedFile
-        fields = ['file']
-        labels = {'file': _('Pliki')}
-        widgets = {'file': forms.ClearableFileInput(attrs={'multiple': True})}
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
-
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Row(
-                Field('file'),
-                Field('DELETE', type='hidden'),
-                css_class='formset_row-{}'.format(formtag_prefix)
-            )
-        )
-
-
 ## CO AUTHOR FORMS
-
 class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
@@ -92,7 +58,7 @@ class PaperCreationForm(forms.ModelForm):
         fields = ['title', 'club', 'keywords', 'description']
         exclude = ['authors', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł'))
+        help_texts = dict(title=_('Tytuł'),keywords=_('Słowa kluczowe'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

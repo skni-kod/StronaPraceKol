@@ -35,7 +35,7 @@
             },
 
             insertDeleteLink = function (row) {
-                row.find('.remove_coauthor_button').click(function () {
+                row.find('.'+options.remove_btn_class).click(function () {
                     var row = $(this).parents('.' + options.formCssClass),
                         del = row.find('input:hidden[id $= "-DELETE"]');
                     if (del.length) {
@@ -81,7 +81,7 @@
         });
 
         if ($$.length) {
-            var addButton, template;
+            var addButton, template, add_btn_id;
             if (options.formTemplate) {
                 // If a form template was specified, we'll clone it to generate new form instances:
                 template = (options.formTemplate instanceof $) ? options.formTemplate : $(options.formTemplate);
@@ -108,7 +108,7 @@
             }
             options.formTemplate = template;
 
-            addButton = $("#add_coauthor_btn");
+            addButton = options.add_btn;
             addButton.click(function () {
                 var formCount = parseInt($('#id_' + options.prefix + '-TOTAL_FORMS').val()),
                     row = options.formTemplate.clone(true).removeClass('formset-custom-template'),
@@ -130,6 +130,8 @@
 
     /* Setup plugin defaults */
     $.fn.formset.defaults = {
+        add_btn: '',                  // The form prefix for your django formset
+        remove_btn_class: '',                  // The form prefix for your django formset
         prefix: 'form',                  // The form prefix for your django formset
         formTemplate: '',              // The jQuery selection cloned to generate new form instances
         addCssClass: 'add-row',          // CSS class applied to the add link

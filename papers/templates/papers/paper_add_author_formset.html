@@ -9,7 +9,7 @@
     {% for hidden in form.hidden_fields %}{{ hidden }} {% endfor %}
 
 
-    <div class="formset_row-{{ formset.prefix }} dynamic-form">
+    <div class="formset_row-{{ formset.prefix }}">
         <div class="row my-2">
 
             <div class="input-group">
@@ -60,9 +60,10 @@
 
 {% endfor %}
 
-<script src="{% static '/papers/js/jquery.formset.js' %}"></script>
 <script type="text/javascript">
     $('.formset_row-{{ formset.prefix }}').formset({
         prefix: '{{ formset.prefix }}',
+        add_btn: $('#add_coauthor_btn'),
+        remove_btn_class: 'remove_coauthor_button',
     });
 </script>
