@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/review_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/review_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +147,7 @@
       <workItem from="1618301749227" duration="33331000" />
       <workItem from="1618380544964" duration="86955000" />
       <workItem from="1618534202371" duration="1057000" />
-      <workItem from="1618556585954" duration="2187000" />
+      <workItem from="1618556585954" duration="2833000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -406,7 +401,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618534093192</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Refactor review list, add approvec input to paper edit/create view">
+      <created>1618558845471</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1618558845471</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,7 +427,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Paper detail merge with messaging,and review detail" />
     <MESSAGE value="Add paper details navigation" />
     <MESSAGE value="Refactor messaging app" />
     <MESSAGE value="Add message box to paper detail" />
@@ -450,7 +451,8 @@
     <MESSAGE value="Fix coAuthors" />
     <MESSAGE value="Configure summernote" />
     <MESSAGE value="Add uploaded file management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add uploaded file management" />
+    <MESSAGE value="Refactor review list, add approvec input to paper edit/create view" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor review list, add approvec input to paper edit/create view" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
