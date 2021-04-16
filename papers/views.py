@@ -292,6 +292,8 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['site_name'] = 'reviews'
         context['site_title'] = f'Recenzje - {SITE_NAME}'
+        for review in context['reviews']:
+            review.paper.get_unread_messages = review.paper.get_unread_messages(self.request.user)
         return context
 
     def test_func(self):

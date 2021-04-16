@@ -57,10 +57,29 @@
                                 {% endfor %}
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
+                                    <span class="input-group-text" id="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </span>
                                     </div>
                                     {{ field|add_class:'custom-select' }}
+                                </div>
+                            </div>
+                        {% endwith %}
+
+                        {% with field=form.approved %}
+                            <div class="col-md-8 offset-md-2">
+                                {% for error in field.errors %}
+                                    <span class="text-danger">{{ error|escape }}</span>
+                                {% endfor %}
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                        </span>
+                                    </div>
+                                    <div class="form-control">
+                                        {{ field }}
+                                    </div>
                                 </div>
                             </div>
                         {% endwith %}
@@ -140,7 +159,7 @@
         $('.remove_file_button').click(function () {
             var input = $("<input>")
                 .attr("type", "hidden")
-                .attr("name", "file-delete-"+$(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
+                .attr("name", "file-delete-" + $(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
             $('#paper_form').append(input);
             $(this).parent().parent().hide();
         });

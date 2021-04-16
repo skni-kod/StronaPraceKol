@@ -1,7 +1,6 @@
 import re
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Row
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
@@ -26,7 +25,7 @@ class FileUploadForm(forms.ModelForm):
 
 
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
-                                            fields=['file'], extra=1, can_delete=True)
+                                          fields=['file'], extra=1, can_delete=True)
 
 
 ## CO AUTHOR FORMS
@@ -52,13 +51,14 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 ### PAPER FORMS
 class PaperCreationForm(forms.ModelForm):
     description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
+    approved = forms.BooleanField(required=False,label=_('Gotowy do oceny'))
 
     class Meta:
         model = Paper
-        fields = ['title', 'club', 'keywords', 'description']
+        fields = ['title', 'club', 'keywords', 'description', 'approved']
         exclude = ['authors', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł'),keywords=_('Słowa kluczowe'))
+        help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

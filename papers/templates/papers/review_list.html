@@ -1,136 +1,135 @@
 {% extends "base.html" %}
 {% load custom_papers_tags %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
 {% block content %}
 
-    <div class="container">
-
-        <div class="text-center">
-            <h2> Twoje recenzje </h2>
-        </div>
-        <hr class="my-4">
+    <div class="text-center">
+        <h2>Lista referatów do których wystawiono recenzję</h2>
+    </div>
+    <hr class="my-4">
 
 
-        <div class="col-md-12 text-center">
-            {% if reviews %}
-                <ul>
-                    <br id="info_list">
-
-                    {% for review in reviews %}
-                        <li style="list-style-type:none;border-style:solid;border-color:#2cd3db;">
-
-                            <div class="row mt-0">
-                                <div class="col text-left">
-                                    <a class="nav-link" style="font-size:25px;"
-                                       href="{% url 'paperDetail' review.paper.id %}">{{ review.paper.title }}</a>
+    <div class="col-md-12">
+        {% if reviews %}
+                {% for review in reviews %}
+                        <div class="m-4 p-3 border border-primary rounded">
+                            <div class="row">
+                                <div class="col-md-7 text-left">
+                                    <a class="nav-link" href="{% url 'paperDetail'  review.paper.id %}">
+                                        <h3>
+                                            <span class="badge badge-primary">
+                                                {{ review.paper.title|truncatechars:40 }}
+                                            </span>
+                                        </h3>
+                                    </a>
                                 </div>
 
-                                <div class="col mt-3 text-left ml-4">
-                                    <h7 style="">Data dodania: {{ review.paper.created_at|date:"d/m/Y G:i" }}</h7>
+                                <div class="col-md-4 text-left">
+                                    <label>
+                                        Data dodania: {{  review.paper.created_at|date:"d.m.Y G:i" }}
+                                    </label>
                                     <br>
-                                    <h7 style="">Data
-                                        modyfikacji: {{ review.paper.updated_at|date:"d/m/Y G:i" }}</h7>
+                                    <label>
+                                        Data modyfikacji: {{  review.paper.updated_at|date:"d.m.Y G:i" }}
+                                    </label>
                                 </div>
                             </div>
 
-                            <div class="row text-left ml-1">
-                                <div class="col text-left">
-                                    <h5>Autorzy:</h5>
-                                </div>
-                            </div>
-
-                            <ul>
-                                {% for author in review.paper.authors.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ author.first_name }} {{ author.last_name }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                                {% for author in review.paper.coauthor_set.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ author.name }} {{ author.surname }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <br>
-
-                            <div class="row text-left ml-1">
-                                <div class="col">
-                                    <h5>Recenzenci: </h5>
-                                </div>
-                            </div>
-
-                            <ul>
-                                {% for review in review.paper.review_set.all %}
-                                    <li>
-                                        <div class="row ml-1">
-                                            {{ review.author.first_name }} {{ review.author.last_name }}
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <br>
+                            <hr class="paper_hr">
 
                             <div class="row">
-                                <div class="col text-left ml-3">
-                                    <h6>Słowa kluczowe: </h6>
-                                    {{ review.paper.keywords }}
-                                </div>
-                            </div>
-                            <br>
+                                <div class="col-md-6 my-2">
+                                    <h4>Autorzy:</h4>
+                                    <ul>
+                                        {% for author in  review.paper.authors.all %}
+                                            <li>
 
-                            <div class="row">
-                                <div class="col text-left ml-3">
-                                    {% if review.paper.approved == True %}
-                                        <p class="text-success"> Gotowy </p>
+                                                {{ author.first_name }} {{ author.last_name }}
+
+                                            </li>
+                                        {% endfor %}
+                                        {% for author in  review.paper.coauthor_set.all %}
+                                            <li>
+
+                                                {{ author.name }} {{ author.surname }}
+
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-6 my-2">
+                                    <h4>Recenzenci:</h4>
+                                    {% if review.paper.reviewers.all|length < 2 and review.paper.reviewers.all|length >= 0 and user.is_staff %}
+                                        <a href="{% url 'paperDetail'  review.paper.id %}">
+                                            <button type="button" class="btn btn-primary">
+                                                Przypisz recenzentów
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                    {% if review.paper.reviewers.all|length == 0 %}
+                                        <span class="badge badge-secondary">
+                                            Brak
+                                        </span>
                                     {% else %}
-                                        <p style="color:#ccb910;"> W przygotowaniu </p>
+                                        <ul>
+                                            {% for reviewer in review.paper.reviewers.all %}
+                                                <li>
+                                                    {{ reviewer.first_name }} {{ reviewer.last_name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col text-left ml-3">
-                                    <p>Liczba przesłanych plików:
-                                        {{ review.paper.uploadedfile_set.all.count }}
-                                    </p>
+                                <div class="col-md-6 my-2">
+                                    <h4>Słowa kluczowe: </h4>
+                                    <span class="text-muted">{{ review.paper.keywords|truncatechars:40 }}</span>
                                 </div>
 
-                                {% if user|is_in_group:'reviewer' %}
-                                    <div class="col text-right mb-2">
-                                        <form action="{% url 'reviewList' %}">
-                                            <input type="submit" class="btn btn-warning w-50 h-100 mr-2"
-                                                   value="Recenzje" enable/>
-                                        </form>
-                                    </div>
-                                {% endif %}
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col text-left ml-3">
-                                    <p style="">Liczba nowych wiadomości: TODO </p>
+                                <div class="col-md-6 my-2">
+                                    <h4>Status: </h4>
+                                    {% if review.paper.approved == True %}
+                                        <span class="text-success">Gotowy</span>
+                                    {% else %}
+                                        <span class="text-danger">W przygotowaniu</span>
+                                    {% endif %}
                                 </div>
 
-
-                                <div class="col text-right mb-2">
-                                    <form action="{% url 'reviewEdit' review.pk %}">
-                                        <input type="submit" class="btn btn-info w-50 h-100 mr-2"
-                                               value="Twoja recenzja"/>
-                                    </form>
+                                <div class="col-md-6 my-2">
+                                    <h4>Przesłane pliki:</h4>
+                                    {% if review.paper.uploadedfile_set.all|length == 0 %}
+                                        <span class="badge badge-secondary">Brak</span>
+                                    {% endif %}
+                                    <ul>
+                                        {% for itm in review.paper.uploadedfile_set.all %}
+                                            <li>
+                                                {{ itm.filename }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
 
+                                <div class="col-md-6 my-2">
+                                    <h4>Liczba nowych wiadomości:
+                                        <span class="badge badge-secondary">
+                                            {{ review.paper.get_unread_messages }}
+                                        </span>
+                                    </h4>
+                                </div>
 
+                                <div class="col-md-12">
+                                    <h4>Opis:</h4>
+                                    <span>
+                                        {{ review.paper.description|safe|truncatechars:500 }}
+                                    </span>
+                                </div>
                             </div>
+                        </div>
+                {% endfor %}
 
-
-                        </li>
-                        <br>
-                    {% endfor %}
-
+                <div class="text-center">
                     {% if is_paginated %}
 
                         {% if page_obj.has_previous %}
@@ -156,15 +155,11 @@
                         {% endif %}
 
                     {% endif %}
-
-
-                </ul>
-            {% else %}
-                <p> Brak recenzji </p>
-            {% endif %}
-            <br>
-        </div>
-
+                </div>
+        {% else %}
+            <p> Nie znaleziono </p>
+        {% endif %}
 
     </div>
+
 {% endblock %}
