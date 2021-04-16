@@ -25,7 +25,7 @@ SECRET_KEY = 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mytestserver.hopto.org']
 
 # Application definition
 

@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StronaProjektyKol/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/StronaProjektyKol/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +146,7 @@
       <workItem from="1618301749227" duration="33331000" />
       <workItem from="1618380544964" duration="86955000" />
       <workItem from="1618534202371" duration="1057000" />
-      <workItem from="1618556585954" duration="2833000" />
+      <workItem from="1618556585954" duration="2871000" />
     </task>
     <task id="LOCAL-00001" summary="Update requirements.txt, update base.html">
       <created>1616324506690</created>
@@ -408,7 +407,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618558845471</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Paper add date fix">
+      <created>1618559453391</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1618559453391</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -427,7 +433,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add paper details navigation" />
     <MESSAGE value="Refactor messaging app" />
     <MESSAGE value="Add message box to paper detail" />
     <MESSAGE value="Bug fix messages box" />
@@ -452,7 +457,8 @@
     <MESSAGE value="Configure summernote" />
     <MESSAGE value="Add uploaded file management" />
     <MESSAGE value="Refactor review list, add approvec input to paper edit/create view" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor review list, add approvec input to paper edit/create view" />
+    <MESSAGE value="Paper add date fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Paper add date fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
