@@ -167,8 +167,9 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             if files.is_valid():
                 for f in self.request.FILES.lists():
                     for x in f[1]:
-                        file_instance = UploadedFile(file=x, paper=self.object)
-                        file_instance.save()
+                        if len(f[1]) > 0:
+                            file_instance = UploadedFile(file=x, paper=self.object)
+                            file_instance.save()
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -194,7 +195,8 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         for key in request.POST.items():
             if 'file-delete-' in key[0]:
-                UploadedFile.objects.filter(pk=key[1]).delete()
+                if len(key[1]) > 0:
+                    UploadedFile.objects.filter(pk=key[1]).delete()
 
         return super(PaperEditView, self).post(request, *args, **kwargs)
 
