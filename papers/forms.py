@@ -72,11 +72,14 @@ class GradeChoiceField(forms.ModelChoiceField):
 
 
 def get_grade_label(tag):
-    grade = Grade.objects.filter(tag=tag).first()
-
-    if grade is None:
+    try:
+        grade = Grade.objects.filter(tag=tag).first()
+        if grade is None:
+            return 'None'
+        return grade.get_tag_display_text()
+    except:
         return 'None'
-    return grade.get_tag_display_text()
+    
 
 
 class ReviewCreationForm(forms.ModelForm):
