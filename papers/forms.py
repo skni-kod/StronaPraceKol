@@ -62,7 +62,7 @@ class PaperCreationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
+        self.fields['club'].queryset = StudentClub.objects.exclude(name='Brak')
 
 
 ### REVIEW FORMS

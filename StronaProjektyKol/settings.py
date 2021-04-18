@@ -130,6 +130,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'papers/static/papers',
 ]
 
+
 # for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -187,3 +188,4 @@ SITE_ADMIN_PHONE = '123456789'
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'
+

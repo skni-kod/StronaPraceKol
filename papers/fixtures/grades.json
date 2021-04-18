@@ -1,0 +1,162 @@
+[
+  {
+    "model": "papers.grade",
+    "pk": 1,
+    "fields": {
+      "name": "Całkowita",
+      "value": 1,
+      "tag": "correspondence",
+      "display_color": "success"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 2,
+    "fields": {
+      "name": "Średnia",
+      "value": 2,
+      "tag": "correspondence",
+      "display_color": "warning"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 3,
+    "fields": {
+      "name": "Słaba",
+      "value": 3,
+      "tag": "correspondence",
+      "display_color": "danger"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 4,
+    "fields": {
+      "name": "Brak",
+      "value": 4,
+      "tag": "correspondence",
+      "display_color": "dark"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 5,
+    "fields": {
+      "name": "Całkowita",
+      "value": 1,
+      "tag": "originality",
+      "display_color": "success"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 6,
+    "fields": {
+      "name": "Średnia",
+      "value": 2,
+      "tag": "originality",
+      "display_color": "warning"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 7,
+    "fields": {
+      "name": "Słaba",
+      "value": 3,
+      "tag": "correspondence",
+      "display_color": "danger"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 8,
+    "fields": {
+      "name": "Brak",
+      "value": 4,
+      "tag": "correspondence",
+      "display_color": "dark"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 9,
+    "fields": {
+      "name": "Niewystarczająca",
+      "value": 1,
+      "tag": "merits",
+      "display_color": "danger"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 10,
+    "fields": {
+      "name": "Wystarczająca",
+      "value": 2,
+      "tag": "merits",
+      "display_color": "success"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 11,
+    "fields": {
+      "name": "Niewystarczająca",
+      "value": 1,
+      "tag": "presentation",
+      "display_color": "danger"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 12,
+    "fields": {
+      "name": "Wystarczająca",
+      "value": 2,
+      "tag": "presentation",
+      "display_color": "success"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 13,
+    "fields": {
+      "name": "Przyjąć",
+      "value": 1,
+      "tag": "final_grade",
+      "display_color": "success"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 14,
+    "fields": {
+      "name": "Raczej przyjąć",
+      "value": 2,
+      "tag": "final_grade",
+      "display_color": "info"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 15,
+    "fields": {
+      "name": "Raczej odrzucić",
+      "value": 3,
+      "tag": "final_grade",
+      "display_color": "warning"
+    }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 16,
+    "fields": {
+      "name": "Odrzucić",
+      "value": 4,
+      "tag": "final_grade",
+      "display_color": "danger"
+    }
+  }
+]

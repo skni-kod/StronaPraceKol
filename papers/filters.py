@@ -99,7 +99,7 @@ class PaperFilter(django_filters.FilterSet):
     author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget,
                                           help_text='Oddzielone przecinkiem', method='author_surname_func')
 
-    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(acronym='Brak'), field_name='club',
+    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(name='Brak'), field_name='club',
                              label='Koło naukowe')
 
     reviewer_surname = MultiValueUserFilter(label='Nazwiska recenzentów', widget=CSVWidget, method='reviewers_lastname',

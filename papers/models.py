@@ -8,15 +8,15 @@ from django.utils import timezone
 
 class StudentClub(models.Model):
     name = models.CharField(max_length=128)
-    acronym = models.CharField(max_length=12)
-    active = models.BooleanField(default=True)
+    faculty = models.CharField(max_length=128)
+    patron = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
 
     @classmethod
     def get_default_pk(cls):
-        club, created = cls.objects.get_or_create(name='Brak koła', acronym='Brak')
+        club, created = cls.objects.get_or_create(name='Brak')
         return club.pk
 
 
