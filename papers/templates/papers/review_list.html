@@ -89,6 +89,11 @@
                                 </div>
 
                                 <div class="col-md-6 my-2">
+                                    <h4>Koło naukowe: </h4>
+                                    <span class="text-muted">{{  review.paper.club|truncatechars:40 }}</span>
+                                </div>
+
+                                <div class="col-md-6 my-2">
                                     <h4>Status: </h4>
                                     {% if review.paper.approved == True %}
                                         <span class="text-success">Gotowy</span>

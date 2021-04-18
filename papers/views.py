@@ -29,7 +29,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['site_name'] = 'papers'
         context['site_title'] = f'Referaty - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
-
+   
         papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:
@@ -38,6 +38,7 @@ class PaperListView(LoginRequiredMixin, ListView):
 
         context['queryset_pks'] = queryset_pks
         context['papers_length'] = papers.count()
+
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:

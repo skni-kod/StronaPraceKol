@@ -271,6 +271,11 @@
                                 </div>
 
                                 <div class="col-md-6 my-2">
+                                    <h4>Koło naukowe: </h4>
+                                    <span class="text-muted">{{ paper.club|truncatechars:40 }}</span>
+                                </div>
+
+                                <div class="col-md-6 my-2">
                                     <h4>Status: </h4>
                                     {% if paper.approved == True %}
                                         <span class="text-success">Gotowy</span>
@@ -389,7 +394,7 @@
                     {% endwith %}
 
                 {% else %}
-                    <div class="row text-center">
+                    <div class="row text-center my-5">
                         <div class="col">
                             <span class="badge badge-secondary">
                                 <h3>Nie znaleziono</h3>

@@ -50,8 +50,8 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 ### PAPER FORMS
 class PaperCreationForm(forms.ModelForm):
-    description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
-    approved = forms.BooleanField(required=False,label=_('Gotowy do oceny'))
+    description = forms.CharField(label='Krótkie streszczenie', widget=SummernoteWidget())
+    approved = forms.BooleanField(required=False,label=_('Gotowy do recenzji'))
 
     class Meta:
         model = Paper
