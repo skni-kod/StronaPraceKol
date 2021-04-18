@@ -25,7 +25,7 @@ SECRET_KEY = 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mytestserver.hopto.org','localhost']
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'django_seed',
     'widget_tweaks',
 ]
 
@@ -82,8 +81,12 @@ WSGI_APPLICATION = 'StronaProjektyKol.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '5432'
     }
 }
 
@@ -124,8 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    '/static/',
+    BASE_DIR / 'site_static',
     BASE_DIR / 'messaging/static/messaging',
     BASE_DIR / 'papers/static/papers',
 ]
@@ -169,8 +171,6 @@ MEDIA_URL = '/media/'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailtrap.io'
