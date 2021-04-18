@@ -30,14 +30,18 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['site_title'] = f'Referaty - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
 
-        papers = context['filter'].qs.order_by('-updated_at')
-        queryset_pks = ''
-        for paper in papers:
-            queryset_pks += f'&qspk={paper.pk}'
-            paper.get_unread_messages = paper.get_unread_messages(self.request.user)
+        try:
+            papers = context['filter'].qs.order_by('-updated_at')
+            for paper in papers:
+                queryset_pks += f'&qspk={paper.pk}'
+                paper.get_unread_messages = paper.get_unread_messages(self.request.user)
+            context['papers_length'] = papers.count()
+        except:
+            papers = []
 
+        queryset_pks = ''
         context['queryset_pks'] = queryset_pks
-        context['papers_length'] = papers.count()
+
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
