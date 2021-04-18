@@ -12,9 +12,12 @@ def is_in_group(user, group_name):
     :param group_name: string (name of a group)
     :return: boolean
     """
-    group = Group.objects.get(name=group_name)
-    if group in user.groups.all():
-        return True
+    try:
+        group = Group.objects.get(name=group_name)
+        if group in user.groups.all():
+            return True
+    except:
+        return False
     return False
 
 
