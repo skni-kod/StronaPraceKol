@@ -11,8 +11,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-
-from StronaProjektyKol.settings import SITE_NAME
+from django.views.static import serve
+from StronaProjektyKol.settings import SITE_NAME, BASE_DIR
 from .filters import PaperFilter
 from .forms import *
 
@@ -120,9 +120,8 @@ def paper_file_download(request, pk, item):
     if request.user in paper.authors.all() or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
-        response = FileResponse(document.file)
-        response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(document.file.path)
-        return response
+        filepath = str(BASE_DIR)+document.file.url
+        return serve(request, os.path.basename(filepath), os.path.dirname(filepath))
     else:
         return redirect('paper-list')
 
