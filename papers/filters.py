@@ -43,7 +43,6 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
         self.ref_field = ref_field
 
     def filter(self, qs, value):
-        # TODO(mystyk): add results found within coAuthors
         values = value or []
         queryset = None
         for value in values:
@@ -66,10 +65,22 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
         return queryset
 
     def name_filter(self, qs, name):
-        return qs.filter(author__first_name__icontains=name)
+        found_ids = []
+        for paper in qs:
+            if paper.coauthor_set.all().filter(name__icontains=name).exists():
+                found_ids.append(paper.id)
+        queryset = qs.filter(pk__in=found_ids)
+        queryset = qs.filter(author__first_name__icontains=name) | queryset
+        return queryset.distinct()
 
     def surname_filter(self, qs, surname):
-        return qs.filter(author__last_name__icontains=surname)
+        found_ids = []
+        for paper in qs:
+            if paper.coauthor_set.all().filter(surnamename__icontains=surname).exists():
+                found_ids.append(paper.id)
+        queryset = qs.filter(pk__in=found_ids)
+        queryset = qs.filter(author__last_name__icontains=surname) | queryset
+        return queryset.distinct()
 
 
 class PaperFilter(django_filters.FilterSet):
