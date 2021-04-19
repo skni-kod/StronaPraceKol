@@ -58,7 +58,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         if self.request.user.groups.filter(name='reviewer').exists():
             return Paper.objects.all().filter(reviewers=self.request.user)
         # FOR REGULAR USER
-        return Paper.objects.all().filter(authors=self.request.user)
+        return Paper.objects.all().filter(author=self.request.user)
 
 
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
@@ -100,7 +100,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user in paper.authors.all() or self.request.user.groups.filter(name='reviewer').exists():
+        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists():
             return True
         return False
 
@@ -118,7 +118,7 @@ def paper_file_download(request, pk, item):
     :return:
     """
     paper = Paper.objects.get(pk=pk)
-    if request.user in paper.authors.all() or request.user.groups.filter(
+    if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         response = FileResponse(document.file)
@@ -159,9 +159,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         coAuthors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
-            form.instance.original_author_id = self.request.user.pk
             self.object = form.save()
-            form.instance.authors.add(self.request.user)
+            form.instance.author = self.request.user
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
@@ -185,7 +184,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user in paper.authors.all():
+        if self.request.user == paper.author:
             return True
         return False
 
@@ -252,7 +251,7 @@ class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user.pk == paper.original_author_id:
+        if self.request.user == paper.author:
             return True
         return False
 
@@ -274,7 +273,7 @@ class ReviewDetailView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
         user = self.request.user
         paper = self.get_object().paper
         if user.is_staff or (user.groups.filter(
-                name='reviewer').exists() and user in paper.reviewers.all()) or user in paper.authors.all() or user == self.get_object().author:
+                name='reviewer').exists() and user in paper.reviewers.all()) or user == paper.author or user == self.get_object().author:
             return True
         return False
 
@@ -322,7 +321,7 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
 
         if user in [itm.author for itm in paper.review_set.all()]:
             return False
-        if user in paper.authors.all() or (self.request.user.groups.filter(
+        if user == paper.author or (self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
         return True
@@ -446,9 +445,9 @@ def userReviewShow(request, **kwargs):
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
     if paper is None or reviewer is None or (
-            user.groups.filter(name='reviewer').exists() and user not in paper.reviewers.all() and not user.is_staff):
+            user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
         return HttpResponse(status=404)
-    if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user not in paper.authors.all():
+    if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user != paper.author:
         return HttpResponse(status=404)
 
     review = Review.objects.filter(author=reviewer, paper=paper).first()

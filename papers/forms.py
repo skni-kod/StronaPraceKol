@@ -56,7 +56,7 @@ class PaperCreationForm(forms.ModelForm):
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description', 'approved']
-        exclude = ['authors', 'reviewers']
+        exclude = ['author', 'reviewers']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
         help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'))
 
@@ -83,16 +83,16 @@ def get_grade_label(tag):
 
 class ReviewCreationForm(forms.ModelForm):
     text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
-    correspondence = GradeChoiceField(label=get_grade_label('correspondence'), required=True,
+    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),
                                       queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(label=get_grade_label('originality'), required=True,
+    originality = GradeChoiceField(label=get_grade_label('originality'),
                                    queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(label=get_grade_label('merits'), required=True,
+    merits = GradeChoiceField(label=get_grade_label('merits'),
                               queryset=Grade.objects.filter(tag='merits'))
-    presentation = GradeChoiceField(label=get_grade_label('presentation'), required=True,
-                                    queryset=Grade.objects.filter(tag='presentation'))
-    final_grade = GradeChoiceField(label=get_grade_label('final_grade'), required=True,
+    final_grade = GradeChoiceField(label=get_grade_label('final_grade'),
                                    queryset=Grade.objects.filter(tag='final_grade'))
+    presentation = GradeChoiceField(label=get_grade_label('presentation'),
+                                    queryset=Grade.objects.filter(tag='presentation'))
 
     class Meta:
         model = Review

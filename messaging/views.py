@@ -88,7 +88,7 @@ def has_user_access_to_messages(user, paper):
     if paper is None or not user.is_authenticated:
         return False
 
-    if not user.is_staff and user not in paper.reviewers.all() and user not in paper.authors.all():
+    if not user.is_staff and user not in paper.reviewers.all() and user != paper.author:
         return False
 
     return True

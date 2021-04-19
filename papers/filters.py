@@ -43,6 +43,7 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
         self.ref_field = ref_field
 
     def filter(self, qs, value):
+        # TODO(mystyk): add results found within coAuthors
         values = value or []
         queryset = None
         for value in values:
@@ -65,10 +66,10 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
         return queryset
 
     def name_filter(self, qs, name):
-        return qs.filter(authors__first_name__icontains=name)
+        return qs.filter(author__first_name__icontains=name)
 
     def surname_filter(self, qs, surname):
-        return qs.filter(authors__last_name__icontains=surname)
+        return qs.filter(author__last_name__icontains=surname)
 
 
 class PaperFilter(django_filters.FilterSet):
@@ -118,7 +119,7 @@ class PaperFilter(django_filters.FilterSet):
                                method='final_grade_func')
 
     def author_surname_func(self, queryset, val1, val2):
-        return queryset.filter(reduce(or_, [Q(authors__last_name__icontains=c) for c in val2])).distinct()
+        return queryset.filter(reduce(or_, [Q(author__last_name__icontains=c) for c in val2])).distinct()
 
     def is_approved(self, queryset, val1, val2):
         return queryset.filter(approved=val2).distinct()
