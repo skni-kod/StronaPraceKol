@@ -50,6 +50,8 @@ class AnnouncementEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
+    def handle_no_permission(self):
+        return redirect(reverse_lazy('index'))
 
 #
 # before log-in
