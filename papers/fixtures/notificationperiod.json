@@ -1,0 +1,10 @@
+[
+  {
+    "model": "papers.notificationperiod",
+    "pk": 1,
+    "fields": {
+      "name": "email_notification_period",
+      "period": 3600
+    }
+  }
+]

@@ -22,7 +22,9 @@ from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, 
 # forms
 from .forms import UserLoginForm, UserPasswordChangeForm, AnnouncementEditForm
 from .forms import UserRegisterForm
-from papers.models import Announcement
+from papers.models import Announcement, NotificationPeriod, Paper
+from .models import UserDetail
+from django.utils import timezone
 
 
 class IndexView(ListView):
@@ -52,6 +54,36 @@ class AnnouncementEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         return redirect(reverse_lazy('index'))
+
+
+class SendNotificationsView(TemplateView):
+    template_name = 'users/check_notifications.html'
+
+    def send_notification(self):
+        period = NotificationPeriod.objects.all().first().period
+        for user in User.objects.all():
+            userDetail = UserDetail.objects.filter(user=user).first()
+            try:
+                difference = timezone.now() - userDetail.last_seen
+            except:
+                continue
+
+            if difference.seconds > period:
+                papers = []
+                for paper in Paper.objects.filter(author=user):
+                    if paper.get_unread_messages(user) > 0:
+                        papers.append(paper.title)
+                if len(papers) > 0 and not userDetail.email_notification_sent:
+                    # TODO set subject and content to const values and make attach_alternative
+                    userDetail.email_notification_sent = True
+                    userDetail.save()
+                    msg = EmailMultiAlternatives('subject', 'content', SITE_ADMIN_MAIL, [user.email])
+                    msg.send()
+
+    def get(self, request, *args, **kwargs):
+        self.send_notification()
+        return super(SendNotificationsView, self).get(request, *args, **kwargs)
+
 
 #
 # before log-in

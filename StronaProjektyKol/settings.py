@@ -176,9 +176,9 @@ MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'a7d71361f4e409'
+EMAIL_HOST_PASSWORD = '8af157447d80c0'
 EMAIL_PORT = '2525'
-EMAIL_HOST_USER = 'b616df948c35a1'
-EMAIL_HOST_PASSWORD = '297234ec84f732'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 

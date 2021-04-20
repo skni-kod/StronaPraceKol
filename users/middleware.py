@@ -14,7 +14,7 @@ class UpdateLastActivityMiddleware:
         if request.user.is_authenticated:
             userLastSeen = UserDetail.objects.filter(user=request.user)
             if userLastSeen:
-                userLastSeen.update(last_seen=timezone.now())
+                userLastSeen.update(last_seen=timezone.now(), email_notification_sent=False)
             else:
                 userLastSeen.create(user=request.user)
         response = self.get_response(request)

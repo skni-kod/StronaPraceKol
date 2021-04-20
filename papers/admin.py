@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.core.checks import messages
 from django.urls import path, reverse_lazy
 from django.views.generic import FormView
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, BadHeaderError
+
+from StronaProjektyKol.settings import SITE_ADMIN_MAIL
 from .models import *
 from django import forms
 
@@ -46,12 +49,37 @@ class MassEmailView(FormView):
     def form_valid(self, form):
         if form.is_valid():
             recipients_choice = form.cleaned_data['recipients']
-            if recipients_choice == 1:
-                recipients = User.objects.all()
-            elif recipients_choice == 2:
-                pass
-            elif recipients_choice == 3:
-                pass
+
+            recipients = []
+            users = User.objects.all()
+            # ALL USERS
+            if recipients_choice == '1':
+                recipients = users
+            # HAS PAPER WITH FLAG APPROVED
+            elif recipients_choice == '2':
+                for user in users:
+                    for paper in user.paper_set.all():
+                        if paper.approved:
+                            recipients.append(user)
+                            break
+            # HAS PAPER WITH REVIEW THAT HAS FINAL GRADE == APPROVE
+            elif recipients_choice == '3':
+                for user in users:
+                    for paper in user.paper_set.all():
+                        for review in paper.review_set.all():
+                            if int(review.final_grade.value) == 1:
+                                recipients.append(user)
+                                break
+            emails = []
+            for recipient in recipients:
+                emails.append(recipient.email)
+            # Send message
+            try:
+                msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
+                                             SITE_ADMIN_MAIL, emails, headers={'Reply-To': SITE_ADMIN_MAIL})
+                msg.send()
+            except BadHeaderError:
+                messages.add_messages(self.request, messages.WARNING, 'Unable to send mail')
         return super().form_valid(form)
 
 
