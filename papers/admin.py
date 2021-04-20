@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.core.checks import messages
+from django.contrib import admin, messages
 from django.urls import path, reverse_lazy
 from django.views.generic import FormView
 from django.core.mail import EmailMultiAlternatives, BadHeaderError
