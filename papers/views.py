@@ -27,7 +27,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
 
         context['site_name'] = 'papers'
-        context['site_title'] = f'Referaty - {SITE_NAME}'
+        context['site_title'] = f'Artykuły - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
    
         papers = context['filter'].qs.order_by('-updated_at')
@@ -70,7 +70,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-        context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
+        context['site_title'] = f'Informacje o artykule - {SITE_NAME}'
         paper_iter = 0
 
         GET_DATA = self.request.GET
@@ -137,7 +137,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Nowy referat - {SITE_NAME}'
+        context['site_title'] = f'Nowy artykuł - {SITE_NAME}'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
@@ -173,7 +173,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, f'Dodano referat')
+        messages.success(self.request, f'Dodano artykuł')
         return str('/papers/')
 
 
@@ -203,7 +203,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(PaperEditView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Edytuj referat - {SITE_NAME}'
+        context['site_title'] = f'Edytuj artykuł - {SITE_NAME}'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
@@ -236,7 +236,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, f'Referat został zmieniony')
+        messages.success(self.request, f'Artykuł został zmieniony')
         paper = self.get_object()
         return str('/papers/paper/' + str(paper.pk) + '/')
 

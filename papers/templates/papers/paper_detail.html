@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h4>Informacje o referacie</h4>
+            <h4>Informacje o artykule</h4>
         </div>
         <div class="col-md-2 offset-md-5 text-right">
             {% if user == paper.author %}
@@ -180,7 +180,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Opis:</h5>
+            <h5>Streszczenie:</h5>
         </div>
         <div class="col-md-8">
             {{ paper.description|safe }}
@@ -329,7 +329,7 @@
         </div>
         <div class="col-md-4">
             <a href="{% url 'paperList' %}">
-                <button type="button" class="btn btn-secondary btn-lg">Lista referatów</button>
+                <button type="button" class="btn btn-secondary btn-lg">Lista artykułów</button>
             </a>
         </div>
         <div class="col-md-4">
