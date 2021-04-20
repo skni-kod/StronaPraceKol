@@ -57,6 +57,7 @@ class AnnouncementEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 # before log-in
 #
 
+
 class ContactView(TemplateView):
     template_name = 'users/contact.html'
 
