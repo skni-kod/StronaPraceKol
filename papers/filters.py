@@ -103,7 +103,7 @@ class PaperFilter(django_filters.FilterSet):
 
     FINAL_GRADE_CHOICE = lambda: [(obj.value, obj.name) for obj in Grade.objects.filter(tag='final_grade')]
 
-    title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł referatu')
+    title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł artykułu')
 
     keywords = MultiValueCharFilter(field_name='keywords', label='Słowa kluczowe',
                                     lookup_expr='icontains', widget=CSVWidget, help_text='Słowa oddzielone przecinkiem')
