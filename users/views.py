@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import PasswordResetForm
 # for login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import BadHeaderError
@@ -13,19 +13,21 @@ from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
-from django.views.generic import TemplateView
-
+from django.views.generic import ListView, TemplateView, UpdateView
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
 # forms
-from .forms import UserLoginForm, UserPasswordChangeForm
+from .forms import UserLoginForm, UserPasswordChangeForm, AnnouncementEditForm
 from .forms import UserRegisterForm
+from papers.models import Announcement
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
     template_name = 'users/index.html'
+    model = Announcement
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
@@ -33,7 +35,20 @@ class IndexView(TemplateView):
         # Create any data and add it to the context
         context['site_name'] = 'index'
         context['site_title'] = f'Strona główna - {SITE_NAME}'
+        context['announcement'] = Announcement.objects.all().last()
         return context
+
+
+class AnnouncementEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Announcement
+    template_name = 'users/announcement_edit.html'
+    form_class = AnnouncementEditForm
+    success_url = reverse_lazy('index')
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 
 #

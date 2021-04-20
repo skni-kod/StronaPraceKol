@@ -15,6 +15,7 @@ admin.site.register(Review)
 admin.site.register(Announcement)
 admin.site.register(Message)
 admin.site.register(MessageSeen)
+admin.site.register(NotificationPeriod)
 
 
 # my dummy model

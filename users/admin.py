@@ -1,3 +1,4 @@
-# Register your models here.
+from .models import UserDetail
+from django.contrib import admin
 
-# admin.site.register()
+admin.site.register(UserDetail)

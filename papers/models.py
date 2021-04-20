@@ -1,9 +1,14 @@
 import os
-
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import pre_delete
 from django.utils import timezone
+from django.db.models.signals import pre_delete
+
+
+class NotificationPeriod(models.Model):
+    name = models.CharField(max_length=64)
+    period = models.IntegerField()  # in seconds
+    last_used = models.DateTimeField(default=timezone.now)
 
 
 class StudentClub(models.Model):
@@ -127,7 +132,6 @@ class Review(models.Model):
 
 
 class Announcement(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
 

@@ -459,3 +459,5 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
+
+

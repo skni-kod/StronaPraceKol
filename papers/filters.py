@@ -70,16 +70,16 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
             if paper.coauthor_set.all().filter(name__icontains=name).exists():
                 found_ids.append(paper.id)
         queryset = qs.filter(pk__in=found_ids)
-        queryset = qs.filter(author__first_name__icontains=name) | queryset
+        queryset = queryset | qs.filter(author__first_name__icontains=name)
         return queryset.distinct()
 
     def surname_filter(self, qs, surname):
         found_ids = []
         for paper in qs:
-            if paper.coauthor_set.all().filter(surnamename__icontains=surname).exists():
+            if paper.coauthor_set.all().filter(surname__icontains=surname).exists():
                 found_ids.append(paper.id)
         queryset = qs.filter(pk__in=found_ids)
-        queryset = qs.filter(author__last_name__icontains=surname) | queryset
+        queryset = queryset | qs.filter(author__last_name__icontains=surname)
         return queryset.distinct()
 
 
@@ -109,7 +109,7 @@ class PaperFilter(django_filters.FilterSet):
                                     lookup_expr='icontains', widget=CSVWidget, help_text='Słowa oddzielone przecinkiem')
 
     author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget,
-                                          help_text='Oddzielone przecinkiem', method='author_surname_func')
+                                          help_text='Oddzielone przecinkiem')
 
     club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(name='Brak'), field_name='club',
                              label='Koło naukowe')
@@ -129,8 +129,8 @@ class PaperFilter(django_filters.FilterSet):
     final_grade = ChoiceFilter(choices=FINAL_GRADE_CHOICE, field_name='final_grade', label='Ocena końcowa',
                                method='final_grade_func')
 
-    def author_surname_func(self, queryset, val1, val2):
-        return queryset.filter(reduce(or_, [Q(author__last_name__icontains=c) for c in val2])).distinct()
+    # def author_surname_func(self, queryset, val1, val2):
+    #     return queryset.filter(reduce(or_, [Q(author__last_name__icontains=c) for c in val2])).distinct()
 
     def is_approved(self, queryset, val1, val2):
         return queryset.filter(approved=val2).distinct()

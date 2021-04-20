@@ -1,8 +1,10 @@
 asgiref==3.3.1
 beautifulsoup4==4.9.3
 Django==3.1.7
+django-background-tasks==1.2.5
 django-bootstrap4==2.3.1
 django-braces==1.14.0
+django-compat==1.0.15
 django-crispy-forms==1.11.1
 django-debug-toolbar==3.2.1
 django-filter==2.4.0

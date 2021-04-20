@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from papers.models import Announcement
 
 
 class UserRegisterForm(UserCreationForm):
@@ -71,3 +72,12 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
     new_password2 = forms.CharField(label=_("Powtórz nowe hasło"),
                                     widget=forms.PasswordInput)
+
+
+class AnnouncementEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Announcement
+        fields = ['text']
+        labels = {'text': 'Treść'}
+
