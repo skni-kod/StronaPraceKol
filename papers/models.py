@@ -21,7 +21,7 @@ class StudentClub(models.Model):
 
     @classmethod
     def get_default_pk(cls):
-        club, created = cls.objects.get_or_create(name='Brak')
+        club, created = cls.objects.get_or_create(name='Brak', faculty='', patron='')
         return club.pk
 
 
