@@ -5,11 +5,8 @@ Serwis ma służyć do obsługi zgłoszeń projetków studentów będących czł
 
 To setup and run your server:
 
-
-
-
-
-
+Install requirements:
+  - python -m pip install -r requirements.txt
 
 Run migrations:
   - python manage.py makemigrations
