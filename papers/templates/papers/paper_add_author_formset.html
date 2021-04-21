@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 
-<div class="btn btn-primary" id="add_coauthor_btn">Dodaj współautora</div>
+<div class="btn btn-primary mb-4" id="add_coauthor_btn">Dodaj współautora</div>
 {{ formset.management_form|crispy }}
 
 {% for form in formset.forms %}
@@ -10,40 +10,43 @@
 
 
     <div class="formset_row-{{ formset.prefix }}">
-        <div class="row my-2">
+        <div class="row my-4">
 
             <div class="input-group">
                 {% with field=form.name %}
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text">{{ field.label }}</span>
-                    <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+
+                    <input type="text" class="form-control"
                            id="{{ field.id_for_label }}"
                            name="{{ field.html_name }}"
-                           value="{{ field.value|default_if_none:'' }}">
+                           value="{{ field.value|default_if_none:'' }}"
+                           placeholder="{{ field.label }}">
                 {% endwith %}
 
                 {% with field=form.surname %}
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text">{{ field.label }}</span>
-                    <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+
+                    <input type="text" class="form-control"
                            id="{{ field.id_for_label }}"
                            name="{{ field.html_name }}"
-                           value="{{ field.value|default_if_none:'' }}">
+                           value="{{ field.value|default_if_none:'' }}"
+                           placeholder="{{ field.label }}">
                 {% endwith %}
 
                 {% with field=form.email %}
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <span class="input-group-text">{{ field.label }}</span>
-                    <input type="email" class="form-control" placeholder="{{ field.help_text }}"
+
+                    <input type="text" class="form-control"
                            id="{{ field.id_for_label }}"
                            name="{{ field.html_name }}"
-                           value="{{ field.value|default_if_none:'' }}">
+                           value="{{ field.value|default_if_none:'' }}"
+                           placeholder="{{ field.label }}">
                 {% endwith %}
 
                 <div class="input-group-append">
