@@ -165,6 +165,9 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                 coAuthors.instance = self.object
                 coAuthors.save()
             if files.is_valid():
+                #receiced a list of file fields
+                #each file field has a list of files
+                #but file can be empty, so we need to check it
                 for f in self.request.FILES.lists():
                     for x in f[1]:
                         if len(f[1]) > 0:
