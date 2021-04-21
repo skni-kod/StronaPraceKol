@@ -34,7 +34,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         queryset_pks = ''
         for paper in papers:
             queryset_pks += f'&qspk={paper.pk}'
-            paper.get_unread_messages = paper.get_unread_messages(self.request.user)
+            paper.get_unread_messages = paper.get_unread_messages(self.request.user)[1]
 
         context['queryset_pks'] = queryset_pks
         context['papers_length'] = papers.count()
@@ -298,7 +298,7 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context['site_name'] = 'reviews'
         context['site_title'] = f'Recenzje - {SITE_NAME}'
         for review in context['reviews']:
-            review.paper.get_unread_messages = review.paper.get_unread_messages(self.request.user)
+            review.paper.get_unread_messages = review.paper.get_unread_messages(self.request.user)[1]
         return context
 
     def test_func(self):

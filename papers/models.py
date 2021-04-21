@@ -1,8 +1,9 @@
 import os
+
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 from django.db.models.signals import pre_delete
+from django.utils import timezone
 
 
 class NotificationPeriod(models.Model):
@@ -41,15 +42,15 @@ class Paper(models.Model):
 
     def get_unread_messages(self, user):
         if user not in self.reviewers.all() and user != self.author:
-            return 0
+            return [], 0
 
-        cnt = 0
+        messages = []
         for message in Message.objects.filter(paper=self):
             if message.author == user:
                 continue
             if not message.is_seen(user):
-                cnt += 1
-        return cnt
+                messages.append(message)
+        return messages, len(messages)
 
 
 class CoAuthor(models.Model):

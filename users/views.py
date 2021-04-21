@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import PasswordResetForm
 # for login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import BadHeaderError
@@ -13,18 +13,18 @@ from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
-from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
-from django.views.generic import ListView, TemplateView, UpdateView
+from django.views.generic import ListView, TemplateView
+
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
+from papers.models import Announcement, NotificationPeriod, Paper
 # forms
 from .forms import UserLoginForm, UserPasswordChangeForm
 from .forms import UserRegisterForm
-from papers.models import Announcement, NotificationPeriod, Paper
 from .models import UserDetail
-from django.utils import timezone
 
 
 class IndexView(ListView):
@@ -53,26 +53,42 @@ class SendNotificationsView(TemplateView):
             except:
                 continue
 
-            if difference.seconds > period:
+            if True:
+            #if difference.seconds > period:
                 papers = []
                 for paper in Paper.objects.filter(author=user):
-                    if paper.get_unread_messages(user) > 0:
-                        papers.append(paper.title)
+                    messages = paper.get_unread_messages(user)
+                    if messages[1] > 0:
+                        papers.append(paper.title, messages[0])
                 if len(papers) > 0 and not userDetail.email_notification_sent:
-                    # TODO set subject and content to const values and make attach_alternative
                     userDetail.email_notification_sent = True
                     userDetail.save()
-                    msg = EmailMultiAlternatives('subject', 'content', SITE_ADMIN_MAIL, [user.email])
-                    msg.send()
+
+                    # now send an email
+                    subject = f'Posiadasz nieprzeczytane wiadomości - {SITE_NAME}'
+                    plaintext = loader.get_template('papers/password_reset_email.txt')
+                    htmltemp = loader.get_template('papers/password_reset_email.html')
+                    c = {
+                        'subject': subject,
+                        'email': user.email,
+                        'domain': SITE_DOMAIN,
+                        'site_name': SITE_NAME,
+                        'last_seen': difference[0],
+                        'protocol': 'https',
+                    }
+                    text_content = plaintext.render(c)
+                    html_content = htmltemp.render(c)
+                    try:
+                        msg = EmailMultiAlternatives(subject, text_content, SITE_ADMIN_MAIL, [user.email],
+                                                     headers={'Reply-To': SITE_ADMIN_MAIL})
+                        msg.attach_alternative(html_content, "text/html")
+                        msg.send()
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
 
     def get(self, request, *args, **kwargs):
         self.send_notification()
         return super(SendNotificationsView, self).get(request, *args, **kwargs)
-
-
-#
-# before log-in
-#
 
 
 class ContactView(TemplateView):
@@ -138,12 +154,6 @@ class LoginView(auth_views.LoginView):
             }
             return render(request, self.template_name, context)
 
-
-#
-#
-# after log-in
-#
-#
 
 class LogoutView(auth_views.LogoutView):
     template_name = 'users/logout.html'
@@ -234,13 +244,14 @@ def password_reset_request(request):
                 plaintext = loader.get_template('registration/password_reset_email.txt')
                 htmltemp = loader.get_template('registration/password_reset_email.html')
                 c = {
-                    "email": user.email,
+                    'subject': subject,
+                    'email': user.email,
                     'domain': SITE_DOMAIN,
                     'site_name': SITE_NAME,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "user": user,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'user': user,
                     'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
+                    'protocol': 'https',
                 }
                 text_content = plaintext.render(c)
                 html_content = htmltemp.render(c)
