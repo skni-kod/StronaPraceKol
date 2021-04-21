@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27c95d27-0ea6-4dfa-acff-53265347eaeb" name="Default Changelist" comment="Update requirements">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/mass_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/mass_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_add.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/templates/papers/paper_unseen_mail.html" beforeDir="false" afterPath="$PROJECT_DIR$/papers/templates/papers/paper_unseen_mail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/papers/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/papers/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/registration/password_reset_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/registration/password_reset_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
