@@ -144,18 +144,20 @@ class PaperFilter(django_filters.FilterSet):
     def reviewers_lastname(self, queryset, val1, val2):
         return queryset.filter(reduce(or_, [Q(reviewers__last_name__icontains=c) for c in val2])).distinct()
 
-    def reviews_count_func(self, queryset, val1, val2):
+    def reviews_count_func(self, queryset, val1, reviews_count):
         to_exclude = []
-        val2 = int(val2)
-        for itm in queryset.all():
+        reviews_count = int(reviews_count)
+        for paper in queryset.all():
             ids = []
-            reviews = Review.objects.filter(paper__id=itm.id).all()
+            reviews = Review.objects.filter(paper__id=paper.id).all()
+
             for review in reviews:
-                if review.author not in itm.reviewers.all():
+                if review.author in paper.reviewers.all():
                     ids.append(review.pk)
+
             reviews = reviews.filter(Q(id__in=[obj for obj in ids]))
-            if not reviews.count() == val2:
-                to_exclude.append(itm)
+            if not reviews.count() == reviews_count:
+                to_exclude.append(paper)
 
         return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
 
