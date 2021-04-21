@@ -85,9 +85,9 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
 
 class PaperFilter(django_filters.FilterSet):
     REVIEWERS_CHOICE = {
-        ('0', 'Nie przydzielone'),
+        ('0', 'Brak przydziału'),
         ('1', '1 przydzielony'),
-        ('2', '2 przydzielonye')
+        ('2', '2 przydzielonych')
     }
 
     STATUS_CHOICE = {
