@@ -10,7 +10,6 @@ from .models import *
 
 
 ### FILE FORMS
-
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
@@ -27,8 +26,7 @@ class FileUploadForm(forms.ModelForm):
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                           fields=['file'], extra=1, can_delete=True)
 
-
-## CO AUTHOR FORMS
+### CO AUTHOR FORMS
 class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
