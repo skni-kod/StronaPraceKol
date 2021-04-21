@@ -42,7 +42,7 @@ class Paper(models.Model):
 
     def get_unread_messages(self, user):
         if user not in self.reviewers.all() and user != self.author:
-            return [], 0
+            return []
 
         messages = []
         for message in Message.objects.filter(paper=self):
@@ -50,7 +50,8 @@ class Paper(models.Model):
                 continue
             if not message.is_seen(user):
                 messages.append(message)
-        return messages, len(messages)
+
+        return messages
 
 
 class CoAuthor(models.Model):

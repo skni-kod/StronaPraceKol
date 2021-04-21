@@ -53,27 +53,33 @@ class SendNotificationsView(TemplateView):
             except:
                 continue
 
-            if True:
-            #if difference.seconds > period:
+            if difference.seconds > period:
                 papers = []
-                for paper in Paper.objects.filter(author=user):
-                    messages = paper.get_unread_messages(user)
-                    if messages[1] > 0:
-                        papers.append(paper.title, messages[0])
+
+                for paper in Paper.objects.filter():
+                    if user == paper.author or user in paper.reviewers.all():
+                        messages = paper.get_unread_messages(user)
+                        if len(messages) > 0:
+                            papers.append((paper.title, messages, paper.pk))
+
                 if len(papers) > 0 and not userDetail.email_notification_sent:
+                    messages = []
+                    for paper in papers:
+                        messages.append(({'count': len(paper[1]), 'title': paper[0], 'id': paper[2]}))
+
                     userDetail.email_notification_sent = True
                     userDetail.save()
 
                     # now send an email
                     subject = f'Posiadasz nieprzeczytane wiadomości - {SITE_NAME}'
-                    plaintext = loader.get_template('papers/password_reset_email.txt')
-                    htmltemp = loader.get_template('papers/password_reset_email.html')
+                    plaintext = loader.get_template('papers/paper_unseen_mail.html')
+                    htmltemp = loader.get_template('papers/paper_unseen_mail.html')
                     c = {
                         'subject': subject,
-                        'email': user.email,
+                        'messages': messages,
                         'domain': SITE_DOMAIN,
                         'site_name': SITE_NAME,
-                        'last_seen': difference[0],
+                        'last_seen': userDetail.last_seen,
                         'protocol': 'https',
                     }
                     text_content = plaintext.render(c)
