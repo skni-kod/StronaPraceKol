@@ -195,131 +195,7 @@
             <div class="col-md-12">
                 {% if papers %}
                     {% for paper in papers %}
-                        <div class="m-4 p-3 border border-primary rounded">
-                            <div class="row">
-                                <div class="col-md-7 text-left">
-                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id=
-                                            {{ forloop.counter }}{{ queryset_pks }}">
-                                        <h3>
-                                            <span class="badge badge-primary">
-                                                {{ paper.title|truncatechars:40 }}
-                                            </span>
-                                        </h3>
-                                    </a>
-                                </div>
-
-                                <div class="col-md-4 text-left">
-                                    <label>
-                                        Data dodania: {{ paper.created_at|date:"d.m.Y G:i" }}
-                                    </label>
-                                    <br>
-                                    <label>
-                                        Data modyfikacji: {{ paper.updated_at|date:"d.m.Y G:i" }}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <hr class="paper_hr">
-
-                            <div class="row">
-                                <div class="col-md-6 my-2">
-                                    <h4>Autorzy:</h4>
-                                    <ul>
-                                        <li>
-
-                                            {{ paper.author.first_name }} {{ paper.author.last_name }}
-
-                                        </li>
-                                        {% for author in paper.coauthor_set.all %}
-                                            <li>
-
-                                                {{ author.name }} {{ author.surname }}
-
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Recenzenci:</h4>
-                                    {% if paper.reviewers.all|length < 2 and paper.reviewers.all|length >= 0 and user.is_staff %}
-                                        <a href="{% url 'paperDetail' paper.id %}?id=
-                                                {{ forloop.counter }}{{ queryset_pks }}">
-                                            <button type="button" class="btn btn-primary">
-                                                Przypisz recenzentów
-                                            </button>
-                                        </a>
-                                    {% endif %}
-                                    {% if paper.reviewers.all|length == 0 %}
-                                        <span class="badge badge-secondary">
-                                            Brak
-                                        </span>
-                                    {% else %}
-                                        <ul>
-                                            {% for reviewer in paper.reviewers.all %}
-                                                <li>
-                                                    {{ reviewer.first_name }} {{ reviewer.last_name }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Słowa kluczowe: </h4>
-                                    <span class="text-muted">{{ paper.keywords|truncatechars:40 }}</span>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Koło naukowe: </h4>
-                                    <span class="text-muted">{{ paper.club|truncatechars:40 }}</span>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Status: </h4>
-                                    {% if paper.approved == True %}
-                                        <span class="text-success">Gotowy</span>
-                                    {% else %}
-                                        <span class="text-danger">W przygotowaniu</span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Przesłane pliki:</h4>
-                                    {% if paper.uploadedfile_set.all|length == 0 %}
-                                        <span class="badge badge-secondary"> Brak </span>
-                                    {% endif %}
-                                    <ul>
-                                        {% for itm in paper.uploadedfile_set.all %}
-                                            <li>
-                                                {% if itm.pk == paper.statement %}
-                                                    <a href="{% url 'paperFileDownload' pk=paper.id item=itm.id %}">
-                                                        Oświadczenie </a>
-                                                {% else %}
-                                                    <a href="{% url 'paperFileDownload' pk=paper.id item=itm.id %}">{{ itm.filename }}</a>
-                                                {% endif %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Liczba nowych wiadomości:
-                                        <span class="badge badge-secondary">
-                                            {{ paper.get_unread_messages }}
-                                        </span>
-                                    </h4>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <h4>Streszczenie:</h4>
-                                    <span>
-                                        {{ paper.description|safe }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
+                        {{ paper|print_paper }}
                     {% endfor %}
 
                     {% with request.get_full_path as querystring %}
@@ -407,8 +283,6 @@
                         </div>
                     </div>
                 {% endif %}
-                <br>
-
             </div>
         </div>
 

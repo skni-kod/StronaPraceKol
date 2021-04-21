@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.auth.models import Group
+from django.template.loader import render_to_string
 
 register = template.Library()
 
@@ -74,4 +75,10 @@ def slice_page(path):
 def in_tag(things, tag):
     return things.filter(tag=tag)
 
+
+@register.filter(name='print_paper')
+def print_paper(paper):
+    context = dict()
+    context['paper'] = paper
+    return render_to_string('papers/paper_list_element.html',context=context)
 
