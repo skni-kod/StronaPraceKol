@@ -26,6 +26,7 @@ class FileUploadForm(forms.ModelForm):
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                           fields=['file'], extra=1, can_delete=True)
 
+
 ### CO AUTHOR FORMS
 class CoAuthorForm(forms.ModelForm):
     class Meta:
@@ -54,7 +55,7 @@ class PaperCreationForm(forms.ModelForm):
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description', 'approved']
-        exclude = ['author', 'reviewers']
+        exclude = ['author', 'reviewers', 'statement']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
         help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'))
 

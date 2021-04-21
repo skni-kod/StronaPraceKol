@@ -10,7 +10,13 @@
 
         <div class="row text-center">
             <div class="col-md-12">
-                <h2>Dodaj artykuł</h2>
+                <h2>
+                    {% if site_type == 'create' %}
+                    Dodaj artykuł
+                    {% elif site_type == 'edit' %}
+                    Edytuj artykuł
+                    {% endif %}
+                </h2>
             </div>
         </div>
 
@@ -111,11 +117,11 @@
 
                         {{ coAuthorsForm }}
 
-                        <hr class="my-2">
+                        {% if site_type == 'create' %}
+                        {{ statement }}
+                        {% elif site_type == 'edit' %}
 
-                        {{  }}
-
-                        <hr class="my-2">
+                        {% endif %}
 
                         {{ filesForm }}
 

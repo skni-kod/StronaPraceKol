@@ -36,6 +36,7 @@ class Paper(models.Model):
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+    statement = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'{self.title[0:40]}'
@@ -51,6 +52,16 @@ class Paper(models.Model):
             if not message.is_seen(user):
                 messages.append(message)
         return messages, len(messages)
+
+
+def delete_statement_with_paper(instance, **kwargs):
+    """
+    Deletes statement file when paper object is deleted
+    :param instance:
+    :param kwargs:
+    :return:
+    """
+    instance.statement.delete()
 
 
 class CoAuthor(models.Model):
@@ -172,4 +183,5 @@ def delete_file_with_object(instance, **kwargs):
     instance.file.delete()
 
 
+pre_delete.connect(delete_statement_with_paper, sender=Paper)
 pre_delete.connect(delete_file_with_object, sender=UploadedFile)

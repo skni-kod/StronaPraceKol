@@ -168,7 +168,11 @@
                 <ul>
                     {% for file in paper.uploadedfile_set.all %}
                         <li>
+                        {% if file.pk == paper.statement %}
+                            <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}"> Oświadczenie </a>
+                        {% else %}
                             <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        {% endif %}
                         </li>
                     {% endfor %}
                 </ul>

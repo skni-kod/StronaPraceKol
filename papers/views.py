@@ -137,13 +137,19 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
         context['site_title'] = f'Nowy artykuł - {SITE_NAME}'
+        context['site_type'] = 'create'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
             context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadFileFormSet()
+            context['statement'] = FileUploadForm()
+
+        context['statement'].fields['file'].required = True
+        context['statement'].fields['file'].widget.attrs['multiple'] = False
 
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
@@ -159,6 +165,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
+            form.save()
             self.object = form.save()
 
             if coAuthors.is_valid():
@@ -173,6 +180,10 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                         if len(f[1]) > 0:
                             file_instance = UploadedFile(file=x, paper=self.object)
                             file_instance.save()
+                            if f[0] == 'file':
+                                self.object.statement = file_instance.pk
+                                self.object.save()
+
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
@@ -207,6 +218,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super(PaperEditView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
         context['site_title'] = f'Edytuj artykuł - {SITE_NAME}'
+        context['site_type'] = 'edit'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
@@ -214,7 +226,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
-        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object()).exclude(pk=self.get_object().statement)
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
