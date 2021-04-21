@@ -18,6 +18,7 @@ Run migrations:
     - python manage.py makemigrations <appname>
     - python manage.py migrate <appname>
     where <appname> is the name of the app. List of your apps you can get by running python manage.py migrate.)
+
 Load fixtures to database:
   - python manage.py loaddata announcement grades groups notificationperiod studentclub
 Run server:
