@@ -91,12 +91,14 @@
                         {% endwith %}
 
                         {% with field=form.description %}
+                            <div class="row mt-5">
+                                <div class="col-md-3">
+                                    <h5>
+                                        {{ field.label }}
+                                    </h5>
+                                </div>
+                            </div>
                             <div class="overflow-auto">
-                                <h5 class="text-left">
-                                <span class="badge badge-secondary">
-                                    {{ field.label }}
-                                </span>
-                                </h5>
                                 {% for error in field.errors %}
                                     <span class="text-danger">{{ error|escape }}</span>
                                 {% endfor %}
@@ -124,17 +126,17 @@
                                         Skan oświadczenia
                                     </h5>
                                 </div>
-                                <div class="col-3">
-
+                                <div class="col-3 text-left">
                                     <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
-
                                         <button type="button" class="btn btn-primary">
                                             Wzory oświadczeń
                                         </button>
                                     </a>
                                 </div>
                             </div>
+
                             <hr>
+
                             <div class="row">
                                 <div class="col-md-4 offset-md-4 mb-4">
                                     {% render_field statement.file %}
