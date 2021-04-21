@@ -4,13 +4,12 @@ from crispy_forms.helper import FormHelper
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
-from django_summernote.widgets import SummernoteWidget
+from django_summernote.fields import SummernoteTextFormField
 
 from .models import *
 
 
 ### FILE FORMS
-
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
@@ -28,7 +27,7 @@ UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadFo
                                           fields=['file'], extra=1, can_delete=True)
 
 
-## CO AUTHOR FORMS
+### CO AUTHOR FORMS
 class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
@@ -50,19 +49,19 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 ### PAPER FORMS
 class PaperCreationForm(forms.ModelForm):
-    description = forms.CharField(label='Krótki opis', widget=SummernoteWidget())
-    approved = forms.BooleanField(required=False,label=_('Gotowy do oceny'))
+    description = SummernoteTextFormField(label='Krótkie streszczenie')
+    approved = forms.BooleanField(required=False,label=_('Gotowy do recenzji'))
 
     class Meta:
         model = Paper
         fields = ['title', 'club', 'keywords', 'description', 'approved']
-        exclude = ['authors', 'reviewers']
+        exclude = ['author', 'reviewers', 'statement']
         labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
         help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['club'].queryset = StudentClub.objects.exclude(acronym='Brak')
+        self.fields['club'].queryset = StudentClub.objects.exclude(name='Brak')
 
 
 ### REVIEW FORMS
@@ -79,21 +78,20 @@ def get_grade_label(tag):
         return grade.get_tag_display_text()
     except:
         return 'None'
-    
 
 
 class ReviewCreationForm(forms.ModelForm):
-    text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
-    correspondence = GradeChoiceField(label=get_grade_label('correspondence'), required=True,
+    text = SummernoteTextFormField(label='Treść recenzji')
+    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),
                                       queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(label=get_grade_label('originality'), required=True,
+    originality = GradeChoiceField(label=get_grade_label('originality'),
                                    queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(label=get_grade_label('merits'), required=True,
+    merits = GradeChoiceField(label=get_grade_label('merits'),
                               queryset=Grade.objects.filter(tag='merits'))
-    presentation = GradeChoiceField(label=get_grade_label('presentation'), required=True,
-                                    queryset=Grade.objects.filter(tag='presentation'))
-    final_grade = GradeChoiceField(label=get_grade_label('final_grade'), required=True,
+    final_grade = GradeChoiceField(label=get_grade_label('final_grade'),
                                    queryset=Grade.objects.filter(tag='final_grade'))
+    presentation = GradeChoiceField(label=get_grade_label('presentation'),
+                                    queryset=Grade.objects.filter(tag='presentation'))
 
     class Meta:
         model = Review

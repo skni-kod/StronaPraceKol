@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.auth.models import Group
+from django.template.loader import render_to_string
 
 register = template.Library()
 
@@ -12,9 +13,12 @@ def is_in_group(user, group_name):
     :param group_name: string (name of a group)
     :return: boolean
     """
-    group = Group.objects.get(name=group_name)
-    if group in user.groups.all():
-        return True
+    try:
+        group = Group.objects.get(name=group_name)
+        if group in user.groups.all():
+            return True
+    except:
+        return False
     return False
 
 
@@ -72,3 +76,16 @@ def in_tag(things, tag):
     return things.filter(tag=tag)
 
 
+@register.filter
+def addstr(arg1, arg2):
+    """concatenate arg1 & arg2"""
+    return str(arg1) + str(arg2)
+
+
+@register.simple_tag(name='print_paper')
+def print_paper(paper, link, user):
+    context = dict()
+    context['paper'] = paper
+    context['link'] = link
+    context['user'] = user
+    return render_to_string('papers/paper_list_element.html', context=context)

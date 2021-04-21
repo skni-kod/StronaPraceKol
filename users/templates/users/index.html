@@ -3,12 +3,7 @@
 {% block content %}
     <br>
     <div class="container mx-1 my-1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus mollis tristique nisi, non imperdiet nunc
-        tempor eget. Nulla sit amet egestas diam. Pellentesque nec lectus ultrices, vestibulum justo vitae, dictum
-        lorem. Donec tincidunt accumsan placerat. Sed ac libero vestibulum, pellentesque est sed, tempus turpis. Quisque
-        finibus, eros vitae posuere pulvinar, metus ante placerat arcu, a convallis elit erat vel justo. Vestibulum
-        rhoncus diam ac magna rutrum, eu malesuada libero vestibulum. Aliquam at justo dolor. Curabitur in turpis
-        sollicitudin, dignissim erat vel, mattis leo.
+        {{ announcement.text|safe }}
     </div>
 {% endblock %}
 

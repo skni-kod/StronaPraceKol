@@ -5,157 +5,44 @@
 {% block content %}
 
     <div class="text-center">
-        <h2>Lista referatów do których wystawiono recenzję</h2>
+        <h2>Lista artykułów do których wystawiono recenzję</h2>
     </div>
     <hr class="my-4">
 
 
     <div class="col-md-12">
         {% if reviews %}
-                {% for review in reviews %}
-                        <div class="m-4 p-3 border border-primary rounded">
-                            <div class="row">
-                                <div class="col-md-7 text-left">
-                                    <a class="nav-link" href="{% url 'paperDetail'  review.paper.id %}">
-                                        <h3>
-                                            <span class="badge badge-primary">
-                                                {{ review.paper.title|truncatechars:40 }}
-                                            </span>
-                                        </h3>
-                                    </a>
-                                </div>
+            {% for review in reviews %}
+                    {% print_paper review.paper '' user %}
+            {% endfor %}
 
-                                <div class="col-md-4 text-left">
-                                    <label>
-                                        Data dodania: {{  review.paper.created_at|date:"d.m.Y G:i" }}
-                                    </label>
-                                    <br>
-                                    <label>
-                                        Data modyfikacji: {{  review.paper.updated_at|date:"d.m.Y G:i" }}
-                                    </label>
-                                </div>
-                            </div>
+            <div class="text-center">
+                {% if is_paginated %}
 
-                            <hr class="paper_hr">
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
+                        <a class="btn btn-outline-info"
+                           href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                    {% endif %}
 
-                            <div class="row">
-                                <div class="col-md-6 my-2">
-                                    <h4>Autorzy:</h4>
-                                    <ul>
-                                        {% for author in  review.paper.authors.all %}
-                                            <li>
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
 
-                                                {{ author.first_name }} {{ author.last_name }}
-
-                                            </li>
-                                        {% endfor %}
-                                        {% for author in  review.paper.coauthor_set.all %}
-                                            <li>
-
-                                                {{ author.name }} {{ author.surname }}
-
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Recenzenci:</h4>
-                                    {% if review.paper.reviewers.all|length < 2 and review.paper.reviewers.all|length >= 0 and user.is_staff %}
-                                        <a href="{% url 'paperDetail'  review.paper.id %}">
-                                            <button type="button" class="btn btn-primary">
-                                                Przypisz recenzentów
-                                            </button>
-                                        </a>
-                                    {% endif %}
-                                    {% if review.paper.reviewers.all|length == 0 %}
-                                        <span class="badge badge-secondary">
-                                            Brak
-                                        </span>
-                                    {% else %}
-                                        <ul>
-                                            {% for reviewer in review.paper.reviewers.all %}
-                                                <li>
-                                                    {{ reviewer.first_name }} {{ reviewer.last_name }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Słowa kluczowe: </h4>
-                                    <span class="text-muted">{{ review.paper.keywords|truncatechars:40 }}</span>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Status: </h4>
-                                    {% if review.paper.approved == True %}
-                                        <span class="text-success">Gotowy</span>
-                                    {% else %}
-                                        <span class="text-danger">W przygotowaniu</span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Przesłane pliki:</h4>
-                                    {% if review.paper.uploadedfile_set.all|length == 0 %}
-                                        <span class="badge badge-secondary">Brak</span>
-                                    {% endif %}
-                                    <ul>
-                                        {% for itm in review.paper.uploadedfile_set.all %}
-                                            <li>
-                                                {{ itm.filename }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-
-                                <div class="col-md-6 my-2">
-                                    <h4>Liczba nowych wiadomości:
-                                        <span class="badge badge-secondary">
-                                            {{ review.paper.get_unread_messages }}
-                                        </span>
-                                    </h4>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <h4>Opis:</h4>
-                                    <span>
-                                        {{ review.paper.description|safe }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                {% endfor %}
-
-                <div class="text-center">
-                    {% if is_paginated %}
-
-                        {% if page_obj.has_previous %}
-                            <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
-                            <a class="btn btn-outline-info"
-                               href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
-                        {% endif %}
-
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
-
-                            {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'+4' %}
-                                <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
-
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.next_page_number }}">Następna</a>
-                            <a class="btn btn-outline-info" href="?page={{ page_obj.paginator.num_pages }}">Ostatnia</a>
+                        {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'+4' %}
+                            <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
 
                         {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a class="btn btn-outline-info" href="?page={{ page_obj.next_page_number }}">Następna</a>
+                        <a class="btn btn-outline-info" href="?page={{ page_obj.paginator.num_pages }}">Ostatnia</a>
 
                     {% endif %}
-                </div>
+
+                {% endif %}
+            </div>
         {% else %}
             <p> Nie znaleziono </p>
         {% endif %}

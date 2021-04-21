@@ -27,17 +27,18 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
 
         context['site_name'] = 'papers'
-        context['site_title'] = f'Referaty - {SITE_NAME}'
+        context['site_title'] = f'Artykuły - {SITE_NAME}'
         context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
-
+   
         papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:
-            queryset_pks += f'&qspk={paper.pk}'
-            paper.get_unread_messages = paper.get_unread_messages(self.request.user)
+            queryset_pks += f'&q={paper.pk}'
+            paper.get_unread_messages = len(paper.get_unread_messages(self.request.user))
 
         context['queryset_pks'] = queryset_pks
         context['papers_length'] = papers.count()
+
         paginator = Paginator(papers, 5)
         page = self.request.GET.get('page', 1)
         try:
@@ -57,7 +58,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         if self.request.user.groups.filter(name='reviewer').exists():
             return Paper.objects.all().filter(reviewers=self.request.user)
         # FOR REGULAR USER
-        return Paper.objects.all().filter(authors=self.request.user)
+        return Paper.objects.all().filter(author=self.request.user)
 
 
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
@@ -69,18 +70,18 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-        context['site_title'] = f'Informacje o referacie - {SITE_NAME}'
+        context['site_title'] = f'Informacje o artykule - {SITE_NAME}'
         paper_iter = 0
 
         GET_DATA = self.request.GET
 
-        if 'id' in GET_DATA:
+        if 'id' in GET_DATA and GET_DATA['id'] is not None:
             paper_iter = int(GET_DATA['id'])
-        if 'qspk' in GET_DATA:
-            qs_list = [int(i) for i in GET_DATA.getlist('qspk')]
+        if 'q' in GET_DATA:
+            qs_list = [int(i) for i in GET_DATA.getlist('q')]
             queryset_pks = ''
             for itm in qs_list:
-                queryset_pks += f'&qspk={itm}'
+                queryset_pks += f'&q={itm}'
             context['queryset_pks'] = queryset_pks
 
             if 1 < paper_iter <= len(qs_list):
@@ -99,7 +100,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user in paper.authors.all() or self.request.user.groups.filter(name='reviewer').exists():
+        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists():
             return True
         return False
 
@@ -117,7 +118,7 @@ def paper_file_download(request, pk, item):
     :return:
     """
     paper = Paper.objects.get(pk=pk)
-    if request.user in paper.authors.all() or request.user.groups.filter(
+    if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         filepath = str(BASE_DIR)+document.file.url
@@ -134,15 +135,22 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['club'].empty_label = 'Wybierz koło naukowe'
         context['site_name'] = 'papers'
-        context['site_title'] = f'Nowy referat - {SITE_NAME}'
+        context['site_title'] = f'Nowy artykuł - {SITE_NAME}'
+        context['site_type'] = 'create'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
             context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadFileFormSet()
+            context['statement'] = FileUploadForm()
+
+        context['statement'].fields['file'].required = True
+        context['statement'].fields['file'].widget.attrs['multiple'] = False
 
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
@@ -157,22 +165,30 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         coAuthors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
-            form.instance.original_author_id = self.request.user.pk
+            form.instance.author = self.request.user
+            form.save()
             self.object = form.save()
-            form.instance.authors.add(self.request.user)
+
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
             if files.is_valid():
+                #receiced a list of file fields
+                #each file field has a list of files
+                #but file can be empty, so we need to check it
                 for f in self.request.FILES.lists():
                     for x in f[1]:
                         if len(f[1]) > 0:
                             file_instance = UploadedFile(file=x, paper=self.object)
                             file_instance.save()
+                            if f[0] == 'file':
+                                self.object.statement = file_instance.pk
+                                self.object.save()
+
         return super(PaperCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, f'Dodano referat')
+        messages.success(self.request, f'Dodano artykuł')
         return str('/papers/')
 
 
@@ -183,7 +199,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user in paper.authors.all():
+        if self.request.user == paper.author:
             return True
         return False
 
@@ -202,7 +218,8 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(PaperEditView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Edytuj referat - {SITE_NAME}'
+        context['site_title'] = f'Edytuj artykuł - {SITE_NAME}'
+        context['site_type'] = 'edit'
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
@@ -210,7 +227,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
-        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object()).exclude(pk=self.get_object().statement)
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
@@ -235,7 +252,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, f'Referat został zmieniony')
+        messages.success(self.request, f'Artykuł został zmieniony')
         paper = self.get_object()
         return str('/papers/paper/' + str(paper.pk) + '/')
 
@@ -250,7 +267,7 @@ class PaperDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user.pk == paper.original_author_id:
+        if self.request.user == paper.author:
             return True
         return False
 
@@ -272,7 +289,7 @@ class ReviewDetailView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
         user = self.request.user
         paper = self.get_object().paper
         if user.is_staff or (user.groups.filter(
-                name='reviewer').exists() and user in paper.reviewers.all()) or user in paper.authors.all() or user == self.get_object().author:
+                name='reviewer').exists() and user in paper.reviewers.all()) or user == paper.author or user == self.get_object().author:
             return True
         return False
 
@@ -294,7 +311,7 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context['site_name'] = 'reviews'
         context['site_title'] = f'Recenzje - {SITE_NAME}'
         for review in context['reviews']:
-            review.paper.get_unread_messages = review.paper.get_unread_messages(self.request.user)
+            review.paper.get_unread_messages = len(review.paper.get_unread_messages(self.request.user))
         return context
 
     def test_func(self):
@@ -320,7 +337,7 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
 
         if user in [itm.author for itm in paper.review_set.all()]:
             return False
-        if user in paper.authors.all() or (self.request.user.groups.filter(
+        if user == paper.author or (self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
         return True
@@ -444,9 +461,9 @@ def userReviewShow(request, **kwargs):
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
     if paper is None or reviewer is None or (
-            user.groups.filter(name='reviewer').exists() and user not in paper.reviewers.all() and not user.is_staff):
+            user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
         return HttpResponse(status=404)
-    if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user not in paper.authors.all():
+    if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user != paper.author:
         return HttpResponse(status=404)
 
     review = Review.objects.filter(author=reviewer, paper=paper).first()
@@ -458,3 +475,5 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
+
+

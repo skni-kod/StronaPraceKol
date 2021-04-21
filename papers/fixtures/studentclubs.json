@@ -1,0 +1,605 @@
+[
+  {
+    "model": "papers.studentclub",
+    "pk": 1,
+    "fields": {
+      "name": "Brak",
+      "faculty": "",
+      "patron": ""
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 2,
+    "fields": {
+      "name": "Koło Naukowe Inżynierii Środowiska",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Adam Masłoń"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 3,
+    "fields": {
+      "name": "Koło Naukowe Budowlanych-Sekcja konstrukcyjna",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Zdzisław Pisarek"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 4,
+    "fields": {
+      "name": "Koło Naukowe Geodetów \"GLOB\"",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Grzegorz Oleniacz"
+    }
+  },
+   {
+    "model": "papers.studentclub",
+    "pk": 5,
+    "fields": {
+      "name": "Koło Naukowe Mostowców",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Bartosz Piątek"
+    }
+  },
+   {
+    "model": "papers.studentclub",
+    "pk": 6,
+    "fields": {
+      "name": "Koło Naukowe Drogowców",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Mateusz Szarata"
+    }
+  },
+   {
+    "model": "papers.studentclub",
+    "pk": 7,
+    "fields": {
+      "name": "Koło Architektoniczne ZARYS",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Tomasz Tomaszek"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 8,
+    "fields": {
+      "name": "Koło Naukowe Mechaniki Budowli",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Piotr Nazarko"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 9,
+    "fields": {
+      "name": "Koło Naukowe \"da Vinci\"",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Michał Musiał"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 10,
+    "fields": {
+      "name": "Koło Naukowe Studentów HVAC Ogrzewanie, Wentylacja, Klimatyzacja",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Elżbieta Rybak - Wilusz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 11,
+    "fields": {
+      "name": "Koło Naukowe Komputerowe Kształtowanie form i konstrukcji budynków - Grafika inżynierska",
+      "faculty": "Wydział Budownictwa, Inżynierii Środowiska i Architektury",
+      "patron": "Jacek Abramczyk"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 12,
+    "fields": {
+      "name": "Koło Naukowe Lotników",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Tomasz Lis"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 13,
+    "fields": {
+      "name": "Koło Naukowe Mechaników-Sekcja Samochodowa",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Paweł Wojewoda"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 14,
+    "fields": {
+      "name": "Koło Naukowe Robotyki \"Mechatronik\"",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Dariusz Szybicki"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 15,
+    "fields": {
+      "name": "Koło Naukowe Szybowników \"Bezmiechowa\"",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Andrzej Majka"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 16,
+    "fields": {
+      "name": "Koło Naukowe Inżynierii Zarządzania",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Andrzej Pacana"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 17,
+    "fields": {
+      "name": "Koło Naukowe EUROAVIA",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Grzegorz Drupka"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 18,
+    "fields": {
+      "name": "Koło Naukowe Programowanie i Automatyzacja Obróbki",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Robert Babiarz"
+    }
+  },
+   {
+    "model": "papers.studentclub",
+    "pk": 19,
+    "fields": {
+      "name": "Koło Naukowe Transport",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Krzysztof Lew"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 20,
+    "fields": {
+      "name": "Koło naukowe inżynierii materiałowej AMSA",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Jacek Nawrocki"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 21,
+    "fields": {
+      "name": "Koło Naukowe Kosmonautyki",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Radosław Kołodziejczyk"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 22,
+    "fields": {
+      "name": "Koło Naukowe Nowoczesnych Systemów Komputerowych i Inżynierii Produkcji",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Sławomir Świrad"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 23,
+    "fields": {
+      "name": "Koło Naukowe Formuła Student Rzeszów",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Piotr Strojny"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 24,
+    "fields": {
+      "name": "Koło Naukowe Szybkiego Prototypowania i Wzornictwa Przemysłowego",
+      "faculty": "Wydział Budowy Maszyn i Lotnictwa",
+      "patron": "Dawid Wydrzyński"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 25,
+    "fields": {
+      "name": "Koło Naukowe Studentów Chemii \"Esprit\"",
+      "faculty": "Wydział Chemiczny",
+      "patron": "Wiktor Bukowski"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 26,
+    "fields": {
+      "name": "Koło Naukowe Insert",
+      "faculty": "Wydział Chemiczny",
+      "patron": "Łukasz Uram"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 27,
+    "fields": {
+      "name": "Studenckie i Doktoranckie Koło Naukowe Inżynierii Chemicznej i Farmaceutycznej IPSUM",
+      "faculty": "Wydział Chemiczny",
+      "patron": "Paweł Chmielarz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 28,
+    "fields": {
+      "name": "Koło Naukowe Elektroenergetyków",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Henryk Wachta"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 29,
+    "fields": {
+      "name": "Koło Naukowe Informatyków – \"Kod\"",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Bartosz Trybus"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 30,
+    "fields": {
+      "name": "Koło Naukowe Systemów Złożonych",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Michał Wroński"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 31,
+    "fields": {
+      "name": "Koło Naukowe Pomiarowców \"6 sigma\"",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Jakub Wojturski"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 32,
+    "fields": {
+      "name": "Koło Naukowe \"ROBO\"",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Tomasz Żabiński"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 33,
+    "fields": {
+      "name": "Koło Naukowe Elektroniki i i Technologii Informacyjnych",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Bartosz Pawłowicz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 34,
+    "fields": {
+      "name": "Koło Naukowe Elektryków \"Mega Volt\"",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Sebastian Hajder"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 35,
+    "fields": {
+      "name": "Koło Naukowe Interakcji Człowiek – Komputer GEST",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Tomasz Kapuściński"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 36,
+    "fields": {
+      "name": "Koło Naukowe IT",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Bogusław Rymut"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 37,
+    "fields": {
+      "name": "Koło Naukowe Podstaw Elektroniki",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Mirosław Sobaszek"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 38,
+    "fields": {
+      "name": "Koło Naukowe Something about IT Security",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Mariusz Nycz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 39,
+    "fields": {
+      "name": "Koło Naukowe ENERGA",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Damian Mazur"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 40,
+    "fields": {
+      "name": "Koło Naukowe Robotyki Stosowanej i Systemów Wbudowanych",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Dominik Ożóg"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 41,
+    "fields": {
+      "name": "Koło Naukowe \"PIORUN\"",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Robert Ziemba"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 42,
+    "fields": {
+      "name": "Koło Naukowe Elektromobilności",
+      "faculty": "Wydział Elektrotechniki i Informatyki",
+      "patron": "Piotr Bogusz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 43,
+    "fields": {
+      "name": "Koło Naukowe Foton",
+      "faculty": "Wydział Matematyki i Fizyki Stosowanej",
+      "patron": "Tomasz Więcek"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 44,
+    "fields": {
+      "name": "Koło Naukowe Odnawialne źródła energii \"ERG\"",
+      "faculty": "Wydział Matematyki i Fizyki Stosowanej",
+      "patron": "Julian Traciak"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 45,
+    "fields": {
+      "name": "Koło Naukowe Studentów Matematyki",
+      "faculty": "Wydział Matematyki i Fizyki Stosowanej",
+      "patron": "Janusz Dronka"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 46,
+    "fields": {
+      "name": "Koło Naukowe inżynierii medycznej X-med",
+      "faculty": "Wydział Matematyki i Fizyki Stosowanej",
+      "patron": "Sławomir Wolski"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 47,
+    "fields": {
+      "name": "Koło Naukowe Machine Learning",
+      "faculty": "Wydział Matematyki i Fizyki Stosowanej",
+      "patron": "Ewa Rejwer-Kosińska"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 48,
+    "fields": {
+      "name": "Koło Naukowe Komputerowego Wspomagania Projektowania",
+      "faculty": "Wydział Mechaniczno- Technologiczny",
+      "patron": "Sylwia Sikorska -Czupryna"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 49,
+    "fields": {
+      "name": "Koło Naukowe Obrabiarek Sterowanych Numerycznie",
+      "faculty": "Wydział Mechaniczno- Technologiczny",
+      "patron": "Krzysztof Szwajka"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 50,
+    "fields": {
+      "name": "Koło Naukowe Informatyki Przemysłowej",
+      "faculty": "Wydział Mechaniczno- Technologiczny",
+      "patron": "Andrzej Chmielowiec"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 51,
+    "fields": {
+      "name": "Koło Naukowe Aero Team",
+      "faculty": "Wydział Mechaniczno- Technologiczny",
+      "patron": "Andrzej Łączek"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 52,
+    "fields": {
+      "name": "Koło Naukowe Ubezpieczeń",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Robert Dankiewicz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 53,
+    "fields": {
+      "name": "Koło Naukowe Komunikacji Marketingowej  \"Brief\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Hanna Hall"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 54,
+    "fields": {
+      "name": "Koło Naukowe Młodych Ekonomistów",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Marzena Hajduk - Stelmachowicz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 55,
+    "fields": {
+      "name": "Koło Naukowo – Badawcze Turystyki \"Tuptuś\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Artur Stec"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 56,
+    "fields": {
+      "name": "Koło Naukowe Innowacyjnej Przedsiębiorczości, EKO zarządzania i Jakości Życia - Ekobiznes",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Sylwia Dziedzic"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 57,
+    "fields": {
+      "name": "Koło Naukowe Controllingu i Rachunkowości Zarządczej",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Łukasz Szydełko"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 58,
+    "fields": {
+      "name": "Koło Naukowe Logistyków \"LogON\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Paulina Bełch"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 59,
+    "fields": {
+      "name": "Koło Naukowe Upowszechniania Kultury Innowacyjności",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Teresa Bal-Woźniak"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 60,
+    "fields": {
+      "name": "Koło Naukowe Eurointegracja",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Mariusz Ruszel"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 61,
+    "fields": {
+      "name": "Koło Naukowe Finansów i Zarządzania",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Mirosław Sołtysiak"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 62,
+    "fields": {
+      "name": "Koło Naukowe Rachunkowości \"ASSETS\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Grzegorz Lew"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 63,
+    "fields": {
+      "name": "Koło Naukowe Studentów Bezpieczeństwa Wewnętrznego Enigma",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Katarzyna Purc – Kurowicka"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 64,
+    "fields": {
+      "name": "Koło Naukowe Luminol",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Artur Polakiewicz"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 65,
+    "fields": {
+      "name": "Koło Naukowe \"Project5\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Agata Wojciechowska"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 66,
+    "fields": {
+      "name": "Studenckie Koło Naukowe Bezpieczeństwa Lotniczego \"Eskadra\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Grzegorz Rosłan"
+    }
+  },
+  {
+    "model": "papers.studentclub",
+    "pk": 67,
+    "fields": {
+      "name": "Koło Strzeleckie PRz \"KALIBER\"",
+      "faculty": "Wydział Zarządzania",
+      "patron": "Zenon Opiekun"
+    }
+  }
+]

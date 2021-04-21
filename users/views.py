@@ -13,19 +13,23 @@ from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
-from django.views.generic import TemplateView
+from django.views.generic import ListView, TemplateView
 
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
+from papers.models import Announcement, NotificationPeriod, Paper
 # forms
 from .forms import UserLoginForm, UserPasswordChangeForm
 from .forms import UserRegisterForm
+from .models import UserDetail
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
     template_name = 'users/index.html'
+    model = Announcement
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
@@ -33,12 +37,65 @@ class IndexView(TemplateView):
         # Create any data and add it to the context
         context['site_name'] = 'index'
         context['site_title'] = f'Strona główna - {SITE_NAME}'
+        context['announcement'] = Announcement.objects.all().last()
         return context
 
 
-#
-# before log-in
-#
+class SendNotificationsView(TemplateView):
+    template_name = 'users/check_notifications.html'
+
+    def send_notification(self):
+        period = NotificationPeriod.objects.all().first().period
+        for user in User.objects.all():
+            userDetail = UserDetail.objects.filter(user=user).first()
+            try:
+                difference = timezone.now() - userDetail.last_seen
+            except:
+                continue
+
+            if difference.seconds > period:
+                papers = []
+
+                for paper in Paper.objects.filter():
+                    if user == paper.author or user in paper.reviewers.all():
+                        messages = paper.get_unread_messages(user)
+                        if len(messages) > 0:
+                            papers.append((paper.title, messages, paper.pk))
+
+                if len(papers) > 0 and not userDetail.email_notification_sent:
+                    messages = []
+                    for paper in papers:
+                        messages.append(({'count': len(paper[1]), 'title': paper[0], 'id': paper[2]}))
+
+                    userDetail.email_notification_sent = True
+                    userDetail.save()
+
+                    # now send an email
+                    subject = f'Posiadasz nieprzeczytane wiadomości - {SITE_NAME}'
+                    plaintext = loader.get_template('papers/paper_unseen_mail.html')
+                    htmltemp = loader.get_template('papers/paper_unseen_mail.html')
+                    c = {
+                        'subject': subject,
+                        'messages': messages,
+                        'domain': SITE_DOMAIN,
+                        'site_name': SITE_NAME,
+                        'last_seen': userDetail.last_seen,
+                        'protocol': 'https',
+                    }
+                    text_content = plaintext.render(c)
+                    html_content = htmltemp.render(c)
+                    try:
+                        msg = EmailMultiAlternatives(subject, text_content, SITE_ADMIN_MAIL, [user.email],
+                                                     headers={'Reply-To': SITE_ADMIN_MAIL})
+                        msg.attach_alternative(html_content, "text/html")
+                        msg.send()
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+
+    def get(self, request, *args, **kwargs):
+        self.send_notification()
+        return super(SendNotificationsView, self).get(request, *args, **kwargs)
+
 
 class ContactView(TemplateView):
     template_name = 'users/contact.html'
@@ -104,12 +161,6 @@ class LoginView(auth_views.LoginView):
             return render(request, self.template_name, context)
 
 
-#
-#
-# after log-in
-#
-#
-
 class LogoutView(auth_views.LogoutView):
     template_name = 'users/logout.html'
 
@@ -166,8 +217,7 @@ class PasswordChangeView(LoginRequiredMixin, TemplateView):
 
 
 class AccountDeleteView(LoginRequiredMixin, TemplateView):
-    login_url = 'login'  # if user isn't logged, when redirect
-
+    login_url = 'login'  # if user isn't logged, then redirect to login page
     template_name = 'users/accountDelete.html'
 
     def get_context_data(self, **kwargs):
@@ -199,13 +249,14 @@ def password_reset_request(request):
                 plaintext = loader.get_template('registration/password_reset_email.txt')
                 htmltemp = loader.get_template('registration/password_reset_email.html')
                 c = {
-                    "email": user.email,
+                    'subject': subject,
+                    'email': user.email,
                     'domain': SITE_DOMAIN,
                     'site_name': SITE_NAME,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "user": user,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'user': user,
                     'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
+                    'protocol': 'https',
                 }
                 text_content = plaintext.render(c)
                 html_content = htmltemp.render(c)

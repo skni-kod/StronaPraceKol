@@ -11,19 +11,17 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h4>Informacje o referacie</h4>
+            <h4>Informacje o artykule</h4>
         </div>
         <div class="col-md-2 offset-md-5 text-right">
-            {% if user in paper.authors.all %}
+            {% if user == paper.author %}
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        {% if user.pk == paper.original_author_id %}
                             <a href="{% url 'paperDelete' paper.pk %}">
                                 <button type="button" class="btn btn-danger">
                                     Usuń
                                 </button>
                             </a>
-                        {% endif %}
                     </div>
                     <div class="input-group-append">
                         <a href="{% url 'paperEdit' paper.pk %}">
@@ -55,13 +53,11 @@
         </div>
         <div class="col-md-8 text-left">
             <ul>
-                {% for author in paper.authors.all %}
                     <li>
                         <div class="row ml-1">
-                            {{ author.first_name }} {{ author.last_name }}
+                            {{ paper.author.first_name }} {{ paper.author.last_name }}
                         </div>
                     </li>
-                {% endfor %}
                 {% for author in paper.coauthor_set.all %}
                     <li>
                         <div class="row ml-1">
@@ -172,7 +168,11 @@
                 <ul>
                     {% for file in paper.uploadedfile_set.all %}
                         <li>
+                        {% if file.pk == paper.statement %}
+                            <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}"> Oświadczenie </a>
+                        {% else %}
                             <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
@@ -184,7 +184,7 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
-            <h5>Opis:</h5>
+            <h5>Streszczenie:</h5>
         </div>
         <div class="col-md-8">
             {{ paper.description|safe }}
@@ -214,7 +214,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    {% if user.is_staff or user in paper.authors.all or user|is_in_group:'reviewer' %}
+                    {% if user.is_staff or user == paper.author or user|is_in_group:'reviewer' %}
                         {% for reviewer in paper.reviewers.all %}
                             <li class="nav-item m-2">
                                 <a data-toggle="tab" href="#review-{{ reviewer.pk }}"
@@ -249,8 +249,7 @@
                     {% endif %}
 
                     {% for reviewer in paper.reviewers.all %}
-                        <div id="review-{{ reviewer.pk }}" class="tab-pane fade review-box"
-                             data-reviewer="{{ reviewer.pk }}"></div>
+                        <div id="review-{{ reviewer.pk }}" class="tab-pane fade review-box" data-reviewer="{{ reviewer.pk }}"></div>
                     {% endfor %}
                 </div>
             {% endif %}
@@ -270,7 +269,7 @@
         <div class="row">
             <div class="col-md-3">
                 <ul class="nav nav-tabs nav-fill">
-                    {% if user|is_in_group:'reviewer' and user not in paper.authors %}
+                    {% if user|is_in_group:'reviewer' and user != paper.author %}
                         <li class="nav-item m-2">
                             <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
                                data-reviewer="{{ user.pk }}">
@@ -333,7 +332,7 @@
         </div>
         <div class="col-md-4">
             <a href="{% url 'paperList' %}">
-                <button type="button" class="btn btn-secondary btn-lg">Lista referatów</button>
+                <button type="button" class="btn btn-secondary btn-lg">Lista artykułów</button>
             </a>
         </div>
         <div class="col-md-4">

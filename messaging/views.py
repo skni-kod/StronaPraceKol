@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.static import serve
 
 from papers.models import Message, MessageSeen, Paper
 
@@ -89,7 +88,7 @@ def has_user_access_to_messages(user, paper):
     if paper is None or not user.is_authenticated:
         return False
 
-    if not user.is_staff and user not in paper.reviewers.all() and user not in paper.authors.all():
+    if not user.is_staff and user not in paper.reviewers.all() and user != paper.author:
         return False
 
     return True

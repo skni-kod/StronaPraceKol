@@ -10,7 +10,13 @@
 
         <div class="row text-center">
             <div class="col-md-12">
-                <h2>Dodaj referat</h2>
+                <h2>
+                    {% if site_type == 'create' %}
+                        Nowy artykuł
+                    {% elif site_type == 'edit' %}
+                        Edytuj artykuł
+                    {% endif %}
+                </h2>
             </div>
         </div>
 
@@ -85,18 +91,21 @@
                         {% endwith %}
 
                         {% with field=form.description %}
+                            <div class="row mt-5">
+                                <div class="col-md-3">
+                                    <h5>
+                                        {{ field.label }}
+                                    </h5>
+                                </div>
+                            </div>
                             <div class="overflow-auto">
-                                <h5 class="text-left">
-                                <span class="badge badge-secondary">
-                                    {{ field.label }}
-                                </span>
-                                </h5>
                                 {% for error in field.errors %}
                                     <span class="text-danger">{{ error|escape }}</span>
                                 {% endfor %}
                                 {{ field }}
                             </div>
                         {% endwith %}
+
 
                         <div class="row mt-5">
                             <div class="col-md-3">
@@ -106,19 +115,36 @@
                             </div>
                         </div>
 
-                        <hr class="my-2">
+                        <hr class="my-2 mb-4">
 
                         {{ coAuthorsForm }}
 
-                        <div class="row mt-5">
-                            <div class="col-md-3">
-                                <h5>
-                                    Pliki
-                                </h5>
+                        {% if site_type == 'create' %}
+                            <div class="row mt-5">
+                                <div class="col-3">
+                                    <h5>
+                                        Skan oświadczenia
+                                    </h5>
+                                </div>
+                                <div class="col-3 text-left">
+                                    <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
+                                        <button type="button" class="btn btn-primary">
+                                            Wzory oświadczeń
+                                        </button>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
 
-                        <hr class="my-2">
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-4 offset-md-4 mb-4">
+                                    {% render_field statement.file %}
+                                </div>
+                            </div>
+
+                            <div class="mb-5"></div>
+                        {% endif %}
 
                         {{ filesForm }}
 

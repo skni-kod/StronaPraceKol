@@ -65,17 +65,29 @@ class MultiValueUserFilter(django_filters.BaseCSVFilter, django_filters.CharFilt
         return queryset
 
     def name_filter(self, qs, name):
-        return qs.filter(authors__first_name__icontains=name)
+        found_ids = []
+        for paper in qs:
+            if paper.coauthor_set.all().filter(name__icontains=name).exists():
+                found_ids.append(paper.id)
+        queryset = qs.filter(pk__in=found_ids)
+        queryset = queryset | qs.filter(author__first_name__icontains=name)
+        return queryset.distinct()
 
     def surname_filter(self, qs, surname):
-        return qs.filter(authors__last_name__icontains=surname)
+        found_ids = []
+        for paper in qs:
+            if paper.coauthor_set.all().filter(surname__icontains=surname).exists():
+                found_ids.append(paper.id)
+        queryset = qs.filter(pk__in=found_ids)
+        queryset = queryset | qs.filter(author__last_name__icontains=surname)
+        return queryset.distinct()
 
 
 class PaperFilter(django_filters.FilterSet):
     REVIEWERS_CHOICE = {
-        ('0', 'Nie przydzielone'),
+        ('0', 'Brak przydziału'),
         ('1', '1 przydzielony'),
-        ('2', '2 przydzielonye')
+        ('2', '2 przydzielonych')
     }
 
     STATUS_CHOICE = {
@@ -91,15 +103,15 @@ class PaperFilter(django_filters.FilterSet):
 
     FINAL_GRADE_CHOICE = lambda: [(obj.value, obj.name) for obj in Grade.objects.filter(tag='final_grade')]
 
-    title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł referatu')
+    title = CharFilter(field_name='title', lookup_expr='icontains', label='Tytuł', help_text='Tytuł artykułu')
 
     keywords = MultiValueCharFilter(field_name='keywords', label='Słowa kluczowe',
                                     lookup_expr='icontains', widget=CSVWidget, help_text='Słowa oddzielone przecinkiem')
 
     author_surname = MultiValueUserFilter(ref_field='last_name', label='Nazwiska autorów', widget=CSVWidget,
-                                          help_text='Oddzielone przecinkiem', method='author_surname_func')
+                                          help_text='Oddzielone przecinkiem')
 
-    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(acronym='Brak'), field_name='club',
+    club = ModelChoiceFilter(queryset=StudentClub.objects.exclude(name='Brak'), field_name='club',
                              label='Koło naukowe')
 
     reviewer_surname = MultiValueUserFilter(label='Nazwiska recenzentów', widget=CSVWidget, method='reviewers_lastname',
@@ -117,8 +129,8 @@ class PaperFilter(django_filters.FilterSet):
     final_grade = ChoiceFilter(choices=FINAL_GRADE_CHOICE, field_name='final_grade', label='Ocena końcowa',
                                method='final_grade_func')
 
-    def author_surname_func(self, queryset, val1, val2):
-        return queryset.filter(reduce(or_, [Q(authors__last_name__icontains=c) for c in val2])).distinct()
+    # def author_surname_func(self, queryset, val1, val2):
+    #     return queryset.filter(reduce(or_, [Q(author__last_name__icontains=c) for c in val2])).distinct()
 
     def is_approved(self, queryset, val1, val2):
         return queryset.filter(approved=val2).distinct()
@@ -132,18 +144,20 @@ class PaperFilter(django_filters.FilterSet):
     def reviewers_lastname(self, queryset, val1, val2):
         return queryset.filter(reduce(or_, [Q(reviewers__last_name__icontains=c) for c in val2])).distinct()
 
-    def reviews_count_func(self, queryset, val1, val2):
+    def reviews_count_func(self, queryset, val1, reviews_count):
         to_exclude = []
-        val2 = int(val2)
-        for itm in queryset.all():
+        reviews_count = int(reviews_count)
+        for paper in queryset.all():
             ids = []
-            reviews = Review.objects.filter(paper__id=itm.id).all()
+            reviews = Review.objects.filter(paper__id=paper.id).all()
+
             for review in reviews:
-                if review.author not in itm.reviewers.all():
+                if review.author in paper.reviewers.all():
                     ids.append(review.pk)
+
             reviews = reviews.filter(Q(id__in=[obj for obj in ids]))
-            if not reviews.count() == val2:
-                to_exclude.append(itm)
+            if not reviews.count() == reviews_count:
+                to_exclude.append(paper)
 
         return queryset.filter(~Q(id__in=[obj.id for obj in to_exclude]))
 

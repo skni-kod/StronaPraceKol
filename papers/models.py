@@ -6,46 +6,63 @@ from django.db.models.signals import pre_delete
 from django.utils import timezone
 
 
+class NotificationPeriod(models.Model):
+    name = models.CharField(max_length=64)
+    period = models.IntegerField()  # in seconds
+    last_used = models.DateTimeField(default=timezone.now)
+
+
 class StudentClub(models.Model):
     name = models.CharField(max_length=128)
-    acronym = models.CharField(max_length=12)
-    active = models.BooleanField(default=True)
+    faculty = models.CharField(max_length=128)
+    patron = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
 
     @classmethod
     def get_default_pk(cls):
-        club, created = cls.objects.get_or_create(name='Brak koła', acronym='Brak')
+        club, created = cls.objects.get_or_create(name='Brak', faculty='', patron='')
         return club.pk
 
 
 class Paper(models.Model):
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
-    authors = models.ManyToManyField(User, related_name='authors', blank=True)
-    original_author_id = models.IntegerField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     keywords = models.CharField(max_length=128)
     description = models.TextField()
     approved = models.BooleanField(default=False)
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+    statement = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'{self.title[0:40]}'
 
     def get_unread_messages(self, user):
-        if user not in self.reviewers.all() and user not in self.authors.all():
-            return 0
+        if user not in self.reviewers.all() and user != self.author:
+            return []
 
-        cnt = 0
+        messages = []
         for message in Message.objects.filter(paper=self):
             if message.author == user:
                 continue
             if not message.is_seen(user):
-                cnt += 1
-        return cnt
+                messages.append(message)
+
+        return messages
+
+
+def delete_statement_with_paper(instance, **kwargs):
+    """
+    Deletes statement file when paper object is deleted
+    :param instance:
+    :param kwargs:
+    :return:
+    """
+    instance.statement.delete()
 
 
 class CoAuthor(models.Model):
@@ -128,29 +145,8 @@ class Review(models.Model):
 
 
 class Announcement(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
-
-
-def check_empty_author_relation(instance, **kwargs):
-    """
-    Checks if user that is being deleted is an original author of any paper of the last author of any paper.
-    If any paper has no other authors it's deleted, otherwise original_author is replaced with another author
-    :param instance: User objects (user that is being deleted)
-    :param kwargs:
-    :return:
-    """
-    papers = Paper.objects.filter(authors=instance)
-    for paper in papers:
-        if len(paper.authors.all()) == 1:
-            paper.delete()
-        elif paper.original_author_id == instance.pk:
-            for author in paper.authors.all():
-                if author.pk != instance.pk:
-                    paper.original_author_id = author.pk
-                    paper.save()
-                    break
 
 
 class Message(models.Model):
@@ -188,5 +184,5 @@ def delete_file_with_object(instance, **kwargs):
     instance.file.delete()
 
 
-pre_delete.connect(check_empty_author_relation, sender=User)
+pre_delete.connect(delete_statement_with_paper, sender=Paper)
 pre_delete.connect(delete_file_with_object, sender=UploadedFile)

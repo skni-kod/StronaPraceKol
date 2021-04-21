@@ -14,4 +14,5 @@ urlpatterns = [
     path('password_reset/done/', pass_reset_view.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', pass_reset_view.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', pass_reset_view.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('notificationEmail/', views.SendNotificationsView.as_view(), name='sendNotificationEmail'),
 ]
