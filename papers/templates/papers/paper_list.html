@@ -90,7 +90,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
                             </div>
-                             {% render_field field class='custom-select' %}
+                            {% render_field field class='custom-select' %}
                         </div>
                     </div>
                 {% endwith %}
@@ -198,7 +198,8 @@
                         <div class="m-4 p-3 border border-primary rounded">
                             <div class="row">
                                 <div class="col-md-7 text-left">
-                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id={{ forloop.counter }}{{ queryset_pks }}">
+                                    <a class="nav-link" href="{% url 'paperDetail' paper.id %}?id=
+                                            {{ forloop.counter }}{{ queryset_pks }}">
                                         <h3>
                                             <span class="badge badge-primary">
                                                 {{ paper.title|truncatechars:40 }}
@@ -224,11 +225,11 @@
                                 <div class="col-md-6 my-2">
                                     <h4>Autorzy:</h4>
                                     <ul>
-                                            <li>
+                                        <li>
 
-                                                {{ paper.author.first_name }} {{ paper.author.last_name }}
+                                            {{ paper.author.first_name }} {{ paper.author.last_name }}
 
-                                            </li>
+                                        </li>
                                         {% for author in paper.coauthor_set.all %}
                                             <li>
 
@@ -242,7 +243,8 @@
                                 <div class="col-md-6 my-2">
                                     <h4>Recenzenci:</h4>
                                     {% if paper.reviewers.all|length < 2 and paper.reviewers.all|length >= 0 and user.is_staff %}
-                                        <a href="{% url 'paperDetail' paper.id %}?id={{ forloop.counter }}{{ queryset_pks }}">
+                                        <a href="{% url 'paperDetail' paper.id %}?id=
+                                                {{ forloop.counter }}{{ queryset_pks }}">
                                             <button type="button" class="btn btn-primary">
                                                 Przypisz recenzentów
                                             </button>
@@ -290,7 +292,12 @@
                                     <ul>
                                         {% for itm in paper.uploadedfile_set.all %}
                                             <li>
-                                                {{ itm.filename }}
+                                                {% if itm.pk == paper.statement %}
+                                                    <a href="{% url 'paperFileDownload' pk=paper.id item=itm.id %}">
+                                                        Oświadczenie </a>
+                                                {% else %}
+                                                    <a href="{% url 'paperFileDownload' pk=paper.id item=itm.id %}">{{ itm.filename }}</a>
+                                                {% endif %}
                                             </li>
                                         {% endfor %}
                                     </ul>
