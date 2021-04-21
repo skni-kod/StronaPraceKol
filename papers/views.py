@@ -135,6 +135,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['club'].empty_label = 'Wybierz koło naukowe'
         context['site_name'] = 'papers'
         context['site_title'] = f'Nowy artykuł - {SITE_NAME}'
         context['site_type'] = 'create'
