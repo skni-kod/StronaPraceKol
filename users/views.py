@@ -217,8 +217,7 @@ class PasswordChangeView(LoginRequiredMixin, TemplateView):
 
 
 class AccountDeleteView(LoginRequiredMixin, TemplateView):
-    login_url = 'login'  # if user isn't logged, when redirect
-
+    login_url = 'login'  # if user isn't logged, then redirect to login page
     template_name = 'users/accountDelete.html'
 
     def get_context_data(self, **kwargs):
