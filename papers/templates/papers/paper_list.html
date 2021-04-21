@@ -18,7 +18,7 @@
 
         <hr class="my-1">
 
-        <form method="get">
+        <form method="GET">
             {% csrf_token %}
 
             {{ filter.form.non_field_errors }}
@@ -195,7 +195,9 @@
             <div class="col-md-12">
                 {% if papers %}
                     {% for paper in papers %}
-                        {{ paper|print_paper }}
+                        {% with '?id='|addstr:forloop.counter|addstr:queryset_pks as link %}
+                            {% print_paper paper link user %}
+                        {% endwith %}
                     {% endfor %}
 
                     {% with request.get_full_path as querystring %}

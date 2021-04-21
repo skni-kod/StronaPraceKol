@@ -33,7 +33,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:
-            queryset_pks += f'&qspk={paper.pk}'
+            queryset_pks += f'&q={paper.pk}'
             paper.get_unread_messages = len(paper.get_unread_messages(self.request.user))
 
         context['queryset_pks'] = queryset_pks
@@ -75,13 +75,13 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
         GET_DATA = self.request.GET
 
-        if 'id' in GET_DATA:
+        if 'id' in GET_DATA and GET_DATA['id'] is not None:
             paper_iter = int(GET_DATA['id'])
-        if 'qspk' in GET_DATA:
-            qs_list = [int(i) for i in GET_DATA.getlist('qspk')]
+        if 'q' in GET_DATA:
+            qs_list = [int(i) for i in GET_DATA.getlist('q')]
             queryset_pks = ''
             for itm in qs_list:
-                queryset_pks += f'&qspk={itm}'
+                queryset_pks += f'&q={itm}'
             context['queryset_pks'] = queryset_pks
 
             if 1 < paper_iter <= len(qs_list):

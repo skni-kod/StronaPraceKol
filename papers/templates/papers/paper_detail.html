@@ -249,8 +249,7 @@
                     {% endif %}
 
                     {% for reviewer in paper.reviewers.all %}
-                        <div id="review-{{ reviewer.pk }}" class="tab-pane fade review-box"
-                             data-reviewer="{{ reviewer.pk }}"></div>
+                        <div id="review-{{ reviewer.pk }}" class="tab-pane fade review-box" data-reviewer="{{ reviewer.pk }}"></div>
                     {% endfor %}
                 </div>
             {% endif %}

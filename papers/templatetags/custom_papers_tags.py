@@ -76,9 +76,16 @@ def in_tag(things, tag):
     return things.filter(tag=tag)
 
 
-@register.filter(name='print_paper')
-def print_paper(paper):
+@register.filter
+def addstr(arg1, arg2):
+    """concatenate arg1 & arg2"""
+    return str(arg1) + str(arg2)
+
+
+@register.simple_tag(name='print_paper')
+def print_paper(paper, link, user):
     context = dict()
     context['paper'] = paper
-    return render_to_string('papers/paper_list_element.html',context=context)
-
+    context['link'] = link
+    context['user'] = user
+    return render_to_string('papers/paper_list_element.html', context=context)
