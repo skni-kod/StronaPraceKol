@@ -118,7 +118,7 @@ def paper_file_download(request, pk, item):
     :return:
     """
     paper = Paper.objects.get(pk=pk)
-    if request.user in paper.authors.all() or request.user.groups.filter(
+    if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         filepath = str(BASE_DIR)+document.file.url
