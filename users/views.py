@@ -20,7 +20,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.views.generic import ListView, TemplateView, UpdateView
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
 # forms
-from .forms import UserLoginForm, UserPasswordChangeForm, AnnouncementEditForm
+from .forms import UserLoginForm, UserPasswordChangeForm
 from .forms import UserRegisterForm
 from papers.models import Announcement, NotificationPeriod, Paper
 from .models import UserDetail
@@ -39,21 +39,6 @@ class IndexView(ListView):
         context['site_title'] = f'Strona główna - {SITE_NAME}'
         context['announcement'] = Announcement.objects.all().last()
         return context
-
-
-class AnnouncementEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Announcement
-    template_name = 'users/announcement_edit.html'
-    form_class = AnnouncementEditForm
-    success_url = reverse_lazy('index')
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-    def handle_no_permission(self):
-        return redirect(reverse_lazy('index'))
 
 
 class SendNotificationsView(TemplateView):

@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
-from django_summernote.widgets import SummernoteWidget
+from django_summernote.fields import SummernoteTextFormField
 
 from .models import *
 
@@ -50,7 +50,7 @@ CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
 
 ### PAPER FORMS
 class PaperCreationForm(forms.ModelForm):
-    description = forms.CharField(label='Krótkie streszczenie', widget=SummernoteWidget())
+    description = SummernoteTextFormField(label='Krótkie streszczenie')
     approved = forms.BooleanField(required=False,label=_('Gotowy do recenzji'))
 
     class Meta:
@@ -82,7 +82,7 @@ def get_grade_label(tag):
 
 
 class ReviewCreationForm(forms.ModelForm):
-    text = forms.CharField(label='Treść recenzji', widget=SummernoteWidget())
+    text = SummernoteTextFormField(label='Treść recenzji')
     correspondence = GradeChoiceField(label=get_grade_label('correspondence'),
                                       queryset=Grade.objects.filter(tag='correspondence'))
     originality = GradeChoiceField(label=get_grade_label('originality'),

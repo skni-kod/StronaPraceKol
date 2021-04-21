@@ -1,9 +1,50 @@
 {% extends "admin/base_site.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
 {% block content %}
-<form method='POST' class="post-form">
+
+    <form method='POST' class="post-form">
         {% csrf_token %}
 
-        {{ form }}
-<input type="submit" value="send">
-</form>
+        <div class="row mb-2">
+            <div class="col-md-1 offset-md-9">
+                <a href="/admin">
+                    <button type="button" class="btn btn-secondary ">Powrót</button>
+                </a>
+            </div>
+            <div clas="col-md-1">
+                <button type="submit" class="btn btn-primary">Wyślij</button>
+            </div>
+        </div>
+
+
+        <div class="row my-2">
+            <div class="col-md-3">
+                <h5>Temat wiadomości</h5>
+            </div>
+            <div class="col-md-8">
+                {{ form.subject|add_class:'form-control' }}
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-md-3">
+                <h5>Grupa adresatów</h5>
+            </div>
+            <div class="col-md-8">
+                {{ form.recipients|add_class:'form-control' }}
+            </div>
+        </div>
+
+         <div class="row my-2">
+            <div class="col-md-3">
+                <h5>Treść</h5>
+            </div>
+            <div class="col-md-8">
+                {{ form.content|add_class:'form-control' }}
+            </div>
+        </div>
+
+    </form>
 {% endblock %}

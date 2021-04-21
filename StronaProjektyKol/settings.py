@@ -105,7 +105,7 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 SUMMERNOTE_CONFIG = {
-    'iframe': False,
+    'iframe': True,
 
     # You can put custom Summernote settings
     'summernote': {
@@ -154,12 +154,14 @@ USE_TZ = True
 
 #EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'a7d71361f4e409'
-EMAIL_HOST_PASSWORD = '8af157447d80c0'
-EMAIL_PORT = '2525'
 EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+#EMAIL_USE_SSL = True
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'b616df948c35a1'
+EMAIL_HOST_PASSWORD = '297234ec84f732'
+EMAIL_PORT = '2525'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -179,5 +181,4 @@ SITE_ADMIN_PHONE = '123456789'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

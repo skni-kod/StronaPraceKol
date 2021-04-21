@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from users.views import IndexView, ContactView, AnnouncementEditView
+from users.views import IndexView, ContactView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -28,7 +28,6 @@ urlpatterns = [
     path('user/', include('users.urls')),
     path('messaging/', include('messaging.urls')),
     path('summernote/', include('django_summernote.urls')),
-    path('announcement/<int:pk>/', AnnouncementEditView.as_view(), name='announcementEdit'),
 ]
 
 if settings.DEBUG:

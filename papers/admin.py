@@ -1,34 +1,26 @@
+from django import forms
 from django.contrib import admin, messages
-from django.urls import path, reverse_lazy
-from django.views.generic import FormView
 from django.core.mail import EmailMultiAlternatives, BadHeaderError
+from django.urls import path
+from django.views.generic import FormView
+from django_summernote.admin import SummernoteModelAdmin
+from django_summernote.fields import SummernoteTextFormField
 
 from StronaProjektyKol.settings import SITE_ADMIN_MAIL
 from .models import *
-from django import forms
 
 
-admin.site.register(StudentClub)
-admin.site.register(Grade)
-admin.site.register(Paper)
-admin.site.register(CoAuthor)
-admin.site.register(UploadedFile)
-admin.site.register(Review)
-admin.site.register(Announcement)
-admin.site.register(Message)
-admin.site.register(MessageSeen)
-admin.site.register(NotificationPeriod)
+class AnnouncementAdmin(SummernoteModelAdmin):
+    summernote_fields = '__all__'
 
 
-# my dummy model
-class DummyModel(models.Model):
+class MassEmailModel(models.Model):
     class Meta:
         verbose_name_plural = 'Mass email'
         app_label = 'papers'
 
 
 class MassEmailForm(forms.Form):
-
     RECIPIENT_CHOICES = (
         ('1', 'Do wszystkich'),
         ('2', 'Artykuł zgłoszony jako gotowy'),
@@ -37,7 +29,7 @@ class MassEmailForm(forms.Form):
 
     subject = forms.CharField(label='Temat')
     recipients = forms.ChoiceField(label='Adresaci', choices=RECIPIENT_CHOICES)
-    content = forms.CharField(widget=forms.Textarea, label='Treść')
+    content = SummernoteTextFormField(label='Treść')
 
 
 class MassEmailView(FormView):
@@ -76,14 +68,16 @@ class MassEmailView(FormView):
             try:
                 msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
                                              SITE_ADMIN_MAIL, emails, headers={'Reply-To': SITE_ADMIN_MAIL})
+                msg.attach_alternative(form.cleaned_data['content'], "text/html")
                 msg.send()
+                messages.add_message(self.request, messages.SUCCESS, f'Message sent to {len(emails)} users')
             except BadHeaderError:
-                messages.add_messages(self.request, messages.WARNING, 'Unable to send mail')
+                messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
         return super().form_valid(form)
 
 
-class DummyModelAdmin(admin.ModelAdmin):
-    model = DummyModel
+class MassEmailModelAdmin(admin.ModelAdmin):
+    model = MassEmailModel
 
     def get_urls(self):
         mass_email = '{}_{}_changelist'.format(
@@ -93,4 +87,14 @@ class DummyModelAdmin(admin.ModelAdmin):
         ]
 
 
-admin.site.register(DummyModel, DummyModelAdmin)
+admin.site.register(StudentClub)
+admin.site.register(Grade)
+admin.site.register(Paper)
+admin.site.register(CoAuthor)
+admin.site.register(UploadedFile)
+admin.site.register(Review)
+admin.site.register(Message)
+admin.site.register(MessageSeen)
+admin.site.register(NotificationPeriod)
+admin.site.register(MassEmailModel, MassEmailModelAdmin)
+admin.site.register(Announcement, AnnouncementAdmin)

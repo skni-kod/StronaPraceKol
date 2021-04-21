@@ -158,8 +158,9 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         coAuthors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
-            self.object = form.save()
             form.instance.author = self.request.user
+            self.object = form.save()
+
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
