@@ -65,14 +65,17 @@ class MassEmailView(FormView):
             for recipient in recipients:
                 emails.append(recipient.email)
             # Send message
-            try:
-                msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
-                                             SITE_ADMIN_MAIL, emails, headers={'Reply-To': SITE_ADMIN_MAIL})
-                msg.attach_alternative(form.cleaned_data['content'], "text/html")
-                msg.send()
+            for email in emails:
+                try:
+                    msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
+                                                 SITE_ADMIN_MAIL, list(email), headers={'Reply-To': SITE_ADMIN_MAIL})
+                    msg.attach_alternative(form.cleaned_data['content'], "text/html")
+                    msg.send()
+                except BadHeaderError:
+                    messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
+                    bad = 1
+            if not bad:
                 messages.add_message(self.request, messages.SUCCESS, f'Message sent to {len(emails)} users')
-            except BadHeaderError:
-                messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
         return super().form_valid(form)
 
 
