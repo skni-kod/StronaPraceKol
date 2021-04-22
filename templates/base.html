@@ -25,9 +25,6 @@
     <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
         <div class="container">
             <div class="navbar-brand">
-                <a href="{% url 'index' %}">
-                    <img class="site_logo" src="{% static 'images/site_logo.png' %}"/>
-                </a>
             </div>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarToggle"
@@ -70,7 +67,7 @@
                         {% if user.is_superuser %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin">
-                                    Panel adminstracyjny
+                                    Panel administracyjny
                                 </a>
                             </li>
                         {% endif %}
@@ -113,7 +110,6 @@
 <div class="row my-5"></div>
 <div class="row my-5"></div>
 
-<div class="row">
     <div class="col-md-10 offset-md-1">
         <div class="container">
             <div class="d-flex p-8 justify-content-center">
@@ -132,11 +128,11 @@
 
         <div id="footer">
             <div class="container">
-                <span class="text-muted">©2021 Miłosz Serafin, Mateusz Rejman, Jakub Przystasz </span>
+                <span class="text-muted">©2021</span>
             </div>
         </div>
     </div>
-</div>
+
 
 </body>
 </html>

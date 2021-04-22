@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
+import textwrap
 
 
 class NotificationPeriod(models.Model):
@@ -53,16 +54,6 @@ class Paper(models.Model):
                 messages.append(message)
 
         return messages
-
-
-def delete_statement_with_paper(instance, **kwargs):
-    """
-    Deletes statement file when paper object is deleted
-    :param instance:
-    :param kwargs:
-    :return:
-    """
-    instance.statement.delete()
 
 
 class CoAuthor(models.Model):
@@ -148,6 +139,9 @@ class Announcement(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return textwrap.shorten(self.text, width=20)
+
 
 class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -184,5 +178,4 @@ def delete_file_with_object(instance, **kwargs):
     instance.file.delete()
 
 
-pre_delete.connect(delete_statement_with_paper, sender=Paper)
 pre_delete.connect(delete_file_with_object, sender=UploadedFile)
