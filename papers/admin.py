@@ -71,6 +71,7 @@ class MassEmailView(FormView):
                                                  SITE_ADMIN_MAIL, list(email), headers={'Reply-To': SITE_ADMIN_MAIL})
                     msg.attach_alternative(form.cleaned_data['content'], "text/html")
                     msg.send()
+                    bad = 0
                 except BadHeaderError:
                     messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
                     bad = 1
