@@ -250,6 +250,7 @@ def password_reset_request(request):
                 c = {
                     'subject': subject,
                     'email': user.email,
+                    'username': user.username,
                     'domain': SITE_DOMAIN,
                     'site_name': SITE_NAME,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
