@@ -56,7 +56,7 @@ class MassEmailView(FormView):
             # HAS PAPER WITH REVIEW THAT HAS FINAL GRADE == APPROVE
             elif recipients_choice == '3':
                 for user in users:
-                    
+                    has_email_to_sent = False
                     for paper in user.paper_set.all():
                         for review in paper.review_set.all():
                             if int(review.final_grade.value) == 1:
@@ -68,7 +68,7 @@ class MassEmailView(FormView):
             emails = list()
             for recipient in recipients:
                 emails.append(recipient.email)
-            
+            #make all emails unique in list
             emails = list(dict.fromkeys(emails))
             # Send message
             try:
