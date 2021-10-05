@@ -28,13 +28,15 @@ class PaperListView(LoginRequiredMixin, ListView):
 
         context['site_name'] = 'papers'
         context['site_title'] = f'Artykuły - {SITE_NAME}'
-        context['filter'] = PaperFilter(self.request.GET, queryset=self.get_queryset())
-   
+        context['filter'] = PaperFilter(
+            self.request.GET, queryset=self.get_queryset())
+
         papers = context['filter'].qs.order_by('-updated_at')
         queryset_pks = ''
         for paper in papers:
             queryset_pks += f'&q={paper.pk}'
-            paper.get_unread_messages = len(paper.get_unread_messages(self.request.user))
+            paper.get_unread_messages = len(
+                paper.get_unread_messages(self.request.user))
 
         context['queryset_pks'] = queryset_pks
         context['papers_length'] = papers.count()
@@ -67,7 +69,8 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
     context_object_name = 'paper'
 
     def get_context_data(self, *args, **kwargs):
-        context = super(PaperDetailView, self).get_context_data(*args, **kwargs)
+        context = super(PaperDetailView, self).get_context_data(
+            *args, **kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
         context['site_title'] = f'Informacje o artykule - {SITE_NAME}'
@@ -142,8 +145,10 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST)
-            context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
-            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES)
+            context['files'] = UploadFileFormSet(
+                self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(
+                self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadFileFormSet()
@@ -173,15 +178,16 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                 coAuthors.instance = self.object
                 coAuthors.save()
             if files.is_valid():
-                #receiced a list of file fields
-                #each file field has a list of files
-                #but file can be empty, so we need to check it
-                for f in self.request.FILES.lists():
-                    for x in f[1]:
-                        if len(f[1]) > 0:
-                            file_instance = UploadedFile(file=x, paper=self.object)
+                # receiced a list of file fields
+                # each file field has a list of files
+                # but file can be empty, so we need to check it
+                for file_fields in self.request.FILES.lists():
+                    for file_field in file_fields[1]:
+                        if len(file_fields[1]) > 0:
+                            file_instance = UploadedFile(
+                                file=file_field, paper=self.object)
                             file_instance.save()
-                            if f[0] == 'file':
+                            if file_fields[0] == 'file':
                                 self.object.statement = file_instance.pk
                                 self.object.save()
 
@@ -222,12 +228,15 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['site_type'] = 'edit'
 
         if self.request.POST:
-            context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
-            context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
+            context['coAuthors'] = CoAuthorFormSet(
+                self.request.POST, instance=self.object)
+            context['files'] = UploadFileFormSet(
+                self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
-        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object()).exclude(pk=self.get_object().statement)
+        context['uploaded_files'] = UploadedFile.objects.filter(
+            paper=self.get_object()).exclude(pk=self.get_object().statement)
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
@@ -245,9 +254,10 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 coAuthors.instance = self.object
                 coAuthors.save()
             if files.is_valid():
-                for f in self.request.FILES.lists():
-                    for x in f[1]:
-                        file_instance = UploadedFile(file=x, paper=self.object)
+                for file_fields in self.request.FILES.lists():
+                    for file_field in file_fields[1]:
+                        file_instance = UploadedFile(
+                            file=file_field, paper=self.object)
                         file_instance.save()
         return super(PaperEditView, self).form_valid(form)
 
@@ -311,7 +321,8 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context['site_name'] = 'reviews'
         context['site_title'] = f'Recenzje - {SITE_NAME}'
         for review in context['reviews']:
-            review.paper.get_unread_messages = len(review.paper.get_unread_messages(self.request.user))
+            review.paper.get_unread_messages = len(
+                review.paper.get_unread_messages(self.request.user))
         return context
 
     def test_func(self):
@@ -475,5 +486,3 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
-
-

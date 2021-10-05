@@ -56,18 +56,26 @@ class MassEmailView(FormView):
             # HAS PAPER WITH REVIEW THAT HAS FINAL GRADE == APPROVE
             elif recipients_choice == '3':
                 for user in users:
+                    
                     for paper in user.paper_set.all():
                         for review in paper.review_set.all():
                             if int(review.final_grade.value) == 1:
                                 recipients.append(user)
+                                has_email_to_sent = True
                                 break
-            emails = []
+                        if has_email_to_sent == True:
+                            break
+            emails = list()
             for recipient in recipients:
                 emails.append(recipient.email)
+            
+            emails = list(dict.fromkeys(emails))
             # Send message
             try:
+                CC = list()
+                CC.append(SITE_ADMIN_MAIL)
                 msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
-                                             SITE_ADMIN_MAIL, emails, headers={'Reply-To': SITE_ADMIN_MAIL})
+                                             SITE_ADMIN_MAIL,CC, bcc=emails, headers={'Reply-To': SITE_ADMIN_MAIL})
                 msg.attach_alternative(form.cleaned_data['content'], "text/html")
                 msg.send()
                 messages.add_message(self.request, messages.SUCCESS, f'Message sent to {len(emails)} users')

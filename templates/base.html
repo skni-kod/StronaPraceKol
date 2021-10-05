@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
 
@@ -15,64 +16,62 @@
     {% block header %}
     {% endblock %}
 
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" />
     <title>{{ site_title }}</title>
     {% load custom_papers_tags %}
 </head>
+
 <body>
 
-<header class="site-header mb-5">
-    <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
-        <div class="container">
-            <div class="navbar-brand">
-                <a href="{% url 'index' %}">
-                    <img class="site_logo" src="{% static 'images/site_logo.png' %}"/>
-                </a>
-            </div>
+    <header class="site-header mb-5">
+        <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a href="{% url 'index' %}">
+                        <img class="site_logo" src="{% static 'images/site_logo.png' %}" />
+                    </a>
+                </div>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarToggle"
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Rozwiń">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
 
-            <div class="navbar-collapse collapse w-100 order-1 dual-collapse2 navbarToggle">
-                <ul class="navbar-nav">
+                <div class="navbar-collapse collapse navbarToggle">
+                    <ul class="navbar-nav ml-auto">
 
-                    <li class="nav-item {% if site_name == 'index' %} active {% endif %}">
-                        <a class="nav-link" href="{% url 'index' %}">Informacje</a>
-                    </li>
+                        <li class="nav-item {% if site_name == 'index' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'index' %}">Informacje</a>
+                        </li>
 
-                    <li class="nav-item {% if site_name == 'contact' %} active {% endif %}">
-                        <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
-                    </li>
+                        <li class="nav-item {% if site_name == 'contact' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'contact' %}">Kontakt</a>
+                        </li>
 
 
-                    {% if user.is_authenticated %}
+                        {% if user.is_authenticated %}
                         <li class="nav-item {% if site_name == 'papers' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'paperList' %}">Artykuły</a>
                         </li>
-                    {% endif %}
+                        {% endif %}
 
-                    {% if user|is_in_group:'reviewer' %}
+                        {% if user|is_in_group:'reviewer' %}
                         <li class="nav-item {% if site_name == 'reviews' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'reviewList' %}">Recenzje</a>
                         </li>
-                    {% endif %}
+                        {% endif %}
 
-                </ul>
-            </div>
+                    </ul>
 
-            <div class="navbar-collapse collapse w-100 order-2 dual-collapse2 navbarToggle">
-                <ul class="navbar-nav">
-
-                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav ml-auto">
+                        {% if user.is_authenticated %}
                         {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin">
-                                    Panel adminstracyjny
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin">
+                                Panel adminstracyjny
+                            </a>
+                        </li>
                         {% endif %}
 
                         <li class="nav-item">
@@ -92,7 +91,7 @@
                             <a class="nav-link" href="{% url 'logout' %}">Wyloguj</a>
                         </li>
 
-                    {% else %}
+                        {% else %}
 
                         <li class="nav-item {% if site_name == 'login' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'login' %}">Logowanie</a>
@@ -102,41 +101,46 @@
                             <a class="nav-link " href="{% url 'register' %}">Rejestracja</a>
                         </li>
 
-                    {% endif %}
+                        {% endif %}
+                    </ul>
 
-                </ul>
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 
-<div class="row my-5"></div>
-<div class="row my-5"></div>
+    <div class="row my-5"></div>
+    <div class="row my-5"></div>
 
-<div class="row">
-    <div class="col-md-10 offset-md-1">
-        <div class="container">
-            <div class="d-flex p-8 justify-content-center">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <div class="jumbotron">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-
-        <div id="footer">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
             <div class="container">
-                <span class="text-muted">©2021 Miłosz Serafin, Mateusz Rejman, Jakub Przystasz </span>
+                <div class="d-flex p-8 justify-content-center">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="jumbotron">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
+            <div id="footer">
+                <div class="container">
+                    <span class="text-muted">
+                        <a href="https://kod.prz.edu.pl">
+                            &copy;2021 <img class="footer_logo" src="/static/images/logo_color.png" />
+                        </a>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </body>
+
 </html>

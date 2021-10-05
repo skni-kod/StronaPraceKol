@@ -95,7 +95,7 @@
                             </a>
                         {% else %}
                             <a href="{% url 'paperFileDownload' pk=paper.id item=itm.id %}">
-                                {{ itm.filename }}
+                                {{ itm.filename|truncatechars:40 }}
                             </a>
                         {% endif %}
                     </li>

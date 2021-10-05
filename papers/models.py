@@ -1,4 +1,6 @@
 import os
+import re
+import textwrap
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -73,12 +75,17 @@ class CoAuthor(models.Model):
 
 
 def paper_directory_path(instance, filename):
+    _filename = filename.split('.')
+    filename = re.sub(r'\W+', '', _filename[0])
+    filename = filename.replace(' ','_')
+    filename = textwrap.shorten(filename,width=100,placeholder='')
+    filename += f'.{_filename[-1]}'
     return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=paper_directory_path, blank=True)
+    file = models.FileField(upload_to=paper_directory_path, blank=True,max_length=512)
     created_at = models.DateTimeField(default=timezone.now)
 
     def filename(self):
