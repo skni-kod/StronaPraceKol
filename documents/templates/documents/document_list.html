@@ -1,0 +1,42 @@
+
+{% load crispy_forms_tags %}
+
+<form method="GET">
+            {% csrf_token %}
+
+            {{ filter.form.non_field_errors }}
+
+            {% for hidden_field in filter.form.hidden_fields %}
+                {{ hidden_field.errors }}
+                {{ hidden_field }}
+            {% endfor %}
+
+            <div class="row">
+                {% with field=filter.form.title %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+            </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        {% if documents %}
+            {% for document in documents %}
+                {{ document.name }} <br>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
