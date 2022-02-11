@@ -11,7 +11,7 @@ import re
 class Document(models.Model):
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=128)
-    club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk(), on_delete=models.SET_DEFAULT)
+    club = models.ForeignKey(StudentClub, null=True, on_delete=models.SET_NULL)
     ready = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
 
