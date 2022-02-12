@@ -1,3 +1,153 @@
-<div>
-    {{ document.name }}
-</div>
+{% extends "base.html" %}
+{% load custom_papers_tags %}
+
+{% block header %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/messaging.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4 text-left">
+            <h4>Informacje o dokumencie</h4>
+        </div>
+        <div class="col-md-2 offset-md-4 text-right">
+            {% if user == document.author %}
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                            <a href="{% url 'documentDelete' document.pk %}">
+                                <button type="button" class="btn btn-danger">
+                                    Usuń
+                                </button>
+                            </a>
+                    </div>
+                    <div class="input-group-append">
+                        <a href="{% url 'documentEdit' document.pk %}">
+                            <button type="button" class="btn btn-primary">
+                                Edytuj
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <hr class="my-2">
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Nazwa:</h5>
+        </div>
+        <div class="col-md-8 text-left">
+            <p> {{ document.name }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Autor:</h5>
+        </div>
+        <div class="col-md-8 text-left">
+            <ul>
+                    <li>
+                        <div class="row ml-1">
+                            {{ document.author.first_name }} {{ document.author.last_name }}
+                        </div>
+                    </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Koło naukowe:</h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ document.club.name }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Status:</h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            {% if document.ready == True %}
+                <p class="text-success">Gotowy</p>
+            {% else %}
+                <p class="text-danger">W przygotowaniu</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Data dodania:</h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            <p> {{ document.created_at|date:"d/m/Y G:i" }} </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
+            <h5>Przesłane pliki:</h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+
+            {% if document.uploadedfile_set.all.count == 0 %}
+                <span class="text-danger">Brak plików</span>
+            {% else %}
+                <ul style="word-wrap: break-word;">
+                    {% for file in document.uploadedfile_set.all %}
+                        <li>
+                            <a href="{% url 'documentFileDownload' pk=document.id item=file.id %}">{{ file.filename }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <hr class="my-2">
+
+    <script>is_staff = {{ user.is_staff|lower }};</script>
+    <script src="{% static  'js/messaging.js' %}"></script>
+    <script src="{% static  'js/papers.js' %}"></script>
+
+    <div class="row text-center my-5">
+        <div class="col-md-4">
+            {% if prev %}
+                <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-warning btn-lg">Poprzedni</button>
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'documentList' %}">
+                <button type="button" class="btn btn-secondary btn-lg">Lista dokumentów</button>
+            </a>
+        </div>
+        <div class="col-md-4">
+            {% if next %}
+                <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
+                    <button type="button" class="btn btn-primary btn-lg">Następny</button>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
