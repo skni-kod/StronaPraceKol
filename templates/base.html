@@ -56,6 +56,12 @@
                         </li>
                         {% endif %}
 
+                        {% if user.is_authenticated %}
+                        <li class="nav-item {% if site_name == 'papers' %} active {% endif %}">
+                            <a class="nav-link" href="{% url 'documentList' %}">Dokumenty</a>
+                        </li>
+                        {% endif %}
+
                         {% if user|is_in_group:'reviewer' %}
                         <li class="nav-item {% if site_name == 'reviews' %} active {% endif %}">
                             <a class="nav-link" href="{% url 'reviewList' %}">Recenzje</a>
