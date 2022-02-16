@@ -161,7 +161,7 @@ class DocumentEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for key in request.POST.items():
             if 'file-delete' in key[0]:
                 if len(key[1]) > 0:
-                    UploadedFile.objects.filter(pk=key[1].delete())
+                    UploadedFile.objects.filter(pk=key[1]).delete()
 
         return super().post(request, *args, **kwargs)
 

@@ -77,21 +77,6 @@
                         {% endwith %}
 
                         {% if site_type == 'create' %}
-                            <div class="row mt-5">
-                                <div class="col-3">
-                                    <h5>
-                                        Skan oświadczenia
-                                    </h5>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
-                                        <button type="button" class="btn btn-primary">
-                                            Wzory oświadczeń
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-
                             <hr>
 
                             <div class="row">
@@ -143,7 +128,7 @@
             var input = $("<input>")
                 .attr("type", "hidden")
                 .attr("name", "file-delete-" + $(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
-            $('#paper_form').append(input);
+            $('#document_form').append(input);
             $(this).parent().parent().hide();
         });
     </script>
