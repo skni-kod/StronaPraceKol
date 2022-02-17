@@ -69,8 +69,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
     context_object_name = 'paper'
 
     def get_context_data(self, *args, **kwargs):
-        context = super(PaperDetailView, self).get_context_data(
-            *args, **kwargs)
+        context = super(PaperDetailView, self).get_context_data(**kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
         context['site_title'] = f'Informacje o artykule - {SITE_NAME}'
@@ -228,10 +227,8 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['site_type'] = 'edit'
 
         if self.request.POST:
-            context['coAuthors'] = CoAuthorFormSet(
-                self.request.POST, instance=self.object)
-            context['files'] = UploadFileFormSet(
-                self.request.POST, self.request.FILES)
+            context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
+            context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()

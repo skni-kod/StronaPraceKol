@@ -1,0 +1,62 @@
+<div class="m-4 p-3 border border-primary rounded">
+    <div class="row">
+        <div class="col-md-7 text-left">
+            <a class="nav-link" href="{% url 'documentDetail' document.id %}{{ link }}">
+                <h3>
+                    <span class="badge badge-primary">
+                        {{ document.name|truncatechars:40 }}
+                    </span>
+                </h3>
+            </a>
+        </div>
+
+        <div class="col-md-4 text-left">
+            <label>
+                Data dodania: {{ document.created_at|date:"d.m.Y G:i" }}
+            </label>
+        </div>
+    </div>
+
+    <hr class="paper_hr">
+
+    <div class="row">
+        <div class="col-md-6 my-2">
+            <h4>Autor:</h4>
+            <ul>
+                <li>
+                    {{ document.author }}
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-6 my-2">
+            <h4>Koło naukowe: </h4>
+            <span class="text-muted">{{ document.club|truncatechars:40 }}</span>
+        </div>
+
+        <div class="col-md-6 my-2">
+            <h4>Status: </h4>
+            {% if document.ready == True %}
+                <span class="text-success">Gotowy</span>
+            {% else %}
+                <span class="text-danger">W przygotowaniu</span>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6 my-2">
+            <h4>Przesłane pliki:</h4>
+            {% if document.uploadedfile_set.all|length == 0 %}
+                <span class="badge badge-secondary"> Brak </span>
+            {% endif %}
+            <ul>
+                {% for itm in document.uploadedfile_set.all %}
+                    <li>
+                        <a href="{% url 'documentFileDownload' pk=document.id item=itm.id %}">
+                            {{ itm.filename|truncatechars:40 }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

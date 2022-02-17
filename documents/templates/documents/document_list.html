@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load custom_documents_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container">
+    <div class="text-center">
+        {% if user.is_staff %}
+            <h2>Dokumenty przesłane przez użytkowników</h2>
+        {% else %}
+            <h2>Przesłane dokumenty</h2>
+        {% endif %}
+    </div>
+
+    <form method="GET">
+            {% csrf_token %}
+
+            {{ filter.form.non_field_errors }}
+
+            {% for hidden_field in filter.form.hidden_fields %}
+                {{ hidden_field.errors }}
+                {{ hidden_field }}
+            {% endfor %}
+
+            <div class="row">
+                {% with field=filter.form.name %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title1">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.club %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.ready %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                <div class="col-md-6 text-center">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Znaleziono: </label>
+                        </div>
+                        <div class="form-control">
+                            <label>{{ documents_length }}</label>
+                        </div>
+                        <div class="input-group-append">
+                            <label class="input-group-text px-2">pozycji</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-right">
+                    {% if user or user.is_staff %}
+                        <a href="{% url 'documentCreate' %}">
+                            <button type="button" class="btn btn-success">
+                                Dodaj dokument
+                            </button>
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'documentList' %}">
+                        <button type="button" class="btn btn-warning">Wyczyść</button>
+                    </a>
+                    <input class="btn btn-primary" type="submit" value="Wyszukaj">
+                </div>
+            </div>
+        </form>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if documents %}
+                {% for document in documents %}
+                    {% with '?id='|addstr:forloop.counter as link %}
+                        {% print_document document link user %}
+                    {% endwith %}
+                {% endfor %}
+
+                {% with request.get_full_path as querystring %}
+                    {% if documents.has_other_pages %}
+                        <div class="text-center">
+                            {% if documents.has_previous %}
+                                {% if 'title' in  querystring %}
+                                    {% if 'page' in querystring %}
+
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring|slice_page }}&page={{ documents.previous_page_number }}">Poprzednia</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-info" href="{{ querystring }}&page=1">Pierwsza</a>
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring }}&page={{ documents.previous_page_number }}">Poprzednia</a>
+                                    {% endif %}
+                                {% else %}
+                                    <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
+                                    <a class="btn btn-outline-info" href="?page={{ documents.previous_page_number }}">Poprzednia</a>
+                                {% endif %}
+                            {% endif %}
+
+                            {% for num in documents.paginator.page_range %}
+                                {% if documents.number == num %}
+                                    {% if 'title' in querystring %}
+                                        {% if 'page' in querystring %}
+                                            <a class="btn btn-info"
+                                               href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                        {% else %}
+                                            <a class="btn btn-info"
+                                               href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+
+                                {% elif num > documents.number|add:'-4' and num < documents.number|add:'+4' %}
+                                    {% if 'title' in querystring %}
+                                        {% if 'page' in querystring %}
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                        {% else %}
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
+                                    {% endif %}
+
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if documents.has_next %}
+                                {% if 'title' in  querystring %}
+                                    {% if 'page' in querystring %}
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring|slice_page }}&page={{ documents.next_page_number }}">Następna</a>
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring|slice_page }}&page={{ documents.paginator.num_pages }}">Ostatnia</a>
+                                    {% else %}
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring }}&page={{ documents.next_page_number }}">Następna</a>
+                                        <a class="btn btn-outline-info"
+                                           href="{{ querystring }}&page={{ documents.paginator.num_pages }}">Ostatnia</a>
+                                    {% endif %}
+                                {% else %}
+                                    <a class="btn btn-outline-info"
+                                       href="?page={{ documents.next_page_number }}">Następna</a>
+                                    <a class="btn btn-outline-info"
+                                       href="?page={{ documents.paginator.num_pages }}">Ostatnia</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+            {% else %}
+                <div class="row text-center my-5">
+                        <div class="col">
+                            <span class="badge badge-secondary">
+                                <h3>Nie znaleziono</h3>
+                            </span>
+                        </div>
+                    </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock %}
