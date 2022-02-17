@@ -22,7 +22,6 @@ class FileUploadForm(forms.ModelForm):
         self.helper.form_show_labels = False
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
 
-
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                           fields=['file'], extra=1, can_delete=True)
 

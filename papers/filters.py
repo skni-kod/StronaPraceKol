@@ -129,9 +129,6 @@ class PaperFilter(django_filters.FilterSet):
     final_grade = ChoiceFilter(choices=FINAL_GRADE_CHOICE, field_name='final_grade', label='Ocena końcowa',
                                method='final_grade_func')
 
-    # def author_surname_func(self, queryset, val1, val2):
-    #     return queryset.filter(reduce(or_, [Q(author__last_name__icontains=c) for c in val2])).distinct()
-
     def is_approved(self, queryset, val1, val2):
         return queryset.filter(approved=val2).distinct()
 

@@ -56,27 +56,31 @@ class MassEmailView(FormView):
             # HAS PAPER WITH REVIEW THAT HAS FINAL GRADE == APPROVE
             elif recipients_choice == '3':
                 for user in users:
+                    has_email_to_sent = False
                     for paper in user.paper_set.all():
                         for review in paper.review_set.all():
                             if int(review.final_grade.value) == 1:
                                 recipients.append(user)
+                                has_email_to_sent = True
                                 break
-            emails = []
+                        if has_email_to_sent == True:
+                            break
+            emails = list()
             for recipient in recipients:
                 emails.append(recipient.email)
-                # Send message
-                for email in emails:
-                    try:
-                        msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
-                                                    SITE_ADMIN_MAIL, [email], headers={'Reply-To': SITE_ADMIN_MAIL})
-                        msg.attach_alternative(form.cleaned_data['content'], "text/html")
-                        msg.send()
-                    except BadHeaderError:
-                        messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
-                        break
-                else:
-                    messages.add_message(self.request, messages.SUCCESS, f'Message sent to {len(emails)} users')
-
+            #make all emails unique in list
+            emails = list(dict.fromkeys(emails))
+            # Send message
+            try:
+                CC = list()
+                CC.append(SITE_ADMIN_MAIL)
+                msg = EmailMultiAlternatives(form.cleaned_data['subject'], form.cleaned_data['content'],
+                                             SITE_ADMIN_MAIL,CC, bcc=emails, headers={'Reply-To': SITE_ADMIN_MAIL})
+                msg.attach_alternative(form.cleaned_data['content'], "text/html")
+                msg.send()
+                messages.add_message(self.request, messages.SUCCESS, f'Message sent to {len(emails)} users')
+            except BadHeaderError:
+                messages.add_message(self.request, messages.WARNING, 'Unable to send mail')
         return super().form_valid(form)
 
 

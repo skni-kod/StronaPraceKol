@@ -5,11 +5,8 @@ Serwis ma służyć do obsługi zgłoszeń projetków studentów będących czł
 
 To setup and run your server:
 
-
-
-
-
-
+Install requirements:
+  - python -m pip install -r requirements.txt
 
 Run migrations:
   - python manage.py makemigrations
@@ -21,6 +18,6 @@ Run migrations:
     where 'appname' is the name of the app. You get list of your apps by running python manage.py migrate.
 
 Load fixtures to database:
-  - python manage.py loaddata announcement grades groups notificationperiod studentclub
+  - python manage.py loaddata announcement grades groups notificationperiod studentclubs
 Run server:
   - python manage.py runserver
