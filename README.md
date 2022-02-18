@@ -19,5 +19,6 @@ Run migrations:
 
 Load fixtures to database:
   - python manage.py loaddata announcement grades groups notificationperiod studentclubs
+ 
 Run server:
   - python manage.py runserver
