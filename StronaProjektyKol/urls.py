@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('contact/', ContactView.as_view(), name='contact'),
     path('papers/', include('papers.urls')),
+    path('documents/', include('documents.urls')),
     path('user/', include('users.urls')),
     path('messaging/', include('messaging.urls')),
     path('summernote/', include('django_summernote.urls')),

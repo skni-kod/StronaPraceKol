@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+    <div class="container w-50">
+
+        <div class="row">
+            <div class="col text-center">
+                <h3>
+                    Czy na pewno usunąć artykuł
+                    <br>
+                    <a href="{% url 'documentDetail' document.id %}" }>
+                    <span class="text-primary">
+                        {{ document.title }}
+                    </span>
+                    </a>
+                </h3>
+                <hr class="my-2">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <form method='POST'>
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger btn-block w-100" value="Tak usuń"/>
+                </form>
+            </div>
+
+            <div class="col">
+                <a href="{% url 'documentDetail' document.pk %}">
+                    <input type="submit" class="btn btn-warning btn-block w-100" value="Anuluj"/>
+                </a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

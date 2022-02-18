@@ -18,7 +18,6 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
 from django.views.generic import ListView, TemplateView
-
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
 from papers.models import Announcement, NotificationPeriod, Paper
 # forms
@@ -37,7 +36,7 @@ class IndexView(ListView):
         # Create any data and add it to the context
         context['site_name'] = 'index'
         context['site_title'] = f'Strona główna - {SITE_NAME}'
-        context['announcement'] = Announcement.objects.all().last()
+        context['announcement'] = Announcement.objects.filter(pk=1).first()
         return context
 
 
@@ -97,17 +96,17 @@ class SendNotificationsView(TemplateView):
         return super(SendNotificationsView, self).get(request, *args, **kwargs)
 
 
-class ContactView(TemplateView):
-    template_name = 'users/contact.html'
+class ContactView(ListView):
+    template_name = 'users/index.html'
+    model = Announcement
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get the context
-        context = super(ContactView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         # Create any data and add it to the context
         context['site_name'] = 'contact'
         context['site_title'] = f'Kontakt - {SITE_NAME}'
-        context['admin_mail'] = SITE_ADMIN_MAIL
-        context['admin_phone'] = SITE_ADMIN_PHONE
+        context['announcement'] = Announcement.objects.filter(pk=2).first()
         return context
 
 
@@ -251,6 +250,7 @@ def password_reset_request(request):
                 c = {
                     'subject': subject,
                     'email': user.email,
+                    'username': user.username,
                     'domain': SITE_DOMAIN,
                     'site_name': SITE_NAME,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),

@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'messaging.apps.MessagesConfig',
     'papers.apps.PapersConfig',
     'users.apps.UsersConfig',
+    'documents.apps.DocumentsConfig',
     'django_summernote',
     'django_filters',
     'django.contrib.admin',
@@ -94,6 +95,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'app_static',
     BASE_DIR / 'messaging/static/messaging',
     BASE_DIR / 'papers/static/papers',
+    BASE_DIR / 'documents/static/documents',
 ]
 
 
