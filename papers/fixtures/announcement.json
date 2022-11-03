@@ -1,9 +1,0 @@
-[
-  {
-    "model": "papers.announcement",
-    "pk": 1,
-    "fields": {
-      "text": "Set your announcement in the admin page"
-    }
-  }
-]

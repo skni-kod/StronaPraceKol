@@ -9,3 +9,6 @@ services:
     ports:
       - "8000:8000"
     entrypoint: 'python manage.py runserver 0.0.0.0:8000'
+    environment:
+      - SECRET_KEY=#6!ik&ii1gl&g$ahnyel2!i%k^mvzhpgsol=x4wkp1q1yen*pf
+      - DEBUG=True

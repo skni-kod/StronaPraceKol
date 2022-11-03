@@ -188,10 +188,7 @@ SITE_DOMAIN = os.environ.get("SITE_DOMAIN", "exmple.com")
 SITE_ADMIN_MAIL = os.environ.get("SITE_ADMIN_MAIL", "example@example.com")
 SITE_ADMIN_PHONE = os.environ.get("SITE_ADMIN_PHONE", "123456789")
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY", "5ctom(4!o!7+il5ifwlyu77tjwx5q^j=3z^_=wj8rjmvxu_1kf")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 ADMINS = [
     ('Admin', os.environ.get("SITE_ADMIN_MAIL", "example@example.com"),)
@@ -199,4 +196,4 @@ ADMINS = [
 MANAGERS = ADMINS
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = eval(os.environ.get('DEBUG', default='True'))
+DEBUG = eval(os.environ.get('DEBUG', default='False'))
