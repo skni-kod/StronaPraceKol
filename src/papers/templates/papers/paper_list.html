@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+{% load custom_papers_tags %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="container">
+
+        <div class="text-center">
+            {% if user.is_staff %}
+                <h2>Artykuły przesłane przez użytkowników</h2>
+            {% elif user|is_in_group:'reviewer' %}
+                <h2>Przydzielone artykuły do wystawienia recenzji </h2>
+            {% else %}
+                <h2>Przesłane artykuły</h2>
+            {% endif %}
+        </div>
+
+        <hr class="my-1">
+
+        <form method="GET">
+            {% csrf_token %}
+
+            {{ filter.form.non_field_errors }}
+
+            {% for hidden_field in filter.form.hidden_fields %}
+                {{ hidden_field.errors }}
+                {{ hidden_field }}
+            {% endfor %}
+
+            <div class="row">
+                {% with field=filter.form.title %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.keywords %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.author_surname %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.club %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.approved %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.reviewers_field %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.reviewer_surname %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="input_title">{{ field.label }}</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ field.help_text }}"
+                                   aria-label="{{ field.help_text }}"
+                                   aria-describedby="input_{{ field.name }}"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if not field.value is None %}value="{{ field.value|join:',' }}"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.reviews_count %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% with field=filter.form.final_grade %}
+                    {{ field.errors }}
+                    <div class="col-md-6">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="{{ field.id_for_label }}">{{ field.label }}</span>
+                            </div>
+                            {% render_field field class='custom-select' %}
+                        </div>
+                    </div>
+                {% endwith %}
+
+
+                <div class="col-md-6 text-center">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Znaleziono: </label>
+                        </div>
+                        <div class="form-control">
+                            <label>{{ papers_length }}</label>
+                        </div>
+                        <div class="input-group-append">
+                            <label class="input-group-text px-2">pozycji</label>
+                        </div>
+                    </div>
+                    {% if not user|is_in_group:'reviewer' or user.is_staff %}
+                        <a href="{% url 'paperCreate' %}">
+                            <button type="button" class="btn btn-success">
+                                Dodaj artykuł
+                            </button>
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'paperList' %}">
+                        <button type="button" class="btn btn-warning">Wyczyść</button>
+                    </a>
+                    <input class="btn btn-primary" type="submit" value="Wyszukaj">
+                </div>
+            </div>
+        </form>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                {% if papers %}
+                    {% for paper in papers %}
+                        {% with '?id='|addstr:forloop.counter|addstr:queryset_pks as link %}
+                            {% print_paper paper link user %}
+                        {% endwith %}
+                    {% endfor %}
+
+                    {% with request.get_full_path as querystring %}
+                        {% if papers.has_other_pages %}
+                            <div class="text-center">
+                                {% if papers.has_previous %}
+                                    {% if 'title' in  querystring %}
+                                        {% if 'page' in querystring %}
+
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring|slice_page }}&page=1">Pierwsza</a>
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring|slice_page }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                        {% else %}
+                                            <a class="btn btn-outline-info" href="{{ querystring }}&page=1">Pierwsza</a>
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring }}&page={{ papers.previous_page_number }}">Poprzednia</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a class="btn btn-outline-info" href="?page=1">Pierwsza</a>
+                                        <a class="btn btn-outline-info" href="?page={{ papers.previous_page_number }}">Poprzednia</a>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% for num in papers.paginator.page_range %}
+                                    {% if papers.number == num %}
+                                        {% if 'title' in querystring %}
+                                            {% if 'page' in querystring %}
+                                                <a class="btn btn-info"
+                                                   href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                            {% else %}
+                                                <a class="btn btn-info"
+                                                   href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                            {% endif %}
+                                        {% else %}
+                                            <a class="btn btn-info" href="?page={{ num }}">{{ num }}</a>
+                                        {% endif %}
+
+                                    {% elif num > papers.number|add:'-4' and num < papers.number|add:'+4' %}
+                                        {% if 'title' in querystring %}
+                                            {% if 'page' in querystring %}
+                                                <a class="btn btn-outline-info"
+                                                   href="{{ querystring|slice_page }}&page={{ num }}">{{ num }}</a>
+                                            {% else %}
+                                                <a class="btn btn-outline-info"
+                                                   href="{{ querystring }}&page={{ num }}">{{ num }}</a>
+                                            {% endif %}
+                                        {% else %}
+                                            <a class="btn btn-outline-info" href="?page={{ num }}">{{ num }}</a>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if papers.has_next %}
+                                    {% if 'title' in  querystring %}
+                                        {% if 'page' in querystring %}
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring|slice_page }}&page={{ papers.next_page_number }}">Następna</a>
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring|slice_page }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                        {% else %}
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring }}&page={{ papers.next_page_number }}">Następna</a>
+                                            <a class="btn btn-outline-info"
+                                               href="{{ querystring }}&page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a class="btn btn-outline-info"
+                                           href="?page={{ papers.next_page_number }}">Następna</a>
+                                        <a class="btn btn-outline-info"
+                                           href="?page={{ papers.paginator.num_pages }}">Ostatnia</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                {% else %}
+                    <div class="row text-center my-5">
+                        <div class="col">
+                            <span class="badge badge-secondary">
+                                <h3>Nie znaleziono</h3>
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

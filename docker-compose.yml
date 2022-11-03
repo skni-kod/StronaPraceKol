@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev  
+    volumes:
+      - ./src:/usr/src/app/
+    ports:
+      - "8000:8000"
+    entrypoint: 'python manage.py runserver 0.0.0.0:8000'

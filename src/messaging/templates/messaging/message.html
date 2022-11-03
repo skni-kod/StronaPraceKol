@@ -1,0 +1,21 @@
+{% if type != 'own' %}
+
+    <div class="media w-50 mb-3">
+        <div class="media-body ml-3">
+            <div class="bg-light rounded py-2 px-3 mb-2">
+                <p class="text-small mb-0 text-muted">[text]</p>
+            </div>
+            <p class="small text-muted float-left">[author], [date]</p>
+        </div>
+    </div>
+
+{% else %}
+    <div class="media w-50 ml-auto mb-3">
+        <div class="media-body">
+            <div class="bg-primary rounded py-2 px-3 mb-2">
+                <p class="text-small mb-0 text-white">[text]</p>
+            </div>
+            <p class="small text-muted float-right">[author], [date]</p>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,43 @@
+body {
+    background-color: white;
+}
+
+#list {
+    background-color: #b3f2f0;
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #ebeef2;
+    text-align: center;
+}
+
+.site_logo {
+    width: 100px;
+    height: 40px;
+}
+
+.alert-div {
+    text-align: center;
+    width: 400px;
+}
+
+
+#main .jumbotron {
+    border-style: solid;
+    border-color: #cccccc;
+    border-width: 1px;
+    background: #ededed;
+}
+
+#login {
+    width: 32%;
+}
+
+.paper_hr{
+    background-color:#2cd3db;
+}
+
