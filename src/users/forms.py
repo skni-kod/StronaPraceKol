@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
+from .models import UserDetail
 
 
 class UserRegisterForm(UserCreationForm):
@@ -23,6 +25,9 @@ class UserRegisterForm(UserCreationForm):
 
     password2 = forms.CharField(label=_("Powtórz hasło"),
                                 widget=forms.PasswordInput)
+    city = forms.CharField(max_length=100, label=_("Miasto"), validators=[RegexValidator("^[A-ZŁŚĆŻŹ][a-ząćęłńóśźż]+(?:[\s-][A-ZŁŚĆŻŹ][a-ząćęłńóśźż]+)*$", "Wprowadź poprawne miasto.")])
+    street = forms.CharField(max_length=100, label=_("Ulica"), validators=[RegexValidator("^[A-ZŁŚĆŻŹ][a-ząćęłńóśźż]+(?:[\s-][A-ZŁŚĆŻŹ]?[a-ząćęłńóśźż]+)*$","Wprowadź poprawną ulicę.")])
+    number = forms.CharField(max_length=100, label=_("Numer budynku/mieszkania"), validators=[RegexValidator("^[0-9]+[A-Z]?(\/[0-9]+[A-Z]?)?$", "Wprowadź poprawny numer.")])
 
     def __init__(self, *args, **kwargs):
         # first call parent's constructor
@@ -30,11 +35,16 @@ class UserRegisterForm(UserCreationForm):
         # there's a `fields` property now
         for field in self.Meta.required:
             self.fields[field].required = True
+    
+    def save(self, commit: bool = ...):
+        user = super().save(commit)
+        UserDetail.objects.create(user=user, city=self.cleaned_data['city'], street=self.cleaned_data['street'], number=self.cleaned_data['number'])
+        return user
 
     class Meta:
         model = User
         help_texts = {'username': _('Maksymalnie 150 znaków, dopuszczone znaki: litery, cyfry oraz @/./+/-/_')}
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'city', 'street', 'number']
         labels = {
             'first_name': _('Imię'),
             'last_name': _('Nazwisko'),

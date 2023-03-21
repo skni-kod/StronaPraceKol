@@ -188,7 +188,7 @@ SITE_DOMAIN = os.environ.get("SITE_DOMAIN", "exmple.com")
 SITE_ADMIN_MAIL = os.environ.get("SITE_ADMIN_MAIL", "example@example.com")
 SITE_ADMIN_PHONE = os.environ.get("SITE_ADMIN_PHONE", "123456789")
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "zv_h*+uu=9&tlk#g_z*01#y-m@_46(c47no9s-y9&il)2%2-))"
 
 ADMINS = [
     ('Admin', os.environ.get("SITE_ADMIN_MAIL", "example@example.com"),)
