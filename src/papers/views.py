@@ -229,7 +229,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         pdf_data = HTML(string=html).write_pdf(font_config=font_config)
         file_content = ContentFile(pdf_data)
         uploaded_file = UploadedFile(paper=self.object, file=file_content, created_at=datetime.now(tz=timezone.utc))
-        uploaded_file.file.save(f"Uzupelnione_Oswiadczenie_{co_author.name}.pdf", file_content, save=True)
+        uploaded_file.file.save(f"Uzupelnione_Oswiadczenie_{co_author.name}{co_author.surname}.pdf", file_content, save=True)
 
     def insert_author_data_to_html(self, html):
         html_string = str(html)
