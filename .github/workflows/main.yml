@@ -18,5 +18,5 @@ jobs:
           script: |
             cd /home/kni/prace_kol/StronaPraceKol
             git checkout main
-            git pull
+            sudo git pull
             docker compose up --build -d
