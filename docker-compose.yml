@@ -19,8 +19,8 @@ services:
       - ./mediafiles:/home/app/web/mediafiles:rw
       - ./static:/app/static:rw
       - ./media:/home/app/web/media:rw
-    depends_on:
-      - db
+#    depends_on:
+#      - db
 
   nginx:
     image: nginx:latest

@@ -11,10 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost').split()
 
 # Application definition
 
@@ -160,20 +164,25 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 #EMAIL_USE_SSL = True
 
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'b616df948c35a1'
-EMAIL_HOST_PASSWORD = '297234ec84f732'
-EMAIL_PORT = '2525'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.mailtrap.io')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'b616df948c35a1')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '297234ec84f732')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', '2525')
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': os.environ.get('SQL_USER', ''),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', ''),
+        'HOST': os.environ.get('SQL_HOST', ''),
+        'PORT': os.environ.get('SQL_PORT', ''),
     }
 }
+
 
 SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
 SITE_DOMAIN = 'localhost'
@@ -182,6 +191,6 @@ SITE_ADMIN_PHONE = '123456789'
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090')
 
 DEBUG = True

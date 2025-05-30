@@ -4,3 +4,4 @@
 /media
 /.idea/*
 /static/
+.env
