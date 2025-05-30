@@ -1,0 +1,38 @@
+services:
+#  db:
+#    image: postgres:latest
+#    environment:
+#      POSTGRES_DB: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+
+  django-web:
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - ./staticfiles:/home/app/web/staticfiles:rw
+      - ./mediafiles:/home/app/web/mediafiles:rw
+      - ./static:/app/static:rw
+      - ./media:/home/app/web/media:rw
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static:/static:ro
+      - ./media:/media:ro
+    depends_on:
+      - django-web
+
+#volumes:
+#  postgres_data:
+#    driver: local
