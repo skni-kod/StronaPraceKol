@@ -4,6 +4,7 @@ services:
     build: .
     env_file:
       - ./.env
+    restart: always
     volumes:
       - ./static:/app/static:rw
       - ./media:/app/media:rw
@@ -12,6 +13,7 @@ services:
     image: nginx:latest
     ports:
       - "8000:80"
+    restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static:/static:ro
