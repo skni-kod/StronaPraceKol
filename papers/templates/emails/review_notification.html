@@ -1,0 +1,20 @@
+<html>
+<body>
+    <h2>Nowa recenzja została dodana</h2>
+    <p><strong>Artykuł:</strong> {{ paper.title }}</p>
+    <p><strong>Recenzent:</strong> {{ reviewer.first_name }} {{ reviewer.last_name }}</p>
+    <p><strong>Data recenzji:</strong> {{ review.created_at|date:"d.m.Y H:i" }}</p>
+
+    <h3>Oceny:</h3>
+    <ul>
+        <li><strong>Zgodność z tematyką:</strong> {{ review.correspondence.name|default:"Brak" }}</li>
+        <li><strong>Oryginalność:</strong> {{ review.originality.name|default:"Brak" }}</li>
+        <li><strong>Poprawność merytoryczna:</strong> {{ review.merits.name|default:"Brak" }}</li>
+        <li><strong>Jakość prezentacji:</strong> {{ review.presentation.name|default:"Brak" }}</li>
+        <li><strong>Ocena końcowa:</strong> {{ review.final_grade.name|default:"Brak" }}</li>
+    </ul>
+
+    <p>Aby zobaczyć pełną recenzję, zaloguj się do systemu.</p>
+    <p>Pozdrawiamy,<br>System Zarządzania Artykułami</p>
+</body>
+</html>
