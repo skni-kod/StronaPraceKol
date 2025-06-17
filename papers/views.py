@@ -6,6 +6,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
+from django.utils.html import strip_tags
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -358,16 +359,18 @@ def send_review_notification_email(review):
 
     subject = f"Nowa recenzja dla artykułu: {paper.title[:50]}..."
     html_content = render_to_string("emails/review_notification.html", context)
+    plain_text_content = strip_tags(html_content)
 
     msg = EmailMultiAlternatives(
         subject=subject,
-        body=html_content,
+        body=plain_text_content,
         from_email=SITE_ADMIN_MAIL,
         to=[SITE_ADMIN_MAIL],
         bcc=recipients,
         headers={'Reply-To': SITE_ADMIN_MAIL}
     )
 
+    msg.attach_alternative(html_content, "text/html")
     msg.send()
 
 class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
