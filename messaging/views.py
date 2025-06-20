@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from .utils import send_message_notification_email
 
 from papers.models import Message, MessageSeen, Paper
 
@@ -69,12 +70,15 @@ def send_message(request):
             response.status_code = 400
 
         if has_user_access_to_messages(user, paper):
-            Message.objects.create(
+            message = Message.objects.create(
                 author=user,
                 paper=paper,
                 reviewer=reviewer,
                 text=request.POST['message_text'],
             )
+
+            send_message_notification_email(message)
+
             response.status_code = 200
         else:
             response.status_code = 400
