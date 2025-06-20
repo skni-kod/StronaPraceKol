@@ -16,6 +16,8 @@ jobs:
           port: ${{ secrets.REMOTE_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: |
+            set -e
+          
             cd /home/kni/prace_kol/StronaPraceKol
             git stash
             git checkout main
