@@ -12,11 +12,14 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "8000:80"
+      - "60080:80"
+      - "60443:443"
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static:/static:ro
       - ./media:/media:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - django-web
