@@ -21,7 +21,7 @@ class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
     template_name = 'papers/paper_list.html'
     context_object_name = 'papers'
-    ordering = ['-updated_at']
+    ordering = ['title']
 
     def get_context_data(self, **kwargs):
         context = super(PaperListView, self).get_context_data(**kwargs)
@@ -31,7 +31,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context['filter'] = PaperFilter(
             self.request.GET, queryset=self.get_queryset())
 
-        papers = context['filter'].qs.order_by('-updated_at')
+        papers = context['filter'].qs.order_by('title')
         queryset_pks = ''
         for paper in papers:
             queryset_pks += f'&q={paper.pk}'
