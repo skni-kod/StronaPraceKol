@@ -1,0 +1,18 @@
+Szanowny/a {{ author_name }},
+
+Otrzymano nową wiadomość dotyczącą Twojego artykułu: {{ paper_title }}
+
+Od: {{ sender_name }}
+Recenzent: {{ reviewer_name }}
+Data: {{ message_date|date:"d F Y, H:i" }}
+
+Wiadomość:
+{{ message_text }}
+
+Prosimy o zalogowanie się do systemu, aby wyświetlić i odpowiedzieć na tę wiadomość.
+
+Z poważaniem,
+Zespół Systemu Recenzji
+
+---
+To jest automatyczne powiadomienie. Prosimy nie odpowiadać na ten e-mail.

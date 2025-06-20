@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powiadomienie o nowej wiadomości</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .message-box {
+            background-color: white;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .footer {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 0 0 5px 5px;
+            font-size: 12px;
+        }
+        .paper-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .sender-info {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Otrzymano nową wiadomość</h2>
+    </div>
+
+    <div class="content">
+        <p>Szanowny/a {{ author_name }},</p>
+
+        <p>Otrzymano nową wiadomość dotyczącą Twojego artykułu: <span class="paper-title">{{ paper_title }}</span></p>
+
+        <div class="message-box">
+            <div class="sender-info">
+                <strong>Od:</strong> {{ sender_name }}<br>
+                <strong>Recenzent:</strong> {{ reviewer_name }}<br>
+                <strong>Data:</strong> {{ message_date|date:"d F Y, H:i" }}
+            </div>
+            <div>
+                <strong>Wiadomość:</strong><br>
+                {{ message_text|linebreaks }}
+            </div>
+        </div>
+
+        <p>Prosimy o zalogowanie się do systemu, aby wyświetlić i odpowiedzieć na tę wiadomość.</p>
+
+        <p>Z poważaniem,<br>
+        Zespół Systemu Recenzji</p>
+    </div>
+
+    <div class="footer">
+        To jest automatyczne powiadomienie. Prosimy nie odpowiadać na ten e-mail.
+    </div>
+</body>
+</html>
