@@ -17,6 +17,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: |
             cd /home/kni/prace_kol/StronaPraceKol
+            git stash
             git checkout main
             git pull
             docker compose up --build -d
