@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-2 offset-md-4 text-right">
             {% if user == paper.author %}
-                <div class="input-group mb-4">
+                <div class="input-group mb-4 justify-content-between">
                     <div class="input-group-prepend">
                             <a href="{% url 'paperDelete' paper.pk %}">
                                 <button type="button" class="btn btn-danger">
