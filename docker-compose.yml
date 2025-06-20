@@ -12,11 +12,11 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "60080:80"
-      - "60443:443"
+      - "${PORT_80}:80"
+      - "${PORT_443}:443"
     restart: always
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - "${NGINX_CONF_PATH}:/etc/nginx/nginx.conf:ro"
       - ./static:/static:ro
       - ./media:/media:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
