@@ -4,7 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
+from django.utils.html import strip_tags
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -12,7 +14,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR
+from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
 from .filters import PaperFilter
 from .forms import *
 
@@ -332,6 +334,45 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return redirect('login')
 
 
+def send_review_notification_email(review):
+    paper = review.paper
+    reviewer = paper.reviewers.filter(pk=review.author.pk).first()
+
+    recipients = []
+
+    if paper.author.email:
+        recipients.append(paper.author.email)
+
+    for coauthor in paper.coauthor_set.all():
+        if coauthor.email:
+            recipients.append(coauthor.email)
+
+    recipients = list(set(recipients))
+    if not recipients:
+        return
+
+    context = {
+        "paper": paper,
+        "reviewer": reviewer,
+        "review": review,
+    }
+
+    subject = f"Nowa recenzja dla artykułu: {paper.title[:50]}..."
+    html_content = render_to_string("emails/review_notification.html", context)
+    plain_text_content = strip_tags(html_content)
+
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=plain_text_content,
+        from_email=SITE_ADMIN_MAIL,
+        to=[SITE_ADMIN_MAIL],
+        bcc=recipients,
+        headers={'Reply-To': SITE_ADMIN_MAIL}
+    )
+
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
 class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Review
     template_name = 'papers/review_add.html'
@@ -361,7 +402,12 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.paper = Paper.objects.get(pk=self.kwargs.get('paper'))
-        return super(ReviewCreateView, self).form_valid(form)
+
+        response = super(ReviewCreateView, self).form_valid(form)
+
+        send_review_notification_email(self.object)
+
+        return response
 
 
 class ReviewUpdateView(SuccessMessageMixin, CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, UpdateView):
