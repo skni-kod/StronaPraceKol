@@ -19,7 +19,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static:/static:ro
       - ./media:/media:ro
-      - ./certbot/www:/var/www/certbot:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - django-web
