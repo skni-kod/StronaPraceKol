@@ -184,7 +184,7 @@ DATABASES = {
 
 SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
 SITE_DOMAIN = 'localhost'
-SITE_ADMIN_MAIL = 'admin@pracekol.pl'
+SITE_ADMIN_MAIL = 'prace.kol@prz.edu.pl'
 SITE_ADMIN_PHONE = '123456789'
 
 
