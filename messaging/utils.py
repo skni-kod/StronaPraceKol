@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from StronaProjektyKol.settings import SITE_ADMIN_MAIL
 
 def send_message_notification_email(message):
     paper = message.paper
@@ -31,7 +32,7 @@ def send_message_notification_email(message):
     send_mail(
         subject=subject,
         message=plain_message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
+        from_email=SITE_ADMIN_MAIL,
         recipient_list=[author.email],
         html_message=html_message,
         fail_silently=False,
