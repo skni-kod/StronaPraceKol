@@ -291,7 +291,7 @@
     "model": "papers.studentclub",
     "pk": 33,
     "fields": {
-      "name": "Koło Naukowe Elektroniki i i Technologii Informacyjnych",
+      "name": "Koło Naukowe Elektroniki i Technologii Informacyjnych",
       "faculty": "Wydział Elektrotechniki i Informatyki",
       "patron": "Bartosz Pawłowicz"
     }
