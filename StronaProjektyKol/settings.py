@@ -159,8 +159,8 @@ USE_TZ = True
 
 #EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-#EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.mailtrap.io')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'b616df948c35a1')
@@ -184,7 +184,7 @@ DATABASES = {
 
 SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
 SITE_DOMAIN = 'localhost'
-SITE_ADMIN_MAIL = 'admin@pracekol.pl'
+SITE_ADMIN_MAIL = 'prace.kol@prz.edu.pl'
 SITE_ADMIN_PHONE = '123456789'
 
 
