@@ -67,12 +67,11 @@ class CoAuthor(models.Model):
 
 def paper_directory_path(instance, filename):
     _filename = filename.split('.')
-    filename = re.sub(r'\W+', '', _filename[0])
-    filename = filename.replace(' ','_')
-    filename = textwrap.shorten(filename,width=100,placeholder='')
+    filename = re.sub(r'[^\w\-]', '', _filename[0])
+    filename = filename.replace(' ', '_')
+    filename = textwrap.shorten(filename, width=100, placeholder='')
     filename += f'.{_filename[-1]}'
     return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
-
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
