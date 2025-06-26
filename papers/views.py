@@ -126,8 +126,7 @@ def paper_file_download(request, pk, item):
     if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
-        decoded_file_url = unquote(document.file.url)
-        filepath = str(BASE_DIR) + decoded_file_url
+        filepath =  document.file.path
         return serve(request, os.path.basename(filepath), os.path.dirname(filepath))
     else:
         return redirect('paper-list')

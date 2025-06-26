@@ -1,12 +1,11 @@
-import os
-import re
-import textwrap
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
 import textwrap
+import unicodedata
+import os
+import re
 
 
 class NotificationPeriod(models.Model):
@@ -66,12 +65,12 @@ class CoAuthor(models.Model):
 
 
 def paper_directory_path(instance, filename):
-    _filename = filename.split('.')
-    filename = re.sub(r'[^\w\-]', '', _filename[0])
-    filename = filename.replace(' ', '_')
-    filename = textwrap.shorten(filename, width=100, placeholder='')
-    filename += f'.{_filename[-1]}'
-    return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
+    name, ext = os.path.splitext(filename)
+    name = unicodedata.normalize('NFD', name)
+    name = re.sub(r'[^\w\s-]', '', name, flags=re.ASCII)
+    name = re.sub(r'\s+', '_', name).strip('_')
+    name = textwrap.shorten(name, width=100, placeholder='') or 'file'
+    return f'paper_files/paperNo.{instance.paper.pk}/{name}{ext}'
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
