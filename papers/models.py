@@ -1,11 +1,11 @@
 import os
+import re
+import textwrap
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
-import textwrap
-
-from django.utils.text import slugify
 
 
 class NotificationPeriod(models.Model):
