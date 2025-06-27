@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
-import textwrap
 
 
 class NotificationPeriod(models.Model):
@@ -64,6 +63,17 @@ class CoAuthor(models.Model):
     email = models.EmailField(blank=True)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
+
+def remove_polish_chars(text):
+    polish_chars = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+    }
+
+    for polish_char, ascii_char in polish_chars.items():
+        text = text.replace(polish_char, ascii_char)
+
+    return text
 
 def paper_directory_path(instance, filename):
     _filename = filename.split('.')
