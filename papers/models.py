@@ -76,18 +76,12 @@ def remove_polish_chars(text):
     return text
 
 def paper_directory_path(instance, filename):
-    name, ext = os.path.splitext(filename)
-    safe_name = remove_polish_chars(name)
-    safe_name = slugify(safe_name)
-    safe_name = safe_name[:100] if len(safe_name) > 100 else safe_name
-    if not safe_name:
-        safe_name = 'file'
-    # _filename = filename.split('.')
-    # filename = re.sub(r'\W+', '', _filename[0])
-    # filename = filename.replace(' ','_')
-    # filename = textwrap.shorten(filename,width=100,placeholder='')
-    # filename += f'.{_filename[-1]}'
-    return f'paper_files/paperNo.{instance.paper.pk}/{safe_name}{ext.lower()}'
+    _filename = filename.split('.')
+    filename = re.sub(r'\W+', '', _filename[0])
+    filename = filename.replace(' ','_')
+    filename = textwrap.shorten(filename,width=100,placeholder='')
+    filename += f'.{_filename[-1]}'
+    return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
 
 class UploadedFile(models.Model):
