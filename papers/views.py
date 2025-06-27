@@ -1,7 +1,6 @@
-from email.utils import unquote
-
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
+from urllib.parse import unquote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -123,19 +122,16 @@ def paper_file_download(request, pk, item):
     :param item: integer (id of a file user wants to download)
     :return:
     """
+    print("request", request, "pk", pk, "item", item)
     paper = Paper.objects.get(pk=pk)
+    print("paper", paper)
     if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
-
-        file_path = document.file.name
-
-        if not os.path.exists(file_path):
-            unquoted_path = unquote(file_path)
-            if os.path.exists(unquoted_path):
-                file_path = unquoted_path
-
-        return serve(request, os.path.basename(file_path), os.path.dirname(file_path))
+        print("document", document)
+        filepath = str(BASE_DIR)+document.file.url
+        print("filepath", unquote(filepath))
+        return serve(request, os.path.basename(unquote(filepath)), os.path.dirname(unquote(filepath)))
     else:
         return redirect('paper-list')
 

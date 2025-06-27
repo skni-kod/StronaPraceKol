@@ -1,5 +1,4 @@
 import os
-import re
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
@@ -65,16 +64,24 @@ class CoAuthor(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
 
+def remove_polish_chars(text):
+    polish_chars = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+    }
+
+    for polish_char, ascii_char in polish_chars.items():
+        text = text.replace(polish_char, ascii_char)
+
+    return text
+
 def paper_directory_path(instance, filename):
-    name, ext = os.path.splitext(filename)
-    safe_name = slugify(name)
-    safe_name = textwrap.shorten(safe_name, width=100, placeholder='')
-    # _filename = filename.split('.')
-    # filename = re.sub(r'\W+', '', _filename[0])
-    # filename = filename.replace(' ','_')
-    # filename = textwrap.shorten(filename,width=100,placeholder='')
-    # filename += f'.{_filename[-1]}'
-    return f'paper_files/paperNo.{instance.paper.pk}/{safe_name}{ext.lower()}'
+    _filename = filename.split('.')
+    filename = re.sub(r'\W+', '', _filename[0])
+    filename = filename.replace(' ','_')
+    filename = textwrap.shorten(filename,width=100,placeholder='')
+    filename += f'.{_filename[-1]}'
+    return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
 
 class UploadedFile(models.Model):
