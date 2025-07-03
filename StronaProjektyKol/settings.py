@@ -181,14 +181,12 @@ DATABASES = {
     }
 }
 
-
-SITE_NAME = 'Projekty Kół Naukowych Politechniki Rzeszowskiej'
-SITE_DOMAIN = 'localhost'
-SITE_ADMIN_MAIL = 'prace.kol@prz.edu.pl'
-SITE_ADMIN_PHONE = '123456789'
-
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'localhost:8000')
+SITE_NAME = os.environ.get('SITE_NAME', 'Projekty Kół Naukowych Politechniki Rzeszowskiej')
+SITE_ADMIN_MAIL = os.environ.get('SITE_ADMIN_MAIL', 'prace.kol@prz.edu.pl')
+SITE_ADMIN_PHONE = os.environ.get('SITE_ADMIN_PHONE', '123456789')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', True)
