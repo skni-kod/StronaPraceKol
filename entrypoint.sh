@@ -4,4 +4,4 @@ python manage.py migrate --noinput
 python manage.py collectstatic --noinput
 
 echo "Starting Gunicorn..."
-exec gunicorn --bind 0.0.0.0:8000 --workers 3 StronaProjektyKol.wsgi:application
+exec gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 StronaProjektyKol.wsgi:application
