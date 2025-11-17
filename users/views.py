@@ -92,7 +92,7 @@ class SendNotificationsView(TemplateView):
                         return HttpResponse('Invalid header found.')
 
     def get(self, request, *args, **kwargs):
-        self.send_notification()
+        # self.send_notification()
         return super(SendNotificationsView, self).get(request, *args, **kwargs)
 
 
