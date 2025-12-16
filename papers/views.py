@@ -177,12 +177,19 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
+            form.instance.author_percentage = 55
             form.save()
-            self.object = form.save()
+            self.object = form.save(commit=False)
 
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+                total = 100
+                for coauthor in self.object.coauthor_set.all():
+                    total -= coauthor.percentage
+                self.object.author_percentage = total
+                self.object.save(update_fields=["author_percentage"])
+
             if files.is_valid():
                 # receiced a list of file fields
                 # each file field has a list of files
@@ -253,10 +260,19 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         coAuthors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
-            self.object = form.save()
+            form.instance.author = self.request.user
+            form.instance.author_percentage = 55
+            form.save()
+            self.object = form.save(commit=False)
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+
+                total = 100
+                for coauthor in self.object.coauthor_set.all():
+                    total -= coauthor.percentage
+                self.object.author_percentage = total
+                self.object.save(update_fields=["author_percentage"])
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
                     for file_field in file_fields[1]:

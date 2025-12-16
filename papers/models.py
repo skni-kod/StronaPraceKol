@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class NotificationPeriod(models.Model):
     name = models.CharField(max_length=64)
@@ -32,6 +32,7 @@ class Paper(models.Model):
     title = models.CharField(max_length=128)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_percentage= models.FloatField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
     keywords = models.CharField(max_length=128)
     description = models.TextField()
     approved = models.BooleanField(default=False)
@@ -61,6 +62,7 @@ class CoAuthor(models.Model):
     name = models.CharField(max_length=32)
     surname = models.CharField(max_length=32)
     email = models.EmailField(blank=True)
+    percentage = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
 
