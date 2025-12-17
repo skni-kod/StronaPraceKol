@@ -154,11 +154,11 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             context['files'] = UploadFileFormSet(
                 self.request.POST, self.request.FILES)
             context['statement'] = FileUploadForm(
-                self.request.POST, self.request.FILES)
+                self.request.POST, self.request.FILES, prefix='statement')
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadFileFormSet()
-            context['statement'] = FileUploadForm()
+            context['statement'] = FileUploadForm(prefix='statement')
 
         context['statement'].fields['file'].required = True
         context['statement'].fields['file'].widget.attrs['multiple'] = False
@@ -183,19 +183,26 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+            if context['statement'].is_valid():
+                statement_file = context['statement'].cleaned_data.get('file')
+                if statement_file:
+                    file_instance = UploadedFile(file=statement_file, paper=self.object)
+                    file_instance.save()
+                    self.object.statement = file_instance.pk
+                    self.object.save()
+
             if files.is_valid():
                 # receiced a list of file fields
                 # each file field has a list of files
                 # but file can be empty, so we need to check it
                 for file_fields in self.request.FILES.lists():
+                    if file_fields[0] == 'statement-file':
+                        continue
                     for file_field in file_fields[1]:
                         if len(file_fields[1]) > 0:
                             file_instance = UploadedFile(
                                 file=file_field, paper=self.object)
                             file_instance.save()
-                            if file_fields[0] == 'file':
-                                self.object.statement = file_instance.pk
-                                self.object.save()
 
         return super(PaperCreateView, self).form_valid(form)
 
@@ -236,9 +243,18 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
             context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES, prefix='statement')
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
+            context['statement'] = FileUploadForm(prefix='statement')
+
+        context['statement'].fields['file'].required = False
+        context['statement'].fields['file'].widget.attrs['multiple'] = False
+
+        if self.object.statement:
+             context['current_statement'] = UploadedFile.objects.filter(pk=self.object.statement).first()
+
         context['uploaded_files'] = UploadedFile.objects.filter(
             paper=self.get_object()).exclude(pk=self.get_object().statement)
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
@@ -257,12 +273,25 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+            if context['statement'].is_valid():
+                statement_file = context['statement'].cleaned_data.get('file')
+                if statement_file:
+                    if self.object.statement:
+                        UploadedFile.objects.filter(pk=self.object.statement).delete()
+                    
+                    file_instance = UploadedFile(file=statement_file, paper=self.object)
+                    file_instance.save()
+                    self.object.statement = file_instance.pk
+                    self.object.save()
+
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
+                    if file_fields[0] == 'statement-file':
+                        continue
                     for file_field in file_fields[1]:
-                        file_instance = UploadedFile(
+                         file_instance = UploadedFile(
                             file=file_field, paper=self.object)
-                        file_instance.save()
+                         file_instance.save()
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):

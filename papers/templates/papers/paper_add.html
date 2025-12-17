@@ -119,32 +119,42 @@
 
                         {{ coAuthorsForm }}
 
-                        {% if site_type == 'create' %}
-                            <div class="row mt-5">
-                                <div class="col-3">
-                                    <h5>
-                                        Skan oświadczenia
-                                    </h5>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
-                                        <button type="button" class="btn btn-primary">
-                                            Wzory oświadczeń
-                                        </button>
-                                    </a>
-                                </div>
+
+                        <div class="row mt-5">
+                            <div class="col-3">
+                                <h5>
+                                    Skan oświadczenia
+                                </h5>
                             </div>
+                            <div class="col-3 text-left">
+                                <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
+                                    <button type="button" class="btn btn-primary">
+                                        Wzory oświadczeń
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
 
-                            <hr>
+                        <hr>
 
-                            <div class="row">
-                                <div class="col-md-4 offset-md-4 mb-4">
+                        <div class="row">
+                            <div class="col-md-4 offset-md-4">
+                                {% if current_statement %}
+                                    <p>Obecnie: {{ current_statement.filename }}</p>
+                                    <button type="button" class="btn btn-warning" id="toggle-statement-btn">Popraw
+                                        oświadczenie
+                                    </button>
+                                    <div id="statement-input-container" style="display: none;">
+                                        {% render_field statement.file %}
+                                    </div>
+                                {% else %}
                                     {% render_field statement.file %}
-                                </div>
+                                {% endif %}
                             </div>
+                        </div>
 
-                            <div class="mb-5"></div>
-                        {% endif %}
+                        <div class="mb-5"></div>
+
 
                         {{ filesForm }}
 
@@ -188,6 +198,11 @@
                 .attr("name", "file-delete-" + $(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
             $('#paper_form').append(input);
             $(this).parent().parent().hide();
+        });
+
+        $('#toggle-statement-btn').click(function () {
+            $('#statement-input-container').show();
+            $(this).hide();
         });
     </script>
 
