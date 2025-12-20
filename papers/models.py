@@ -80,8 +80,6 @@ def paper_directory_path(instance, filename):
     filename = re.sub(r'\W+', '', _filename[0])
     filename = filename.replace(' ','_')
     filename = textwrap.shorten(filename,width=100,placeholder='')
-    date_str = timezone.now().strftime('%d_%m_%Y')
-    filename = f'{date_str}_{filename}'
     filename += f'.{_filename[-1]}'
     return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
