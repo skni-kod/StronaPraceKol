@@ -1,20 +1,22 @@
+from urllib.parse import unquote
+
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
-from urllib.parse import unquote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
-from django.utils.html import strip_tags
-from django.http import FileResponse, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
+
 from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
 from .filters import PaperFilter
 from .forms import *
@@ -129,7 +131,7 @@ def paper_file_download(request, pk, item):
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         print("document", document)
-        filepath = str(BASE_DIR)+document.file.url
+        filepath = str(BASE_DIR) + document.file.url
         print("filepath", unquote(filepath))
         return serve(request, os.path.basename(unquote(filepath)), os.path.dirname(unquote(filepath)))
     else:
@@ -253,7 +255,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['statement'].fields['file'].widget.attrs['multiple'] = False
 
         if self.object.statement:
-             context['current_statement'] = UploadedFile.objects.filter(pk=self.object.statement).first()
+            context['current_statement'] = UploadedFile.objects.filter(pk=self.object.statement).first()
 
         context['uploaded_files'] = UploadedFile.objects.filter(
             paper=self.get_object()).exclude(pk=self.get_object().statement)
@@ -278,7 +280,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 if statement_file:
                     if self.object.statement:
                         UploadedFile.objects.filter(pk=self.object.statement).delete()
-                    
+
                     file_instance = UploadedFile(file=statement_file, paper=self.object)
                     file_instance.save()
                     self.object.statement = file_instance.pk
@@ -289,9 +291,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     if file_fields[0] == 'statement-file':
                         continue
                     for file_field in file_fields[1]:
-                         file_instance = UploadedFile(
+                        file_instance = UploadedFile(
                             file=file_field, paper=self.object)
-                         file_instance.save()
+                        file_instance.save()
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -406,6 +408,7 @@ def send_review_notification_email(review):
 
     msg.attach_alternative(html_content, "text/html")
     msg.send()
+
 
 class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Review
