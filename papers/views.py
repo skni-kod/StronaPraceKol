@@ -21,6 +21,8 @@ from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
 from .filters import PaperFilter
 from .forms import *
 
+STATEMENT_FILE = 'statement-file'
+
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -198,7 +200,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                 # each file field has a list of files
                 # but file can be empty, so we need to check it
                 for file_fields in self.request.FILES.lists():
-                    if file_fields[0] == 'statement-file':
+                    if file_fields[0] == STATEMENT_FILE:
                         continue
                     for file_field in file_fields[1]:
                         if len(file_fields[1]) > 0:
@@ -288,7 +290,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
-                    if file_fields[0] == 'statement-file':
+                    if file_fields[0] == STATEMENT_FILE:
                         continue
                     for file_field in file_fields[1]:
                         file_instance = UploadedFile(
