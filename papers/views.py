@@ -278,11 +278,11 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if context['statement'].is_valid():
                 statement_file = context['statement'].cleaned_data.get('file')
                 if statement_file:
-                    if self.object.statement:
-                        UploadedFile.objects.filter(pk=self.object.statement).delete()
-
+                    old_statement = UploadedFile.objects.filter(pk=self.object.statement).first()
                     file_instance = UploadedFile(file=statement_file, paper=self.object)
                     file_instance.save()
+                    if old_statement:
+                        old_statement.delete()
                     self.object.statement = file_instance.pk
                     self.object.save()
 
