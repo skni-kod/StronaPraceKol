@@ -9,6 +9,17 @@ services:
       - ./static:/app/static:rw
       - ./media:/app/media:rw
 
+  django-qcluster:
+    build: .
+    command: python manage.py qcluster
+    env_file:
+      - ./.env
+    restart: always
+    volumes:
+      - ./media:/app/media:rw
+    depends_on:
+      - django-web
+
   nginx:
     image: nginx:latest
     ports:
