@@ -173,22 +173,24 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            form.instance.author_percentage = 55
-            form.save()
-            self.object = form.save(commit=False)
+            
+            co_author_total = 0
+            if co_authors.is_valid():
+                for co_author_form in co_authors.forms:
+                    if not co_author_form.cleaned_data.get("DELETE"):
+                        percentage = co_author_form.cleaned_data.get("percentage") or 0
+                        co_author_total += percentage
+            
+            form.instance.author_percentage = 100 - co_author_total
+            self.object = form.save()
 
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
-                total = 100
-                for coauthor in self.object.coauthor_set.all():
-                    total -= coauthor.percentage
-                self.object.author_percentage = total
-                self.object.save(update_fields=["author_percentage"])
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
 
             if files.is_valid():
                 # receiced a list of file fields
@@ -257,22 +259,24 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            form.instance.author_percentage = 55
-            form.save()
-            self.object = form.save(commit=False)
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
-
-                total = 100
-                for coauthor in self.object.coauthor_set.all():
-                    total -= coauthor.percentage
-                self.object.author_percentage = total
-                self.object.save(update_fields=["author_percentage"])
+            
+            co_author_total = 0
+            if co_authors.is_valid():
+                for co_author_form in co_authors.forms:
+                    if not co_author_form.cleaned_data.get("DELETE"):
+                        percentage = co_author_form.cleaned_data.get("percentage") or 0
+                        co_author_total += percentage
+            
+            form.instance.author_percentage = 100 - co_author_total
+            self.object = form.save()
+            
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
                     for file_field in file_fields[1]:

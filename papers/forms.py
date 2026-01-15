@@ -54,10 +54,19 @@ class CoAuthorInlineFormSet(BaseInlineFormSet):
                 continue
 
             p = form.cleaned_data.get("percentage") or 0
+            
+
+            if p < 0:
+                raise ValidationError(_("Procentowy udział wspołautora nie może być ujemny."))
+            
             total += p
-        
+
         if total > 100:
             raise ValidationError(_("Suma procentów wspołautorów nie może przekroczyć 100 (teraz %(val)s)."),
+                                  params={"val": total},)
+        
+        if total >= 100:
+            raise ValidationError(_("Suma procentów wspołautorów musi być mniejsza niż 100, aby autor miał dodatni udział (teraz %(val)s)."),
                                   params={"val": total},)
 
 CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,formset=CoAuthorInlineFormSet,
