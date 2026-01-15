@@ -113,31 +113,17 @@
 
     function validateTotal() {
         const total = recalcTotal();
-        const ok = total <= 100;
+        const ok = total < 100;
 
-        $("#total_error").text(ok ? "" : `Błąd: Suma procentów > 100`);
-
-        return ok;
-    }
-
-    function validateSign(){
-        let ok = true;
-
-        $(".js-percentage").each(function () {
-            num = Number($(this).val() || 0);
-            if(num < 0){
-                ok = false;
-                return;
-            }
-        });
-
-        $("#sign_error").text(ok ? "" : `Błąd: Wszystkie wartości muszą być dodatnie`);
+        $("#total_error").text(ok ? "" : 
+        `Błąd: Suma procentów wspołautorów musi być < 100 (autor musi mieć > 0%)`);
 
         return ok;
     }
+
 
     $("form").on("submit", function (e) {
-        if (!validateTotal() || !validateSign())  {
+        if (!validateTotal())  {
             e.preventDefault();
             e.stopPropagation();
         }
