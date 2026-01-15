@@ -113,9 +113,10 @@
 
     function validateTotal() {
         const total = recalcTotal();
-        const ok = total <= 100;
+        const ok = total < 100;
 
-        $("#total_error").text(ok ? "" : `Błąd: Suma procentów > 100`);
+        $("#total_error").text(ok ? "" : 
+        `Błąd: Suma procentów wspołautorów musi być < 100 (autor musi mieć > 0%)`);
 
         return ok;
     }

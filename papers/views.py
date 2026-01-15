@@ -185,7 +185,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                         percentage = co_author_form.cleaned_data.get("percentage") or 0
                         co_author_total += percentage
             
-            form.instance.author_percentage = 100 - co_author_total
+            form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
 
             if co_authors.is_valid():
@@ -271,7 +271,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                         percentage = co_author_form.cleaned_data.get("percentage") or 0
                         co_author_total += percentage
             
-            form.instance.author_percentage = 100 - co_author_total
+            form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
             
             if co_authors.is_valid():
