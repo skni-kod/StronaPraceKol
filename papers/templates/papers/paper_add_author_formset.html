@@ -61,10 +61,10 @@
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <input type="number" step="0.01" min="0" class="form-control js-percentage"
+                    <input type="number" step="0.01" min="0" max="100" class="form-control js-percentage"
                     id="{{ field.id_for_label }}"
                     name="{{ field.html_name }}"
-                    value="{{ field.value|default_if_none:'' }}"
+                    value="{{ field.value|stringformat:".2f"}}"
                     placeholder="{{ field.label }}"
                     >
                 {% endwith %}
@@ -88,7 +88,7 @@
         let totalPercentage = 0; 
 
         $(".js-percentage").each(function () {
-            totalPercentage += Number($(this).val() || 0);
+            totalPercentage += parseFloat($(this).val() || 0);
         });
 
         const remaining = Math.round((100 - totalPercentage) * 100) / 100;
@@ -106,6 +106,21 @@
         recalcTotal();
     });
     $(document).on("change", "input[name$='-DELETE']", recalcTotal);
+    
+    // Clearing value on focus to show placeholder
+    $(document).on("focus", ".js-percentage", function () {
+        if ((parseFloat($(this).val() || 0) === 0) && ($(this).val() !== "")) {
+            $(this).val("");
+        }
+    });
+    
+    //Restoring 0.00 when left empty
+    $(document).on("blur", ".js-percentage", function () {
+        if ($(this).val() === "") {
+            $(this).val("0.00");
+            recalcTotal();
+        }
+    });
 
     $(document).ready(function () {
         recalcTotal();
@@ -113,7 +128,7 @@
 
     function validateTotal() {
         const total = recalcTotal();
-        const ok = total < 100;
+        const ok = !(total > 99.99);
 
         $("#total_error").text(ok ? "" : 
         `Błąd: Suma procentów wspołautorów musi być < 100 (autor musi mieć > 0%)`);

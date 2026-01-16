@@ -67,6 +67,16 @@ class CoAuthorInlineFormSet(BaseInlineFormSet):
             raise ValidationError(_("Suma procentów wspołautorów musi być mniejsza niż 100, aby autor miał dodatni udział (teraz %(val)s)."),
                                   params={"val": round(total, 2)},)
 
+    #calculate author percentage based on co-author percentages.
+    def calculate_author_percentage(self):
+        co_author_total = 0
+        if self.is_valid():
+            for co_author_form in self.forms:
+                if not co_author_form.cleaned_data.get("DELETE"):
+                    percentage = co_author_form.cleaned_data.get("percentage") or 0
+                    co_author_total += percentage
+        return round(100 - co_author_total, 2)
+
 CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,formset=CoAuthorInlineFormSet,
                                         fields=['name', 'surname', 'email', 'percentage'], extra=1,
                                         can_delete=True)

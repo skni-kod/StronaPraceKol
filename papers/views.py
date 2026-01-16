@@ -177,15 +177,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            
-            co_author_total = 0
-            if co_authors.is_valid():
-                for co_author_form in co_authors.forms:
-                    if not co_author_form.cleaned_data.get("DELETE"):
-                        percentage = co_author_form.cleaned_data.get("percentage") or 0
-                        co_author_total += percentage
-            
-            form.instance.author_percentage = round(100 - co_author_total, 2)
+            form.instance.author_percentage = co_authors.calculate_author_percentage()
             self.object = form.save()
 
             if co_authors.is_valid():
@@ -263,15 +255,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            
-            co_author_total = 0
-            if co_authors.is_valid():
-                for co_author_form in co_authors.forms:
-                    if not co_author_form.cleaned_data.get("DELETE"):
-                        percentage = co_author_form.cleaned_data.get("percentage") or 0
-                        co_author_total += percentage
-            
-            form.instance.author_percentage = round(100 - co_author_total, 2)
+            form.instance.author_percentage = co_authors.calculate_author_percentage()
             self.object = form.save()
             
             if co_authors.is_valid():
