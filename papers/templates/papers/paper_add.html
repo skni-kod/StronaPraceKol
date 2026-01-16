@@ -126,7 +126,7 @@
                                         Skan oświadczenia
                                     </h5>
                                 </div>
-                                <div class="col-3 text-left">
+                                <div class="col-9 text-left">
                                     <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
                                         <button type="button" class="btn btn-primary">
                                             Wzory oświadczeń
@@ -138,8 +138,86 @@
                             <hr>
 
                             <div class="row">
-                                <div class="col-md-4 offset-md-4 mb-4">
+                                <div class="col-md-8 offset-md-2 mb-4">
+                                    <div class="alert alert-info" role="alert">
+                                        <strong>Informacja:</strong> Oświadczenie można dodać teraz lub później. 
+                                        Aby wygenerować gotowe oświadczenie w formie PDF, najpierw zapisz artykuł, 
+                                        a następnie użyj opcji <em>"Generuj PDF oświadczenia"</em> w trybie edycji.
+                                    </div>
                                     {% render_field statement.file %}
+                                    <small class="form-text text-muted">Pole opcjonalne - możesz dodać oświadczenie później w trybie edycji.</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-5"></div>
+                        {% endif %}
+
+                        {% if site_type == 'edit' %}
+                            <div class="row mt-5">
+                                <div class="col-3">
+                                    <h5>
+                                        Skan oświadczenia
+                                    </h5>
+                                </div>
+                                <div class="col-9 text-left">
+                                    <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
+                                        <button type="button" class="btn btn-primary">
+                                            Wzory oświadczeń
+                                        </button>
+                                    </a>
+                                    <a href="{% url 'paperPDFForm' object.pk %}">
+                                        <button type="button" class="btn btn-success">
+                                            Generuj PDF oświadczenia
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-8 offset-md-2 mb-4">
+                                    {% if object.statement %}
+                                        <div class="mb-3 p-3 bg-light rounded">
+                                            <small class="text-muted d-block mb-2">Bieżące oświadczenie:</small>
+                                            <div class="my-2">
+                                                {% for file in uploaded_files %}
+                                                    {% if file.pk == object.statement %}
+                                                        <a href="{% url 'paperFileDownload' pk=object.id item=file.id %}">
+                                                            <strong>{{ file.filename }}</strong>
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="mb-3">
+                                        <label class="form-label font-weight-bold">Zmień/Dodaj oświadczenie</label>
+                                        {% render_field statement.file %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-md-8 offset-md-2 mb-4">
+                                    <label class="form-label font-weight-bold">Wybierz istniejący plik jako oświadczenie</label>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            {% if uploaded_files %}
+                                                <div class="list-group">
+                                                    {% for file in uploaded_files %}
+                                                        <label class="list-group-item">
+                                                            <input type="radio" name="statement_from_files" value="{{ file.pk }}" {% if file.pk == object.statement %}checked{% endif %}>
+                                                            <span class="ml-2">{{ file.filename }}</span>
+                                                        </label>
+                                                    {% endfor %}
+                                                </div>
+                                                <small class="form-text text-muted mt-2 d-block">Zaznacz plik, aby ustawić go jako oświadczenie</small>
+                                            {% else %}
+                                                <p class="text-muted mb-0">Brak plików do wyboru. Dodaj pliki w sekcji poniżej.</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

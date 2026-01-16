@@ -121,3 +121,39 @@ class ReviewerAssignmentForm(forms.ModelForm):
         if reviewers.count() > 2:
             raise forms.ValidationError('Nie można przypisać więcej niż dwóch recenzentów')
         return reviewers
+
+
+### AUTHOR DATA FORMS
+class AuthorPersonalDataForm(forms.Form):
+    """Form for collecting author personal data (name, surname, PESEL, address)"""
+    name = forms.CharField(
+        max_length=100,
+        label='Imię',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    surname = forms.CharField(
+        max_length=100,
+        label='Nazwisko',
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    pesel = forms.CharField(
+        max_length=11,
+        label='PESEL',
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '11 cyfr'
+        })
+    )
+    address = forms.CharField(
+        max_length=255,
+        label='Adres zamieszkania',
+        required=True,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 2,
+            'placeholder': 'ulica, numer, miasto, kod'})
+    )
+
+
+AuthorPersonalDataFormSet = forms.formset_factory(AuthorPersonalDataForm, extra=0)

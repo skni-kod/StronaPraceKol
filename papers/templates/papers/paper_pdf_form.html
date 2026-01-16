@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Dane Autora - Formularz{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="d-flex align-items-center mb-3">
+                <div>
+                    <h2 class="mb-1">Dane autora do PDF</h2>
+                    <p class="text-muted mb-0">Wprowadź dane autora i współautorów.</p>
+                </div>
+            </div>
+            
+            <form method="post" class="shadow-sm rounded bg-white p-4">
+                {% csrf_token %}
+                {{ formset.management_form }}
+
+                {% for form in formset %}
+                    <div class="border rounded p-3 mb-4 author-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">
+                                Autor {{ forloop.counter }}
+                                {% if form.initial.name or form.initial.surname %}
+                                    : {{ form.initial.name }} {{ form.initial.surname }}
+                                {% endif %}
+                            </h6>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.name.label }} <span class="text-danger">*</span></label>
+                                {{ form.name }}
+                                <small class="form-text text-muted">Imię dokładnie jak w dokumentach.</small>
+                                {{ form.name.errors }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.surname.label }} <span class="text-danger">*</span></label>
+                                {{ form.surname }}
+                                <small class="form-text text-muted">Nazwisko autora lub współautora.</small>
+                                {{ form.surname.errors }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.pesel.label }} <span class="text-danger">*</span></label>
+                                {{ form.pesel }}
+                                <small class="form-text text-muted">11 cyfr (PESEL z dowodu osobistego lub paszportu).</small>
+                                {{ form.pesel.errors }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.address.label }} <span class="text-danger">*</span></label>
+                                {{ form.address }}
+                                <small class="form-text text-muted">Pełny adres zamieszkania (ulica, numer, miasto, kod pocztowy).</small>
+                                {{ form.address.errors }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'paperDetail' object.pk %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Anuluj
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Generuj oświadczenia w formie PDF
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .author-card {
+        background: #f8f9fa;
+    }
+    .author-card .form-control {
+        background-color: #fff;
+    }
+</style>
+{% endblock %}

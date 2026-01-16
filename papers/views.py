@@ -160,7 +160,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             context['files'] = UploadFileFormSet()
             context['statement'] = FileUploadForm()
 
-        context['statement'].fields['file'].required = True
+        context['statement'].fields['file'].required = False
         context['statement'].fields['file'].widget.attrs['multiple'] = False
 
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
@@ -236,11 +236,16 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
             context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES)
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
-        context['uploaded_files'] = UploadedFile.objects.filter(
-            paper=self.get_object()).exclude(pk=self.get_object().statement)
+            context['statement'] = FileUploadForm()
+        
+        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+        context['statement'].fields['file'].required = False
+        context['statement'].fields['file'].widget.attrs['multiple'] = False
+        
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
@@ -252,17 +257,34 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
         files = context['files']
+        statement_form = context['statement']
+        
         with transaction.atomic():
             self.object = form.save()
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+            
+            if statement_form.is_valid() and 'file' in self.request.FILES:
+                for file_field in self.request.FILES.getlist('file'):
+                    file_instance = UploadedFile(file=file_field, paper=self.object)
+                    file_instance.save()
+                    self.object.statement = file_instance.pk
+                    self.object.save()
+            
+            if 'statement_from_files' in self.request.POST:
+                statement_pk = self.request.POST.get('statement_from_files')
+                if statement_pk:
+                    self.object.statement = int(statement_pk)
+                    self.object.save()
+            
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
-                    for file_field in file_fields[1]:
-                        file_instance = UploadedFile(
-                            file=file_field, paper=self.object)
-                        file_instance.save()
+                    if file_fields[0] != 'file':
+                        for file_field in file_fields[1]:
+                            file_instance = UploadedFile(
+                                file=file_field, paper=self.object)
+                            file_instance.save()
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -534,3 +556,68 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
+
+
+@login_required
+def paper_pdf_form_view(request, pk):
+    paper = Paper.objects.get(pk=pk)
+    
+    if request.user != paper.author and not request.user.is_staff:
+        return redirect('paperDetail', pk=pk)
+    
+    co_authors_count = paper.coauthor_set.count() + 1
+    
+    formset_prefix = 'authors'
+
+    if request.method == 'POST':
+        formset = AuthorPersonalDataFormSet(request.POST, prefix=formset_prefix)
+        if formset.is_valid():
+            authors_data = []
+            for form in formset:
+                if form.cleaned_data:
+                    authors_data.append({
+                        'name': form.cleaned_data.get('name', ''),
+                        'surname': form.cleaned_data.get('surname', ''),
+                        'pesel': form.cleaned_data.get('pesel', ''),
+                        'address': form.cleaned_data.get('address', ''),
+                    })
+            
+            request.session['pdf_authors_data'] = authors_data
+            request.session.modified = True
+            
+            messages.success(request, 'Dane autora zostały zapisane.')
+            return redirect('paperDetail', pk=pk)
+    else:
+        initial_data = [
+            {
+                'name': paper.author.first_name,
+                'surname': paper.author.last_name,
+                'pesel': '',
+                'address': '',
+            }
+        ]
+
+        for coauthor in paper.coauthor_set.all():
+            initial_data.append({
+                'name': coauthor.name,
+                'surname': coauthor.surname,
+                'pesel': '',
+                'address': '',
+            })
+
+        while len(initial_data) < co_authors_count:
+            initial_data.append({})
+
+        formset = AuthorPersonalDataFormSet(
+            prefix=formset_prefix,
+            initial=initial_data
+        )
+    
+    context = {
+        'object': paper,
+        'formset': formset,
+        'site_title': f'Dane autora - {SITE_NAME}',
+        'site_name': 'papers',
+    }
+    
+    return render(request, 'papers/paper_pdf_form.html', context)
