@@ -173,16 +173,25 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            form.save()
+            
+            co_author_total = 0
+            if co_authors.is_valid():
+                for co_author_form in co_authors.forms:
+                    if not co_author_form.cleaned_data.get("DELETE"):
+                        percentage = co_author_form.cleaned_data.get("percentage") or 0
+                        co_author_total += percentage
+            
+            form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
 
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
+
             if files.is_valid():
                 # receiced a list of file fields
                 # each file field has a list of files
@@ -255,11 +264,21 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
         statement_form = context['statement']
         
         with transaction.atomic():
+            form.instance.author = self.request.user
+            
+            co_author_total = 0
+            if co_authors.is_valid():
+                for co_author_form in co_authors.forms:
+                    if not co_author_form.cleaned_data.get("DELETE"):
+                        percentage = co_author_form.cleaned_data.get("percentage") or 0
+                        co_author_total += percentage
+            
+            form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
             if coAuthors.is_valid():
                 coAuthors.instance = self.object

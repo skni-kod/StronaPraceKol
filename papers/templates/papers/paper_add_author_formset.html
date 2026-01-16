@@ -3,6 +3,13 @@
 {% load widget_tweaks %}
 
 <div class="btn btn-primary mb-4" id="add_coauthor_btn">Dodaj współautora</div>
+<div id="cont">
+    <p id="author_percentage">Twój udział: %</p>
+    <div id="total_error" style="color:red;"></div>
+    <div id="sign_error" style="color:red;"></div>
+</div>
+<div id="add_coauthor_container"></div>
+
 {{ formset.management_form|crispy }}
 
 {% for form in formset.forms %}
@@ -49,6 +56,19 @@
                            placeholder="{{ field.label }}">
                 {% endwith %}
 
+                {% with field=form.percentage %}
+                    
+                    {% for error in field.errors %}
+                        <span class="text-danger">{{ error|escape }}</span>
+                    {% endfor %}
+                    <input type="number" step="0.01" min="0" class="form-control js-percentage"
+                    id="{{ field.id_for_label }}"
+                    name="{{ field.html_name }}"
+                    value="{{ field.value|default_if_none:'' }}"
+                    placeholder="{{ field.label }}"
+                    >
+                {% endwith %}
+
                 <div class="input-group-append">
                     <div class="btn btn-danger remove_coauthor_button">
                         Usuń
@@ -60,13 +80,71 @@
         </div>
         {{ form.DELETE }}
     </div>
-
 {% endfor %}
 
 <script type="text/javascript">
+    
+    function recalcTotal() {
+        let totalPercentage = 0; 
+
+        $(".js-percentage").each(function () {
+            totalPercentage += Number($(this).val() || 0);
+        });
+
+        const remaining = Math.round((100 - totalPercentage) * 100) / 100;
+        $("#author_percentage").text(`Twój udział: ${remaining}%`);
+        if(remaining < 0){
+            $("#author_percentage").css("color", "red");
+        }
+        else{
+            $("#author_percentage").css("color", "black");
+        }
+        return totalPercentage;
+    }
+
+    $(document).on("input", ".js-percentage", function () {
+        recalcTotal();
+    });
+    $(document).on("change", "input[name$='-DELETE']", recalcTotal);
+
+    $(document).ready(function () {
+        recalcTotal();
+    });
+
+    function validateTotal() {
+        const total = recalcTotal();
+        const ok = total < 100;
+
+        $("#total_error").text(ok ? "" : 
+        `Błąd: Suma procentów wspołautorów musi być < 100 (autor musi mieć > 0%)`);
+
+        return ok;
+    }
+
+
+    $("form").on("submit", function (e) {
+        if (!validateTotal())  {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
     $('.formset_row-{{ formset.prefix }}').formset({
         prefix: '{{ formset.prefix }}',
         add_btn: $('#add_coauthor_btn'),
         remove_btn_class: 'remove_coauthor_button',
+
+        added: function(row){
+            $("#add_coauthor_container").after(row);
+            recalcTotal();
+        },
+        removed: function(row) {
+            row.find("input[name$='-percentage']").val("")
+            recalcTotal();
+        }
+    });
+
+    $(function () {
+        recalcTotal();
     });
 </script>

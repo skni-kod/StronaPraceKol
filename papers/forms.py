@@ -2,9 +2,11 @@ import re
 
 from crispy_forms.helper import FormHelper
 from django import forms
+from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.fields import SummernoteTextFormField
+from django.core.exceptions import ValidationError
 
 from .models import *
 
@@ -30,19 +32,43 @@ UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadFo
 class CoAuthorForm(forms.ModelForm):
     class Meta:
         model = CoAuthor
-        fields = ['name', 'surname', 'email']
+        fields = ['name', 'surname', 'email', 'percentage']
         labels = {
             'name': _('Imię'),
-            'surname': _('Nazwisko')
+            'surname': _('Nazwisko'),
+            'percentage': _('Procent udziału')
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
 
+class CoAuthorInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        total = 0
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            if form.cleaned_data.get("DELETE"):
+                continue
 
-CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,
-                                        fields=['name', 'surname', 'email'], extra=1,
+            p = form.cleaned_data.get("percentage") or 0
+            
+
+            if p < 0:
+                raise ValidationError(_("Procentowy udział wspołautora nie może być ujemny."))
+            
+            total += p
+
+        
+        # Co-authors must take less than 100% so author has at least 0.01%
+        if total >= 99.99:
+            raise ValidationError(_("Suma procentów wspołautorów musi być mniejsza niż 100, aby autor miał dodatni udział (teraz %(val)s)."),
+                                  params={"val": round(total, 2)},)
+
+CoAuthorFormSet = inlineformset_factory(Paper, CoAuthor, form=CoAuthorForm,formset=CoAuthorInlineFormSet,
+                                        fields=['name', 'surname', 'email', 'percentage'], extra=1,
                                         can_delete=True)
 
 
