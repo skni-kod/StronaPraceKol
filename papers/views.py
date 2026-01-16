@@ -175,14 +175,14 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        co_authors = context['coAuthors']
+        coAuthors = context['coAuthors']
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
             
             co_author_total = 0
-            if co_authors.is_valid():
-                for co_author_form in co_authors.forms:
+            if coAuthors.is_valid():
+                for co_author_form in coAuthors.forms:
                     if not co_author_form.cleaned_data.get("DELETE"):
                         percentage = co_author_form.cleaned_data.get("percentage") or 0
                         co_author_total += percentage
@@ -190,9 +190,9 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
 
-            if co_authors.is_valid():
-                co_authors.instance = self.object
-                co_authors.save()
+            if coAuthors.is_valid():
+                coAuthors.instance = self.object
+                coAuthors.save()
 
             if files.is_valid():
                 # receiced a list of file fields
@@ -266,7 +266,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        co_authors = context['coAuthors']
+        coAuthors = context['coAuthors']
         files = context['files']
         statement_form = context['statement']
         
@@ -274,17 +274,17 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             form.instance.author = self.request.user
             
             co_author_total = 0
-            if co_authors.is_valid():
-                for co_author_form in co_authors.forms:
+            if coAuthors.is_valid():
+                for co_author_form in coAuthors.forms:
                     if not co_author_form.cleaned_data.get("DELETE"):
                         percentage = co_author_form.cleaned_data.get("percentage") or 0
                         co_author_total += percentage
             
             form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
-            if co_authors.is_valid():
-                co_authors.instance = self.object
-                co_authors.save()
+            if coAuthors.is_valid():
+                coAuthors.instance = self.object
+                coAuthors.save()
             
             if statement_form.is_valid() and 'file' in self.request.FILES:
                 for file_field in self.request.FILES.getlist('file'):
@@ -586,7 +586,7 @@ def paper_pdf_form_view(request, pk):
     if request.user != paper.author and not request.user.is_staff:
         return redirect('paperDetail', pk=pk)
     
-    co_authors_count = paper.coauthor_set.count() + 1
+    coAuthors_count = paper.coauthor_set.count() + 1
     
     formset_prefix = 'authors'
 
@@ -625,7 +625,7 @@ def paper_pdf_form_view(request, pk):
                 'address': '',
             })
 
-        while len(initial_data) < co_authors_count:
+        while len(initial_data) < coAuthors_count:
             initial_data.append({})
 
         formset = AuthorPersonalDataFormSet(
@@ -654,7 +654,6 @@ def paper_statement_pdf(request, pk):
 
     contributors = []
     if authors_data:
-        # Główny autor z danymi z formularza + procent z bazy
         if authors_data:
             entry = authors_data[0]
             name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
@@ -665,9 +664,8 @@ def paper_statement_pdf(request, pk):
                 'percentage': paper.author_percentage,
             })
         
-        # Współautorzy z danymi z formularza + procenty z bazy
-        coauthors = paper.coauthor_set.all()
-        for idx, coauthor in enumerate(coauthors):
+        coAuthors = paper.coauthor_set.all()
+        for idx, coauthor in enumerate(coAuthors):
             if idx + 1 < len(authors_data):
                 entry = authors_data[idx + 1]
                 name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
@@ -678,7 +676,6 @@ def paper_statement_pdf(request, pk):
                     'percentage': coauthor.percentage,
                 })
     else:
-        # Fallback: tylko dane z bazy (bez PESEL/adresu)
         contributors.append({
             'name': f"{paper.author.first_name} {paper.author.last_name}".strip() or paper.author.username,
             'pesel': '',
@@ -693,7 +690,6 @@ def paper_statement_pdf(request, pk):
                 'percentage': coauthor.percentage,
             })
     
-    # Dodaj listę pozostałych autorów dla każdego autora
     for idx, contributor in enumerate(contributors):
         other_authors = [c for i, c in enumerate(contributors) if i != idx]
         contributor['other_authors'] = other_authors

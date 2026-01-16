@@ -5,15 +5,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
-from django.views.static import serve
 from braces.views import CsrfExemptMixin
 from django.shortcuts import redirect
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
-from StronaProjektyKol.settings import BASE_DIR, SITE_NAME
 from .filters import DocumentFilter
 from .forms import *
 from .models import Document, UploadedFile
+from StronaProjektyKol.settings import BASE_DIR, SITE_NAME
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.static import serve
+
 
 
 class DocumentListView(LoginRequiredMixin, ListView):
