@@ -4,10 +4,14 @@ services:
     build: .
     env_file:
       - ./.env
+    environment:
+      - GOTENBERG_URL=http://gotenberg:3000
     restart: always
     volumes:
       - ./static:/app/static:rw
       - ./media:/app/media:rw
+    depends_on:
+      - gotenberg
 
   nginx:
     image: nginx:latest
@@ -22,3 +26,9 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - django-web
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    restart: always
+    ports:
+      - "3000:3000"

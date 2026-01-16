@@ -1,20 +1,19 @@
 import os
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.static import serve
 from braces.views import CsrfExemptMixin
 from django.shortcuts import redirect
-from django.views.static import serve
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR
-from .models import Document, UploadedFile
+from StronaProjektyKol.settings import BASE_DIR, SITE_NAME
 from .filters import DocumentFilter
 from .forms import *
+from .models import Document, UploadedFile
 
 
 class DocumentListView(LoginRequiredMixin, ListView):
@@ -102,6 +101,11 @@ class DocumentCreateView(LoginRequiredMixin, CreateView):
     form_class = DocumentCreationForm
     success_url = '/'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super(DocumentCreateView, self).get_context_data(**kwargs)
         context['form'].fields['club'].empty_label = 'Wybierz koło naukowe'
@@ -149,6 +153,11 @@ class DocumentEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Document
     form_class = DocumentCreationForm
     template_name = 'documents/document_add.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def test_func(self):
         document = self.get_object()

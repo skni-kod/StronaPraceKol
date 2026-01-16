@@ -13,6 +13,7 @@ urlpatterns = [
     path('paper/<int:paper>/review/<int:reviewer>/', views.userReviewShow, name='reviewShow'),
     path('paper/<int:pk>/review/assign/', views.ReviewerAssignmentView.as_view(), name='reviewerAssignment'),
     path('paper/<int:pk>/pdf/form/', views.paper_pdf_form_view, name='paperPDFForm'),
+    path('paper/<int:pk>/pdf/statement/', views.paper_statement_pdf, name='paperStatementPdf'),
 
     #reviews
     path('review/', views.ReviewListView.as_view(), name='reviewList'),

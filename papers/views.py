@@ -15,9 +15,11 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
+from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
 from .filters import PaperFilter
 from .forms import *
+import requests
+
 
 
 class PaperListView(LoginRequiredMixin, ListView):
@@ -280,9 +282,9 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             
             form.instance.author_percentage = round(100 - co_author_total, 2)
             self.object = form.save()
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
             
             if statement_form.is_valid() and 'file' in self.request.FILES:
                 for file_field in self.request.FILES.getlist('file'):
@@ -604,8 +606,7 @@ def paper_pdf_form_view(request, pk):
             request.session['pdf_authors_data'] = authors_data
             request.session.modified = True
             
-            messages.success(request, 'Dane autora zostały zapisane.')
-            return redirect('paperDetail', pk=pk)
+            return redirect('paperStatementPdf', pk=pk)
     else:
         initial_data = [
             {
@@ -640,3 +641,82 @@ def paper_pdf_form_view(request, pk):
     }
     
     return render(request, 'papers/paper_pdf_form.html', context)
+
+
+@login_required
+def paper_statement_pdf(request, pk):
+    paper = Paper.objects.get(pk=pk)
+
+    if request.user != paper.author and not request.user.is_staff:
+        return redirect('paperDetail', pk=pk)
+
+    authors_data = request.session.get('pdf_authors_data') or []
+
+    contributors = []
+    if authors_data:
+        # Główny autor z danymi z formularza + procent z bazy
+        if authors_data:
+            entry = authors_data[0]
+            name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
+            contributors.append({
+                'name': name or 'Autor',
+                'pesel': entry.get('pesel', ''),
+                'address': entry.get('address', ''),
+                'percentage': paper.author_percentage,
+            })
+        
+        # Współautorzy z danymi z formularza + procenty z bazy
+        coauthors = paper.coauthor_set.all()
+        for idx, coauthor in enumerate(coauthors):
+            if idx + 1 < len(authors_data):
+                entry = authors_data[idx + 1]
+                name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
+                contributors.append({
+                    'name': name or coauthor.name,
+                    'pesel': entry.get('pesel', ''),
+                    'address': entry.get('address', ''),
+                    'percentage': coauthor.percentage,
+                })
+    else:
+        # Fallback: tylko dane z bazy (bez PESEL/adresu)
+        contributors.append({
+            'name': f"{paper.author.first_name} {paper.author.last_name}".strip() or paper.author.username,
+            'pesel': '',
+            'address': '',
+            'percentage': paper.author_percentage,
+        })
+        for coauthor in paper.coauthor_set.all():
+            contributors.append({
+                'name': f"{coauthor.name} {coauthor.surname}".strip(),
+                'pesel': '',
+                'address': '',
+                'percentage': coauthor.percentage,
+            })
+    
+    # Dodaj listę pozostałych autorów dla każdego autora
+    for idx, contributor in enumerate(contributors):
+        other_authors = [c for i, c in enumerate(contributors) if i != idx]
+        contributor['other_authors'] = other_authors
+
+    html = render_to_string(
+        'papers/paper_statement.html',
+        {
+            'paper': paper,
+            'contributors': contributors,
+        },
+    )
+
+    url = f"{GOTENBERG_URL}/forms/chromium/convert/html"
+    files = {
+        'index.html': ('index.html', html.encode('utf-8'), 'text/html'),
+    }
+
+    try:
+        response = requests.post(url, files=files, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException:
+        return HttpResponse('Błąd generowania PDF', status=502)
+
+    http_response = HttpResponse(response.content, content_type='application/pdf')
+    http_response['Content-Disposition'] = 'inline; filename="oswiadczenie.pdf"'
+    return http_response
