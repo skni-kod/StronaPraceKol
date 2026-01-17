@@ -72,6 +72,27 @@
                             </div>
                         {% endwith %}
 
+
+                        {% with field=form.author_phone %}
+                        <p></p>
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="col-md-8 offset-md-2">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input_author_phone">{{ field.label }}
+                                            <span class="ml-2 rounded px-1 bg-info text-white" data-toggle="tooltip" data-placement="top" 
+                                                title="Numer telefonu jest opcjonalny, jednak prosimy o jego podanie, gdyż znacząco ułatwia on komunikację">
+                                                ?
+                                            </span>
+                                        </span>
+                                    </div>
+                                    {% render_field field placeholder=field.help_text class='form-control' %}
+                                </div>
+                            </div>
+                        {% endwith %}
+
                         {% with field=form.approved %}
                             <div class="col-md-8 offset-md-2">
                                 {% for error in field.errors %}

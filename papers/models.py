@@ -33,6 +33,7 @@ class Paper(models.Model):
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     author_percentage= models.FloatField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    author_phone = models.CharField(max_length=16, blank=True)
     keywords = models.CharField(max_length=128)
     description = models.TextField()
     approved = models.BooleanField(default=False)
