@@ -55,13 +55,13 @@
             <ul>
                     <li>
                         <div class="row ml-1">
-                            {{ paper.author.first_name }} {{ paper.author.last_name }}
+                            {{ paper.author.first_name }} {{ paper.author.last_name }} - udział {{paper.author_percentage}}%
                         </div>
                     </li>
                 {% for author in paper.coauthor_set.all %}
                     <li>
                         <div class="row ml-1">
-                            <a href="mailto:{{ author.email }}">{{ author.name }} {{ author.surname }}</a>
+                            <a href="mailto:{{ author.email }}">{{ author.name }} {{ author.surname }}</a> &nbsp; - udział {{author.percentage}}%
                         </div>
                     </li>
                 {% endfor %}

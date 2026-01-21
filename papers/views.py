@@ -173,16 +173,21 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
+        
+        if not co_authors.is_valid():
+            return self.form_invalid(form)
+        
         with transaction.atomic():
             form.instance.author = self.request.user
-            form.save()
+            form.instance.author_percentage = co_authors.calculate_author_percentage()
             self.object = form.save()
 
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
+
             if files.is_valid():
                 # receiced a list of file fields
                 # each file field has a list of files
@@ -250,13 +255,20 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
+        
+        if not co_authors.is_valid():
+            return self.form_invalid(form)
+        
         with transaction.atomic():
+            form.instance.author = self.request.user
+            form.instance.author_percentage = co_authors.calculate_author_percentage()
             self.object = form.save()
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
                     for file_field in file_fields[1]:
