@@ -89,14 +89,27 @@ class PaperCreationForm(forms.ModelForm):
 
     class Meta:
         model = Paper
-        fields = ['title', 'club', 'keywords', 'description', 'approved']
+        fields = ['title', 'club', 'keywords', 'description', 'approved', 'author_phone']
         exclude = ['author', 'reviewers', 'statement']
-        labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'))
-        help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'))
+        labels = dict(title=_('Tytuł'), club=_('Koło naukowe'), keywords=_('Słowa kluczowe'), description=_('Opis'), author_phone=_('Numer telefonu autora'))
+        help_texts = dict(title=_('Tytuł'), keywords=_('Słowa kluczowe'), author_phone=_('Numer telefonu autora'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['club'].queryset = StudentClub.objects.exclude(name='Brak')
+
+    def clean_author_phone(self):
+        phone = self.cleaned_data.get('author_phone', '').strip()
+        if not phone:
+            return phone
+        if not re.match(r'^[\d\s\-+()]+$', phone):
+            raise ValidationError(_('Numer telefonu może zawierać tylko cyfry, spacje, myślniki, plus i nawiasy.'))
+        digits_only = re.sub(r'\D', '', phone)
+        if len(digits_only) < 9:
+            raise ValidationError(_('Numer telefonu musi zawierać co najmniej 9 cyfr.'))
+        if len(digits_only) > 15:
+            raise ValidationError(_('Numer telefonu może zawierać maksymalnie 15 cyfr.'))
+        return phone
 
 
 ### REVIEW FORMS
