@@ -37,3 +37,26 @@ def send_message_notification_email(message):
         html_message=html_message,
         fail_silently=False,
     )
+
+def send_paper_creation_notification_email(paper):
+    author = paper.author
+
+    if not author.email:
+        return
+
+    subject = f'Potwierdzenie utworzenia artykułu: {paper.title}'
+    context = {
+        'paper': paper,
+    }
+
+    html_message = render_to_string('email/paper_creation_notification.html', context)
+    plain_message = render_to_string('email/paper_creation_notification.txt', context)
+
+    send_mail(
+        subject=subject,
+        message=plain_message,
+        from_email=SITE_ADMIN_MAIL,
+        recipient_list=[author.email],
+        html_message=html_message,
+        fail_silently=False,
+    )

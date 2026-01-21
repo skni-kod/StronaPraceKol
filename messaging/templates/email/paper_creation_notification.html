@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potwierdzenie otrzymania artykułu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .review-box {
+            background-color: white;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+        .footer {
+            background-color: #6c757d;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 0 0 5px 5px;
+            font-size: 12px;
+        }
+        .paper-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .reviewer-info {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .grades-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .grades-list li {
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .grades-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Potwierdzenie otrzymania artykułu</h2>
+    </div>
+
+    <div class="content">
+        <p>Szanowny/a Autorze,</p>
+
+        <p>Otrzymano Twój artykuł: <span class="paper-title">{{ paper.title }}</span></p>
+
+        <div class="review-box">
+            <div class="reviewer-info">
+                <strong>Data dodania:</strong> {{ paper.created_at|date:"d F Y, H:i" }}
+            </div>
+            <div>
+                <strong>Autorzy:</strong>
+                <ul class="grades-list">
+                    <li>
+                        <strong>{{ paper.author.first_name }} {{ paper.author.last_name }}</strong> (główny autor) - {{ paper.author_percentage }}%
+                    </li>
+                    {% for coauthor in paper.coauthor_set.all %}
+                        <li>
+                            <strong>{{ coauthor.name }} {{ coauthor.surname }}</strong> - {{ coauthor.percentage }}% {% if coauthor.email %}({{ coauthor.email }}){% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% if paper.statement %}
+        <p>Otrzymano również Twoje oświadczenie dotyczące oryginalności artykułu.</p>
+        {% else %}
+        <p>Jeżeli jeszcze nie odesłałeś oświadczenia, prosimy o jego niezwłoczne przesłanie.</p>
+        {% endif %}
+
+        <p>Z poważaniem,<br>
+        System Zarządzania Artykułami</p>
+    </div>
+
+    <div class="footer">
+        To jest automatyczne powiadomienie. Prosimy nie odpowiadać na ten e-mail.
+    </div>
+</body>
+</html>
