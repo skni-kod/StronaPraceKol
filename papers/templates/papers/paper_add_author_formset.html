@@ -3,12 +3,13 @@
 {% load widget_tweaks %}
 
 <div class="btn btn-primary mb-4" id="add_coauthor_btn">Dodaj współautora</div>
+<div class="btn btn-primary mb-4" id="split-percentage-evenly-btn">Podziel udział po równo</div>
 <div id="cont">
-    <p id="author_percentage">Twój udział: %</p>
-    <div id="total_error" style="color:red;"></div>
-    <div id="sign_error" style="color:red;"></div>
+    <p id="author-percentage">Twój udział: %</p>
+    <div id="total-error" style="color:red;"></div>
+    <div id="sign-error" style="color:red;"></div>
 </div>
-<div id="add_coauthor_container"></div>
+<div id="add-coauthor-container"></div>
 
 {{ formset.management_form|crispy }}
 
@@ -61,10 +62,10 @@
                     {% for error in field.errors %}
                         <span class="text-danger">{{ error|escape }}</span>
                     {% endfor %}
-                    <input type="number" step="0.01" min="0" class="form-control js-percentage"
+                    <input type="number" step="0.01" min="0" max="100" class="form-control js-percentage"
                     id="{{ field.id_for_label }}"
                     name="{{ field.html_name }}"
-                    value="{{ field.value|default_if_none:'' }}"
+                    value="{{ field.value|stringformat:".2f"}}"
                     placeholder="{{ field.label }}"
                     >
                 {% endwith %}
@@ -85,27 +86,42 @@
 <script type="text/javascript">
     
     function recalcTotal() {
-        let totalPercentage = 0; 
+        let total_percentage = 0; 
 
         $(".js-percentage").each(function () {
-            totalPercentage += Number($(this).val() || 0);
+            total_percentage += parseFloat($(this).val() || 0);
         });
 
-        const remaining = Math.round((100 - totalPercentage) * 100) / 100;
-        $("#author_percentage").text(`Twój udział: ${remaining}%`);
+        const remaining = Math.round((100 - total_percentage) * 100) / 100;
+        $("#author-percentage").text(`Twój udział: ${remaining}%`);
         if(remaining < 0){
-            $("#author_percentage").css("color", "red");
+            $("#author-percentage").css("color", "red");
         }
         else{
-            $("#author_percentage").css("color", "black");
+            $("#author-percentage").css("color", "black");
         }
-        return totalPercentage;
+        return total_percentage;
     }
 
     $(document).on("input", ".js-percentage", function () {
         recalcTotal();
     });
     $(document).on("change", "input[name$='-DELETE']", recalcTotal);
+    
+    // Clearing value on focus to show placeholder
+    $(document).on("focus", ".js-percentage", function () {
+        if ((parseFloat($(this).val() || 0) === 0) && ($(this).val() !== "")) {
+            $(this).val("");
+        }
+    });
+    
+    //Restoring 0.00 when left empty
+    $(document).on("blur", ".js-percentage", function () {
+        if ($(this).val() === "") {
+            $(this).val("0.00");
+            recalcTotal();
+        }
+    });
 
     $(document).ready(function () {
         recalcTotal();
@@ -113,9 +129,9 @@
 
     function validateTotal() {
         const total = recalcTotal();
-        const ok = total < 100;
+        const ok = !(total > 99.99);
 
-        $("#total_error").text(ok ? "" : 
+        $("#total-error").text(ok ? "" : 
         `Błąd: Suma procentów wspołautorów musi być < 100 (autor musi mieć > 0%)`);
 
         return ok;
@@ -135,13 +151,27 @@
         remove_btn_class: 'remove_coauthor_button',
 
         added: function(row){
-            $("#add_coauthor_container").after(row);
+            $("#add-coauthor-container").after(row);
             recalcTotal();
         },
         removed: function(row) {
             row.find("input[name$='-percentage']").val("")
             recalcTotal();
         }
+    });
+
+    $("#split-percentage-evenly-btn").on("click", function(){
+        const visible_coauthors = $('.formset_row-coauthor_set').filter(function() {
+            return $(this).css('display') !== 'none';
+        });
+        const author_count = 1;
+        const number_of_coauthors = visible_coauthors.length + author_count;
+        
+        const percentage_splited_evenly = 100 / number_of_coauthors;
+        const percentage_rounded = Math.round(percentage_splited_evenly * 100) / 100;
+        
+        visible_coauthors.find(".js-percentage").val(percentage_rounded.toFixed(2));
+        recalcTotal();
     });
 
     $(function () {

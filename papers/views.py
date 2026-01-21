@@ -15,12 +15,11 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
+from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
 from .filters import PaperFilter
 from .forms import *
-import requests
 
-
+STATEMENT_FILE = 'statement-file'
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -156,11 +155,11 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             context['files'] = UploadFileFormSet(
                 self.request.POST, self.request.FILES)
             context['statement'] = FileUploadForm(
-                self.request.POST, self.request.FILES)
+                self.request.POST, self.request.FILES, prefix='statement')
         else:
             context['coAuthors'] = CoAuthorFormSet()
             context['files'] = UploadFileFormSet()
-            context['statement'] = FileUploadForm()
+            context['statement'] = FileUploadForm(prefix='statement')
 
         context['statement'].fields['file'].required = False
         context['statement'].fields['file'].widget.attrs['multiple'] = False
@@ -179,34 +178,32 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         files = context['files']
         with transaction.atomic():
             form.instance.author = self.request.user
-            
-            co_author_total = 0
-            if coAuthors.is_valid():
-                for co_author_form in coAuthors.forms:
-                    if not co_author_form.cleaned_data.get("DELETE"):
-                        percentage = co_author_form.cleaned_data.get("percentage") or 0
-                        co_author_total += percentage
-            
-            form.instance.author_percentage = round(100 - co_author_total, 2)
+            form.save()
             self.object = form.save()
 
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+            if context['statement'].is_valid():
+                statement_file = context['statement'].cleaned_data.get('file')
+                if statement_file:
+                    file_instance = UploadedFile(file=statement_file, paper=self.object)
+                    file_instance.save()
+                    self.object.statement = file_instance.pk
+                    self.object.save()
 
             if files.is_valid():
                 # receiced a list of file fields
                 # each file field has a list of files
                 # but file can be empty, so we need to check it
                 for file_fields in self.request.FILES.lists():
+                    if file_fields[0] == STATEMENT_FILE:
+                        continue
                     for file_field in file_fields[1]:
                         if len(file_fields[1]) > 0:
                             file_instance = UploadedFile(
                                 file=file_field, paper=self.object)
                             file_instance.save()
-                            if file_fields[0] == 'file':
-                                self.object.statement = file_instance.pk
-                                self.object.save()
 
         return super(PaperCreateView, self).form_valid(form)
 
@@ -247,16 +244,20 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.POST:
             context['coAuthors'] = CoAuthorFormSet(self.request.POST, instance=self.object)
             context['files'] = UploadFileFormSet(self.request.POST, self.request.FILES)
-            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES)
+            context['statement'] = FileUploadForm(self.request.POST, self.request.FILES, prefix='statement')
         else:
             context['coAuthors'] = CoAuthorFormSet(instance=self.object)
             context['files'] = UploadFileFormSet()
-            context['statement'] = FileUploadForm()
-        
-        context['uploaded_files'] = UploadedFile.objects.filter(paper=self.get_object())
+            context['statement'] = FileUploadForm(prefix='statement')
+
         context['statement'].fields['file'].required = False
         context['statement'].fields['file'].widget.attrs['multiple'] = False
-        
+
+        if self.object.statement:
+            context['current_statement'] = UploadedFile.objects.filter(pk=self.object.statement).first()
+
+        context['uploaded_files'] = UploadedFile.objects.filter(
+            paper=self.get_object()).exclude(pk=self.get_object().statement)
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
@@ -268,44 +269,36 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
         files = context['files']
-        statement_form = context['statement']
-        
+
+        if not coAuthors.is_valid():
+            return self.form_invalid(form)
+
         with transaction.atomic():
             form.instance.author = self.request.user
-            
-            co_author_total = 0
-            if coAuthors.is_valid():
-                for co_author_form in coAuthors.forms:
-                    if not co_author_form.cleaned_data.get("DELETE"):
-                        percentage = co_author_form.cleaned_data.get("percentage") or 0
-                        co_author_total += percentage
-            
-            form.instance.author_percentage = round(100 - co_author_total, 2)
+            form.instance.author_percentage = coAuthors.calculate_author_percentage()
             self.object = form.save()
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
-            
-            if statement_form.is_valid() and 'file' in self.request.FILES:
-                for file_field in self.request.FILES.getlist('file'):
-                    file_instance = UploadedFile(file=file_field, paper=self.object)
+            if context['statement'].is_valid():
+                statement_file = context['statement'].cleaned_data.get('file')
+                if statement_file:
+                    old_statement = UploadedFile.objects.filter(pk=self.object.statement).first()
+                    file_instance = UploadedFile(file=statement_file, paper=self.object)
                     file_instance.save()
+                    if old_statement:
+                        old_statement.delete()
                     self.object.statement = file_instance.pk
                     self.object.save()
-            
-            if 'statement_from_files' in self.request.POST:
-                statement_pk = self.request.POST.get('statement_from_files')
-                if statement_pk:
-                    self.object.statement = int(statement_pk)
-                    self.object.save()
-            
+
             if files.is_valid():
                 for file_fields in self.request.FILES.lists():
-                    if file_fields[0] != 'file':
-                        for file_field in file_fields[1]:
-                            file_instance = UploadedFile(
-                                file=file_field, paper=self.object)
-                            file_instance.save()
+                    if file_fields[0] == STATEMENT_FILE:
+                        continue
+                    for file_field in file_fields[1]:
+                        file_instance = UploadedFile(
+                            file=file_field, paper=self.object)
+                        file_instance.save()
         return super(PaperEditView, self).form_valid(form)
 
     def get_success_url(self):
@@ -577,8 +570,7 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
-
-
+      
 @login_required
 def paper_pdf_form_view(request, pk):
     paper = Paper.objects.get(pk=pk)
