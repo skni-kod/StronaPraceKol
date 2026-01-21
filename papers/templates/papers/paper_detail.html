@@ -146,6 +146,28 @@
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3 text-left">
+            <h5>Oświadczenie autorów:</h5>
+        </div>
+
+        <div class="col-md-8 text-left">
+            {% if paper.statement %}
+                {% for file in paper.uploadedfile_set.all %}
+                    {% if file.pk == paper.statement %}
+                        <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        <small class="text-muted d-block">
+                            Przesłano: {{ file.created_at|date:"d/m/Y G:i" }}
+                        </small>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <span class="text-muted">Brak oświadczenia</span>
+            {% endif %}
+        </div>
+    </div>
+<br>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 text-left">
             <h5>Przesłane pliki:</h5>
         </div>
 
@@ -156,13 +178,11 @@
             {% else %}
                 <ul style="word-wrap: break-word;">
                     {% for file in paper.uploadedfile_set.all %}
-                        <li>
-                        {% if file.pk == paper.statement %}
-                            <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}"> Oświadczenie </a>
-                        {% else %}
-                            <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        {% if file.pk != paper.statement %}
+                            <li>
+                                <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                            </li>
                         {% endif %}
-                        </li>
                     {% endfor %}
                 </ul>
             {% endif %}

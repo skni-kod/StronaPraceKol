@@ -15,9 +15,10 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
+from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
 from .filters import PaperFilter
 from .forms import *
+import requests
 
 STATEMENT_FILE = 'statement-file'
 
@@ -280,6 +281,12 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
+            
+            statement_from_files = self.request.POST.get('statement_from_files')
+            if statement_from_files:
+                self.object.statement = int(statement_from_files)
+                self.object.save()
+            
             if context['statement'].is_valid():
                 statement_file = context['statement'].cleaned_data.get('file')
                 if statement_file:

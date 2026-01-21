@@ -76,12 +76,18 @@
         <ol>
             <li>Wspólnie z innymi autorami napisałem/am utwór o wstępnej objętości ____ arkuszy autorskich tekstu oraz wykonałem/am _____ ilustracji o wstępnej objętości _____ arkuszy autorskich, zwany w dalszej treści Utworem pt.: {{paper.title}}
                 , który ma być zamieszczony w czasopiśmie/monografii* o nazwie: _______________________________________________________________________________________ zwanej w dalszej części <strong>Publikacją.</strong> </li>
-            <li>Mój udział procentowy w osobistych i majątkowych prawach autorskich do Utworu wynosi {{person.percentage}}%, zaś pozostałych autorów:
+            <li>Mój udział procentowy w osobistych i majątkowych prawach autorskich do Utworu wynosi {{person.percentage}}%
+                {% if person.other_authors %}
+                , zaś pozostałych autorów:
                 <ol>
                     {% for other in person.other_authors %}
-                    <li>{{other.name}} - {{other.percentage}}%</li>
+                         <li>{{other.name}} - {{other.percentage}}%</li>
                     {% endfor %}
                 </ol>
+                {% else %}
+                .
+                {% endif %}
+            </li>
             </li>
             <li>Mój udział procentowy w osobistych i majątkowych prawach autorskich do całości Publikacji wynosi {{person.percentage}}%.</li>
             <li>Moje majątkowe prawa autorskie do Utworu nie są ograniczone w zakresie objętym niniejszym oświadczeniem.</li>

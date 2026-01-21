@@ -134,17 +134,9 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-3 text-left">
-                                <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
-                                    <button type="button" class="btn btn-primary">
-                                        Wzory oświadczeń
-                                    </button>
-                                </a>
-                            </div>
                         </div>
 
                         <hr>
-
                             <div class="row">
                                 <div class="col-md-8 offset-md-2 mb-4">
                                     <div class="alert alert-info" role="alert">
@@ -167,7 +159,7 @@
                                         Skan oświadczenia
                                     </h5>
                                 </div>
-                                <div class="col-9 text-left">
+                                <div class="col-5 text-right ml-4">
                                     <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
                                         <button type="button" class="btn btn-primary">
                                             Wzory oświadczeń
@@ -184,111 +176,63 @@
                             <hr>
 
                             <div class="row">
-                                <div class="col-md-8 offset-md-2 mb-4">
-                                    {% if object.statement %}
-                                        <div class="mb-3 p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-2">Bieżące oświadczenie:</small>
-                                            <div class="my-2">
-                                                {% for file in uploaded_files %}
-                                                    {% if file.pk == object.statement %}
-                                                        <a href="{% url 'paperFileDownload' pk=object.id item=file.id %}">
-                                                            <strong>{{ file.filename }}</strong>
-                                                        </a>
-                                                    {% endif %}
-                                                {% endfor %}
+                                <div class="col-md-6 offset-md-3">
+                                    {% if current_statement %}
+                                        <div id="current-statement-display"
+                                             class="d-flex align-items-center justify-content-between p-2 border rounded bg-light">
+                                            <div class="d-flex flex-column flex-grow-1 mr-3" style="min-width: 0;">
+                                                <span class="text-truncate" title="{{ current_statement.filename }}">
+                                                    {{ current_statement.filename }}
+                                                </span>
+                                                <small class="text-muted" style="font-size: 0.7rem;">
+                                                    Przesłano: {{ current_statement.created_at|date:"H:i:s l, d.m.Y" }}
+                                                </small>
+                                            </div>
+                                            <button type="button" class="btn btn-warning btn-sm" id="toggle-statement-btn">
+                                                Popraw
+                                            </button>
+                                        </div>
+                                        <div id="statement-input-container" class="mt-2" style="display: none;">
+                                            <div class="d-flex align-items-center justify-content-between p-2 border rounded">
+                                                <div class="flex-grow-1 mr-3">
+                                                    {% render_field statement.file class='form-control-file' %}
+                                                </div>
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                        id="cancel-statement-btn">
+                                                    Anuluj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex align-items-center p-2 border rounded">
+                                            <div class="flex-grow-1">
+                                                {% render_field statement.file class='form-control-file' %}
                                             </div>
                                         </div>
                                     {% endif %}
-                                    <div class="mb-3">
-                                        <label class="form-label font-weight-bold">Zmień/Dodaj oświadczenie</label>
-                                        {% render_field statement.file %}
-                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row mt-4">
-                                <div class="col-md-8 offset-md-2 mb-4">
-                                    <label class="form-label font-weight-bold">Wybierz istniejący plik jako oświadczenie</label>
-                                    <div class="card">
-                                        <div class="card-body">
-                                            {% if uploaded_files %}
-                                                <div class="list-group">
-                                                    {% for file in uploaded_files %}
-                                                        <label class="list-group-item">
-                                                            <input type="radio" name="statement_from_files" value="{{ file.pk }}" {% if file.pk == object.statement %}checked{% endif %}>
-                                                            <span class="ml-2">{{ file.filename }}</span>
-                                                        </label>
-                                                    {% endfor %}
-                                                </div>
-                                                <small class="form-text text-muted mt-2 d-block">Zaznacz plik, aby ustawić go jako oświadczenie</small>
-                                            {% else %}
-                                                <p class="text-muted mb-0">Brak plików do wyboru. Dodaj pliki w sekcji poniżej.</p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                        <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                {% if current_statement %}
-                                    <div id="current-statement-display"
-                                         class="d-flex align-items-center justify-content-between p-2 border rounded bg-light">
-                                        <div class="d-flex flex-column flex-grow-1 mr-3" style="min-width: 0;">
-                                    <span class="text-truncate" title="{{ current_statement.filename }}">
-                                        {{ current_statement.filename }}
-                                    </span>
-                                            <small class="text-muted" style="font-size: 0.7rem;">
-                                                Przesłano: {{ current_statement.created_at|date:"H:i:s l, d.m.Y" }}
-                                            </small>
-                                        </div>
-                                        <button type="button" class="btn btn-warning btn-sm" id="toggle-statement-btn">
-                                            Popraw
-                                        </button>
-                                    </div>
-                     
-                                    <div id="statement-input-container" class="mt-2" style="display: none;">
-                                        <div class="d-flex align-items-center justify-content-between p-2 border rounded">
-                                            <div class="flex-grow-1 mr-3">
-                                                {% render_field statement.file class='form-control-file' %}
-                                    </div>
-                                            <button type="button" class="btn btn-secondary btn-sm"
-                                                    id="cancel-statement-btn">
-                                                Anuluj
-                                    </button>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="d-flex align-items-center p-2 border rounded">
-                                        <div class="flex-grow-1">
-                                            {% render_field statement.file class='form-control-file' %}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="mb-5"></div>
-
+                            <div class="mb-5"></div>
+                        {% endif %}
 
                         {{ filesForm }}
 
-                        <div class="row my-4">
-                            <div class="col-md-6 offset-md-3">
+                        <h5 class="mt-5 mb-4">Pliki artykułu</h5>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2">
                                 {% for file in uploaded_files %}
-                                    <div class="uploaded-file-row align-items-center justify-content-between p-2 mb-2 border rounded bg-light"
-                                         style="display: flex;">
-                                        <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;"
-                                             class="mr-3">
-                                            <span class="text-truncate"
-                                                  title="{{ file.filename }}">{{ file.filename }}</span>
-                                            <small class="text-muted" style="font-size: 0.7rem;">
-                                                Przesłano: {{ file.created_at|date:"H:i:s l, d.m.Y" }}
-                                            </small>
+                                    <div class="d-flex align-items-center justify-content-between p-2 mb-2 border rounded bg-light" id="file-row-{{ file.pk }}">
+                                        <div style="flex-grow: 1; min-width: 0;" class="mr-3">
+                                            <span class="text-truncate d-block" title="{{ file.filename }}">{{ file.filename }}</span>
+                                            <small class="text-muted">{{ file.created_at|date:"H:i:s l, d.m.Y" }}</small>
                                         </div>
-                                        <button type="button" class="btn btn-danger btn-sm remove_file_button"
-                                                data-file-pk="{{ file.pk }}">
+                                        <button type="button" class="btn btn-danger btn-sm remove_file_button" data-file-pk="{{ file.pk }}">
                                             Usuń
                                         </button>
                                     </div>
+                                {% empty %}
+                                    <p class="text-muted">Nie ma jeszcze żadnych plików. Dodaj je korzystając z pola powyżej.</p>
                                 {% endfor %}
                             </div>
                         </div>
@@ -307,12 +251,19 @@
     </div>
 
     <script>
-        $('.remove_file_button').click(function () {
+        $(document).on('click', '.remove_file_button', function (e) {
+            e.preventDefault();
+            var filePk = $(this).data('file-pk');
+            var fileRow = $('#file-row-' + filePk);
+            
             var input = $("<input>")
                 .attr("type", "hidden")
-                .attr("name", "file-delete-" + $(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
+                .attr("name", "file-delete-" + filePk)
+                .val(filePk);
             $('#paper_form').append(input);
-            $(this).closest('.uploaded-file-row').hide();
+            fileRow.fadeOut(function() {
+                $(this).remove();
+            });
         });
 
         $('#toggle-statement-btn').click(function () {

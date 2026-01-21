@@ -34,5 +34,6 @@ class DocumentCreationForm(forms.ModelForm):
         labels = dict(name=_('Nazwa dokumentu'), club=_('Koło naukowe'))
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         self.fields['club'].queryset = StudentClub.objects.exclude(name='Brak')
