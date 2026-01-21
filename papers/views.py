@@ -1,28 +1,25 @@
-from urllib.parse import unquote
-
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
+from urllib.parse import unquote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse
+from django.utils.html import strip_tags
+from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
-
 from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL
 from .filters import PaperFilter
 from .forms import *
 
 STATEMENT_FILE = 'statement-file'
-
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -133,7 +130,7 @@ def paper_file_download(request, pk, item):
             name='reviewer').exists() or request.user.is_staff:
         document = UploadedFile.objects.get(pk=item)
         print("document", document)
-        filepath = str(BASE_DIR) + document.file.url
+        filepath = str(BASE_DIR)+document.file.url
         print("filepath", unquote(filepath))
         return serve(request, os.path.basename(unquote(filepath)), os.path.dirname(unquote(filepath)))
     else:
@@ -272,7 +269,13 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = self.get_context_data()
         coAuthors = context['coAuthors']
         files = context['files']
+
+        if not coAuthors.is_valid():
+            return self.form_invalid(form)
+
         with transaction.atomic():
+            form.instance.author = self.request.user
+            form.instance.author_percentage = coAuthors.calculate_author_percentage()
             self.object = form.save()
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
@@ -410,7 +413,6 @@ def send_review_notification_email(review):
 
     msg.attach_alternative(html_content, "text/html")
     msg.send()
-
 
 class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Review
