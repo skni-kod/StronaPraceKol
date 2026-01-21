@@ -119,50 +119,84 @@
 
                         {{ coAuthorsForm }}
 
-                        {% if site_type == 'create' %}
-                            <div class="row mt-5">
-                                <div class="col-3">
-                                    <h5>
-                                        Skan oświadczenia
-                                    </h5>
-                                </div>
-                                <div class="col-3 text-left">
-                                    <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
-                                        <button type="button" class="btn btn-primary">
-                                            Wzory oświadczeń
+
+                        <div class="row mt-5">
+                            <div class="col-3">
+                                <h5>
+                                    Skan oświadczenia
+                                </h5>
+                            </div>
+                            <div class="col-3 text-left">
+                                <a href="https://oficyna.prz.edu.pl/materialy-do-pobrania" target="_blank">
+                                    <button type="button" class="btn btn-primary">
+                                        Wzory oświadczeń
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                {% if current_statement %}
+                                    <div id="current-statement-display"
+                                         class="d-flex align-items-center justify-content-between p-2 border rounded bg-light">
+                                        <div class="d-flex flex-column flex-grow-1 mr-3" style="min-width: 0;">
+                                    <span class="text-truncate" title="{{ current_statement.filename }}">
+                                        {{ current_statement.filename }}
+                                    </span>
+                                            <small class="text-muted" style="font-size: 0.7rem;">
+                                                Przesłano: {{ current_statement.created_at|date:"H:i:s l, d.m.Y" }}
+                                            </small>
+                                        </div>
+                                        <button type="button" class="btn btn-warning btn-sm" id="toggle-statement-btn">
+                                            Popraw
                                         </button>
-                                    </a>
-                                </div>
+                                    </div>
+                                    <div id="statement-input-container" class="mt-2" style="display: none;">
+                                        <div class="d-flex align-items-center justify-content-between p-2 border rounded">
+                                            <div class="flex-grow-1 mr-3">
+                                                {% render_field statement.file class='form-control-file' %}
+                                    </div>
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                    id="cancel-statement-btn">
+                                                Anuluj
+                                    </button>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex align-items-center p-2 border rounded">
+                                        <div class="flex-grow-1">
+                                            {% render_field statement.file class='form-control-file' %}
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
+                        </div>
 
-                            <hr>
+                        <div class="mb-5"></div>
 
-                            <div class="row">
-                                <div class="col-md-4 offset-md-4 mb-4">
-                                    {% render_field statement.file %}
-                                </div>
-                            </div>
-
-                            <div class="mb-5"></div>
-                        {% endif %}
 
                         {{ filesForm }}
 
                         <div class="row my-4">
-                            <div class="col-6 offset-3">
+                            <div class="col-md-6 offset-md-3">
                                 {% for file in uploaded_files %}
-                                    <div class="my-2">
-                                        <div class="row">
-                                            <div class="col-sm-8">
-                                                {{ file.filename }}
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="btn btn-danger remove_file_button"
-                                                     data-file-pk="{{ file.pk }}">
-                                                    Usuń
-                                                </div>
-                                            </div>
+                                    <div class="uploaded-file-row align-items-center justify-content-between p-2 mb-2 border rounded bg-light"
+                                         style="display: flex;">
+                                        <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;"
+                                             class="mr-3">
+                                            <span class="text-truncate"
+                                                  title="{{ file.filename }}">{{ file.filename }}</span>
+                                            <small class="text-muted" style="font-size: 0.7rem;">
+                                                Przesłano: {{ file.created_at|date:"H:i:s l, d.m.Y" }}
+                                            </small>
                                         </div>
+                                        <button type="button" class="btn btn-danger btn-sm remove_file_button"
+                                                data-file-pk="{{ file.pk }}">
+                                            Usuń
+                                        </button>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -187,7 +221,18 @@
                 .attr("type", "hidden")
                 .attr("name", "file-delete-" + $(this).attr('data-file-pk')).val($(this).attr('data-file-pk'));
             $('#paper_form').append(input);
-            $(this).parent().parent().hide();
+            $(this).closest('.uploaded-file-row').hide();
+        });
+
+        $('#toggle-statement-btn').click(function () {
+            $('#current-statement-display').hide();
+            $('#statement-input-container').show();
+        });
+
+        $('#cancel-statement-btn').click(function () {
+            $('#statement-input-container').hide();
+            $('#current-statement-display').show();
+            $('#statement-input-container').find('input[type="file"]').val('');
         });
     </script>
 
