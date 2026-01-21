@@ -175,6 +175,10 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = self.get_context_data()
         co_authors = context['coAuthors']
         files = context['files']
+        
+        if not co_authors.is_valid():
+            return self.form_invalid(form)
+        
         with transaction.atomic():
             form.instance.author = self.request.user
             form.instance.author_percentage = co_authors.calculate_author_percentage()
@@ -253,6 +257,10 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = self.get_context_data()
         co_authors = context['coAuthors']
         files = context['files']
+        
+        if not co_authors.is_valid():
+            return self.form_invalid(form)
+        
         with transaction.atomic():
             form.instance.author = self.request.user
             form.instance.author_percentage = co_authors.calculate_author_percentage()
