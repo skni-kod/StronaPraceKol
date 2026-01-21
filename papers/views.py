@@ -570,3 +570,141 @@ def userReviewShow(request, **kwargs):
             return render(request, template_name='papers/review_not_found.html')
     else:
         return redirect('reviewDetail', review.pk)
+      
+@login_required
+def paper_pdf_form_view(request, pk):
+    paper = Paper.objects.get(pk=pk)
+    
+    if request.user != paper.author and not request.user.is_staff:
+        return redirect('paperDetail', pk=pk)
+    
+    coAuthors_count = paper.coauthor_set.count() + 1
+    
+    formset_prefix = 'authors'
+
+    if request.method == 'POST':
+        formset = AuthorPersonalDataFormSet(request.POST, prefix=formset_prefix)
+        if formset.is_valid():
+            authors_data = []
+            for form in formset:
+                if form.cleaned_data:
+                    authors_data.append({
+                        'name': form.cleaned_data.get('name', ''),
+                        'surname': form.cleaned_data.get('surname', ''),
+                        'pesel': form.cleaned_data.get('pesel', ''),
+                        'address': form.cleaned_data.get('address', ''),
+                    })
+            
+            request.session['pdf_authors_data'] = authors_data
+            request.session.modified = True
+            
+            return redirect('paperStatementPdf', pk=pk)
+    else:
+        initial_data = [
+            {
+                'name': paper.author.first_name,
+                'surname': paper.author.last_name,
+                'pesel': '',
+                'address': '',
+            }
+        ]
+
+        for coauthor in paper.coauthor_set.all():
+            initial_data.append({
+                'name': coauthor.name,
+                'surname': coauthor.surname,
+                'pesel': '',
+                'address': '',
+            })
+
+        while len(initial_data) < coAuthors_count:
+            initial_data.append({})
+
+        formset = AuthorPersonalDataFormSet(
+            prefix=formset_prefix,
+            initial=initial_data
+        )
+    
+    context = {
+        'object': paper,
+        'formset': formset,
+        'site_title': f'Dane autora - {SITE_NAME}',
+        'site_name': 'papers',
+    }
+    
+    return render(request, 'papers/paper_pdf_form.html', context)
+
+
+@login_required
+def paper_statement_pdf(request, pk):
+    paper = Paper.objects.get(pk=pk)
+
+    if request.user != paper.author and not request.user.is_staff:
+        return redirect('paperDetail', pk=pk)
+
+    authors_data = request.session.get('pdf_authors_data') or []
+
+    contributors = []
+    if authors_data:
+        if authors_data:
+            entry = authors_data[0]
+            name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
+            contributors.append({
+                'name': name or 'Autor',
+                'pesel': entry.get('pesel', ''),
+                'address': entry.get('address', ''),
+                'percentage': paper.author_percentage,
+            })
+        
+        coAuthors = paper.coauthor_set.all()
+        for idx, coauthor in enumerate(coAuthors):
+            if idx + 1 < len(authors_data):
+                entry = authors_data[idx + 1]
+                name = f"{entry.get('name', '').strip()} {entry.get('surname', '').strip()}".strip()
+                contributors.append({
+                    'name': name or coauthor.name,
+                    'pesel': entry.get('pesel', ''),
+                    'address': entry.get('address', ''),
+                    'percentage': coauthor.percentage,
+                })
+    else:
+        contributors.append({
+            'name': f"{paper.author.first_name} {paper.author.last_name}".strip() or paper.author.username,
+            'pesel': '',
+            'address': '',
+            'percentage': paper.author_percentage,
+        })
+        for coauthor in paper.coauthor_set.all():
+            contributors.append({
+                'name': f"{coauthor.name} {coauthor.surname}".strip(),
+                'pesel': '',
+                'address': '',
+                'percentage': coauthor.percentage,
+            })
+    
+    for idx, contributor in enumerate(contributors):
+        other_authors = [c for i, c in enumerate(contributors) if i != idx]
+        contributor['other_authors'] = other_authors
+
+    html = render_to_string(
+        'papers/paper_statement.html',
+        {
+            'paper': paper,
+            'contributors': contributors,
+        },
+    )
+
+    url = f"{GOTENBERG_URL}/forms/chromium/convert/html"
+    files = {
+        'index.html': ('index.html', html.encode('utf-8'), 'text/html'),
+    }
+
+    try:
+        response = requests.post(url, files=files, timeout=30)
+        response.raise_for_status()
+    except requests.RequestException:
+        return HttpResponse('Błąd generowania PDF', status=502)
+
+    http_response = HttpResponse(response.content, content_type='application/pdf')
+    http_response['Content-Disposition'] = 'inline; filename="oswiadczenie.pdf"'
+    return http_response

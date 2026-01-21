@@ -13,23 +13,12 @@
         <div class="col-md-4 text-left">
             <h4>Informacje o artykule</h4>
         </div>
-        <div class="col-md-2 offset-md-4 text-right">
+        <div class="col-md-4 offset-md-2 text-right">
             {% if user == paper.author %}
-                <div class="input-group mb-4 justify-content-between">
-                    <div class="input-group-prepend">
-                            <a href="{% url 'paperDelete' paper.pk %}">
-                                <button type="button" class="btn btn-danger">
-                                    Usuń
-                                </button>
-                            </a>
-                    </div>
-                    <div class="input-group-append">
-                        <a href="{% url 'paperEdit' paper.pk %}">
-                            <button type="button" class="btn btn-primary">
-                                Edytuj
-                            </button>
-                        </a>
-                    </div>
+                <div class="btn-group mb-4 float-right" role="group" aria-label="Akcje artykułu">
+                    <a class="btn btn-danger" href="{% url 'paperDelete' paper.pk %}">Usuń</a>
+                    <a class="btn btn-primary" href="{% url 'paperEdit' paper.pk %}">Edytuj</a>
+                    <a class="btn btn-outline-secondary" href="{% url 'paperPDFForm' paper.pk %}">Dane do oświadczeń</a>
                 </div>
             {% endif %}
         </div>

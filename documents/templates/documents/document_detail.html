@@ -14,7 +14,7 @@
             <h4>Informacje o dokumencie</h4>
         </div>
         <div class="col-md-2 offset-md-4 text-right">
-            {% if user == document.author %}
+            {% if user == document.author or user.is_staff %}
                 <div class="input-group mb-4">
                     <div class="input-group-prepend">
                             <a href="{% url 'documentDelete' document.pk %}">
