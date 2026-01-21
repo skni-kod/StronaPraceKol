@@ -33,6 +33,7 @@ class Paper(models.Model):
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     author_percentage= models.FloatField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    author_phone = models.CharField(max_length=16, blank=True)
     keywords = models.CharField(max_length=128)
     description = models.TextField()
     approved = models.BooleanField(default=False)
@@ -40,9 +41,14 @@ class Paper(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     statement = models.PositiveIntegerField(default=0)
+    statement_reminder_sent = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.title[0:40]}'
+    
+    def has_statement(self):
+        """Check if statement file was uploaded"""
+        return self.statement > 0 and UploadedFile.objects.filter(pk=self.statement).exists()
 
     def get_unread_messages(self, user):
         if user not in self.reviewers.all() and user != self.author:

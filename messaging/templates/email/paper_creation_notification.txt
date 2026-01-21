@@ -1,0 +1,27 @@
+Szanowny/a {{ paper.author_name }},
+
+Otrzymano Twój artykuł: {{ paper.title }}
+
+Szanowny/a Autorze,
+
+Otrzymano Twój artykuł: {{ paper.title }}
+
+Data dodania: {{ paper.created_at|date:"d F Y, H:i" }}
+Autorzy:
+{{ paper.author.first_name }} {{ paper.author.last_name }} (główny autor) - {{ paper.author_percentage }}%
+{% for coauthor in paper.coauthor_set.all %}
+{{ coauthor.name }} {{ coauthor.surname }} - {{ coauthor.percentage }}% {% if coauthor.email %}({{ coauthor.email }}){% endif %}
+{% endfor %}
+
+{% if paper.statement %}
+Otrzymano również Twoje oświadczenie dotyczące oryginalności artykułu.
+{% else %}
+Jeżeli jeszcze nie odesłałeś oświadczenia, prosimy o jego niezwłoczne przesłanie.
+{% endif %}
+
+
+Z poważaniem,
+Zespół Systemu Recenzji
+
+---
+To jest automatyczne powiadomienie. Prosimy nie odpowiadać na ten e-mail.

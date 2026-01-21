@@ -279,12 +279,20 @@
             <div class="col-md-3">
                 <ul class="nav nav-tabs nav-fill">
                     {% if user|is_in_group:'reviewer' and user != paper.author %}
+
+                        <li class="nav-item m-2">
+                            <a data-toggle="tab" href=".numberbox" class="nav-link message_link m-2"
+                               data-reviewer="{{ user.pk }}">
+                                Numer do autora 
+                            </a>
+                        </li>
                         <li class="nav-item m-2">
                             <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
                                data-reviewer="{{ user.pk }}">
                                 Konwersacja z autorami
                             </a>
                         </li>
+
                     {% else %}
                         {% for reviewer in paper.reviewers.all %}
                             <li class="nav-item">
@@ -299,7 +307,7 @@
             </div>
             <div class="col-md-9">
                 <div class="tab-content p-4">
-                    <div class="tab-pane fade messagebox">
+                    <div class="tab-pane fade messagebox active">
                         <div id="messages_box" class="bg-white container p-4"></div>
                         <div class="input-group">
                          <textarea id="input_message" placeholder="Wprowadź wiadomość"
@@ -310,6 +318,15 @@
                                     <button id="send_message_button" class="btn btn-primary">Wyślij</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade numberbox">
+                        <div class="input-group">
+                            {% if paper.author_phone == "" %}
+                                <p class="text-danger">Autor nie podał numeru telefonu.</p>
+                            {% else %}
+                                <p>Numer telefonu do autora: {{ paper.author_phone }}</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

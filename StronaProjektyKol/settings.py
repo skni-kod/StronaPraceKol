@@ -37,7 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'widget_tweaks',
+    'django_q',
 ]
+
+Q_CLUSTER = {
+    'name': 'StronaProjektyKol',
+    'workers': 2,
+    'recycle': 500,
+    'timeout': 60,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',  # Używa bazy danych Django
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
