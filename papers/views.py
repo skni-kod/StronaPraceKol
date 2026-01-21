@@ -164,7 +164,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
             context['files'] = UploadFileFormSet()
             context['statement'] = FileUploadForm(prefix='statement')
 
-        context['statement'].fields['file'].required = True
+        context['statement'].fields['file'].required = False
         context['statement'].fields['file'].widget.attrs['multiple'] = False
 
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
