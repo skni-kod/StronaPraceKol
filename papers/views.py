@@ -172,19 +172,25 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                                                 {'formset': context['files']})
 
         return context
-
+    
     def form_valid(self, form):
         context = self.get_context_data()
-        coAuthors = context['coAuthors']
+        co_authors = context['coAuthors']
         files = context['files']
+
+        if not co_authors.is_valid():
+            return self.form_invalid(form)
+
+
         with transaction.atomic():
             form.instance.author = self.request.user
-            form.save()
+            form.instance.author_percentage = co_authors.calculate_author_percentage()
             self.object = form.save()
 
-            if coAuthors.is_valid():
-                coAuthors.instance = self.object
-                coAuthors.save()
+            if co_authors.is_valid():
+                co_authors.instance = self.object
+                co_authors.save()
+
             if context['statement'].is_valid():
                 statement_file = context['statement'].cleaned_data.get('file')
                 if statement_file:
@@ -205,8 +211,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                             file_instance = UploadedFile(
                                 file=file_field, paper=self.object)
                             file_instance.save()
-
         return super(PaperCreateView, self).form_valid(form)
+
 
     def get_success_url(self):
         messages.success(self.request, f'Dodano artykuł')
