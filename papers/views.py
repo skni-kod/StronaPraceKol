@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views.static import serve
 from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
+from messaging.utils import send_paper_creation_notification_email
 from .filters import PaperFilter
 from .forms import *
 import requests
@@ -211,6 +212,8 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                             file_instance = UploadedFile(
                                 file=file_field, paper=self.object)
                             file_instance.save()
+
+        send_paper_creation_notification_email(self.object)
         return super(PaperCreateView, self).form_valid(form)
 
 
