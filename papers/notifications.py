@@ -26,7 +26,7 @@ def send_statement_reminder():
     threshold = now - period_delta
 
     papers_without_statement = Paper.objects.filter(
-        (Q(statement=0) | Q(statement_file__isnull=True)),
+        (Q(statement=0) | Q(statement__isnull=True)),
     ).filter(
         Q(statement_reminder_sent__isnull=True) | Q(statement_reminder_sent__lt=threshold)
     )
