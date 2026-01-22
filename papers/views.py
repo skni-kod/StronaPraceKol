@@ -287,11 +287,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             if coAuthors.is_valid():
                 coAuthors.instance = self.object
                 coAuthors.save()
-            
-            statement_from_files = self.request.POST.get('statement_from_files')
-            if statement_from_files:
-                self.object.statement = int(statement_from_files)
-                self.object.save()
+
             
             if context['statement'].is_valid():
                 statement_file = context['statement'].cleaned_data.get('file')

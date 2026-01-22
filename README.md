@@ -17,6 +17,9 @@ Run migrations:
     
     where 'appname' is the name of the app. You get list of your apps by running python manage.py migrate.
 
+Setup scheduled tasks:
+ - `python manage.py setup_scheduled_tasks`
+
 Load fixtures to database:
   - python manage.py loaddata announcement grades groups notificationperiod studentclubs
  
