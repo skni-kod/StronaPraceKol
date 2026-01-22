@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <title>Oświadczenia autorów</title>
+    <style>
+        body {
+    font-family: 'Times New Roman', Times, serif;
+    margin: 30px;
+    }
+
+    .title-main {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .title-sub {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .title-subsub {
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .text-normal {
+        font-size: 14px;
+        font-weight: normal;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+    .left{
+        text-align: left;
+    }
+
+    .right{
+        text-align: right;
+    }
+
+    .statement-page {
+        page-break-before: always;
+    }
+
+    .statement-page:first-child {
+        page-break-before: auto;
+    }
+
+    .statement-page:last-child {
+        page-break-after: avoid;
+    }
+    </style>
+</head>
+<body>
+    {% for person in contributors %}
+    <div class="statement-page">
+    <div class="title-main">
+        OŚWIADCZENIE AUTORA
+    </div>
+    <div class="title-sub">
+        W SPRAWIE ZGODY NA WYDANIE UTWORUORAZ PRZENIESIENIE MAJĄTKOWYCH PRAW AUTORSKICHWRAZ Z UDZIELENIEM PEŁNOMOCNICTWA DO ZAWARCIAUMOWY WYDAWNICZEJ ORAZ PRZENIESIENIA TYCH PRAWNA RZECZ WYDAWCY
+        <div class="title-subsub">
+            § 1
+        </div>
+    </div>
+    <div class="text-normal">
+        Ja, niżej podpisany/a <strong>{{person.name}} {{person.surname}}</strong>, PESEL: {{person.pesel}}, 
+        zamieszkały/a pod adresem {{person.address}} - zwany/a w dalszej części <strong>Autorem</strong>, oświadczam, że:
+        <ol>
+            <li>Wspólnie z innymi autorami napisałem/am utwór o wstępnej objętości ____ arkuszy autorskich tekstu oraz wykonałem/am _____ ilustracji o wstępnej objętości _____ arkuszy autorskich, zwany w dalszej treści Utworem pt.: {{paper.title}}
+                , który ma być zamieszczony w czasopiśmie/monografii* o nazwie: _______________________________________________________________________________________ zwanej w dalszej części <strong>Publikacją.</strong> </li>
+            <li>Mój udział procentowy w osobistych i majątkowych prawach autorskich do Utworu wynosi {{person.percentage}}%
+                {% if person.other_authors %}
+                , zaś pozostałych autorów:
+                <ol>
+                    {% for other in person.other_authors %}
+                         <li>{{other.name}} - {{other.percentage}}%</li>
+                    {% endfor %}
+                </ol>
+                {% else %}
+                .
+                {% endif %}
+            </li>
+            </li>
+            <li>Mój udział procentowy w osobistych i majątkowych prawach autorskich do całości Publikacji wynosi {{person.percentage}}%.</li>
+            <li>Moje majątkowe prawa autorskie do Utworu nie są ograniczone w zakresie objętym niniejszym oświadczeniem.</li>
+            <li>Utwór stanowi dzieło oryginalne, jest wolny od wad prawnych i nie narusza jakichkolwiek praw osób trzecich, ani też nie zawiera żadnych zapożyczeń z innych utworów.</li>
+            <li>Żadna inna osoba poza wskazanymi w ust. 2 powyżej nie wniosła wkładu w powstanie Utworu jako jeden z autorów, którego nazwiska ani nie ujawniono, ani nie wymieniono w podziękowaniach.</li>
+            <li>Utwór nie był dotychczas nigdzie w całości lub części publikowany i nie został przekazany innemu podmiotowi w celu opublikowania.</li>
+            <li>Zawarty w mojej części Utworu materiał, w szczególności tekst, tabele, tablice ilustracje, fotografie, rysunki, mapy, wykresy, schematy, jest moją własnością. W przypadku wystąpienia przez jakąkolwiek osobę trzecią z jakimkolwiek roszczeniem w stosunku do PolitechnikiRzeszowskiej im. Ignacego Łukasiewicza w Rzeszowie, al. Powstańców Warszawy 12, 35-029Rzeszów, NIP: 8130266999, REGON: 000001749, zwanej w dalszej treści <strong>Wydawcą</strong>, z tytułu naruszenia praw autorskich lub innych praw osób trzecich związanych z moją częścią Utworu, podejmę niezbędne kroki do zwolnienia Wydawcy od odpowiedzialności, w tym wstąpię dotoczącego się procesu, a także zwrócę Wydawcy wszelkie koszty i pokryją straty poniesione przez Wydawcę w związku z wystąpieniem takich roszczeń.</li>
+            <li>Przedłożony Utwór zostanie/został* poprawiony zgodnie z propozycjami recenzenta. W przypadku nie uwzględnienia propozycji recenzenta zobowiązuję się do pisemnego uzasadnienia przyczyn, z których to następuje. Uzasadnienie stanowić będzie załącznik - integralną część niniejszego oświadczenia Autora.</li>
+            <li>Utwór został stworzony zgodnie z moją najlepszą wiedzą i umiejętnościami oraz zgodnie z zasadami obowiązującymi przy tworzeniu dzieł tego rodzaju. Utwór w wersji papierowej(w formacie A4, jednostronnie) i cyfrowej został przygotowany na poziomie merytorycznym, formalnym i językowym wymaganym przy wydawaniu tego typu utworów, w programie uzgodnionym z Wydawcą, zgodnie z wytycznymi obowiązującymi w Oficynie Wydawniczej Politechniki Rzeszowskiej.</li>
+        </ol>
+        <div class="title-subsub">
+            § 2
+        </div>
+        <div class="text-normal">
+            <ol>
+                <li>Wyrażam zgodę na wydanie przez Wydawcę Utworu na zasadach uzgodnionych przez redaktora naukowego Publikacji (Pana/ią _______________________________) w Umowie wydawniczej zawartej z Politechniką Rzeszowską zgodnie z postanowieniami niniejszego oświadczenia Autora, zwanej w dalszej treści <strong>Umową </strong>i jednocześnie na jej zawarcie w moim imieniu.
+                    W szczególności wyrażam zgodę na przeniesienie przez w/w osobą nieodpłatnie na Politechnikę Rzeszowską przysługujących mi majątkowych praw autorskich do Utworu w zakresienie ograniczonego w czasie korzystania i rozporządzania Utworem w kraju i za granicą, w całości lubw dowolnej jego części, na następujących polach eksploatacji obejmujących:
+                    <ol>
+                        <li>prawo do wydawania Utworu drukiem w formie książkowej i cyfrowej oraz jego rozpowszechniania w formie książkowej i cyfrowej, w tym poprzez wyświetlanie, odtworzenie, nadawanie, publiczne udostępnienie przez Wydawcę oraz podmioty trzecie,</li>
+                        <li>prawo do wprowadzenia Utworu do obrotu (dystrybucja) w postaci cyfrowej i w postaci papierowej, w tym poprzez sprzedaż, użyczenie, najem, wypożyczenie, udostępnienie,licencję, na rzecz innych podmiotów,</li>
+                        <li>prawo do utrwalenia i zwielokrotnienia całości lub części Utworu na papierze i w formie zapisu cyfrowego oraz w każdy inny możliwy sposób przez Wydawcę oraz podmioty trzecie,</li>
+                        <li>prawo do wprowadzania Utworu do pamięci komputera oraz zapisywania Utworuw systemach informatycznych Wydawcy i innych podmiotów dystrybuujących treści cyfrowe,</li>
+                        <li>prawo do archiwizowania Utworu oraz tworzenia kopii Utworu na nośnikach elektronicznych przez Wydawcę oraz podmioty trzecie, bez ograniczeń ilościowych,</li>
+                        <li>prawo do digitalizacji Utworu oraz dokonywania konwersji/przekształceń Utworu w wersji elektronicznej na inne formaty cyfrowe przez Wydawcę oraz podmioty trzecie,</li>
+                        <li>prawo do oferowania Utworu w postaci papierowej i cyfrowej za pośrednictwem sieci Internet lub innych sieci teleinformatycznych przez Wydawcę oraz inne podmioty trzecie,</li>
+                        <li>prawo do rozpowszechniania Utworu, w tym za pośrednictwem sieci Internet lub innych sieci teleinformatycznych przez Wydawcę oraz inne podmioty trzecie, w sposób umożliwiającyoglądanie, czytanie, kopiowanie treści Utworu w postaci elektronicznej, tj. wszystkich elementów do niego należących, przy czym przez kopiowanie rozumie się zapisanie przez osobę zainteresowaną udostępnionego jej Utworu na wybranym przez nią nośniku,</li>
+                        <li>prawo do przechowywania Utworu w bazie danych Wydawcy i innych podmiotów dystrybuujących Utwór w jakiejkolwiek postaci, jak również jego przetwarzania w bazie danych Wydawcy oraz podmiotów trzecich,</li>
+                        <li>prawo do tłumaczenia i wydania Utworu w jednym z języków nowożytnych w jakiejkolwiek postaci przez Wydawcę oraz podmioty trzecie,</li>
+                        <li>prawo do sporządzania opracowań Utworu w zakresie koniecznym do korzystania z tej zawartości. W tym zakresie Wydawca lub podmiot trzeci, który dokonał opracowania, jest uprawniony do rozporządzania opracowaniami i korzystania z nich.</li>
+                    </ol>
+                </li>
+                <li>Wyrażam zgodę na dokonanie przez Wydawcę koniecznych zmian Utworu, wynikających z opracowania redakcyjnego i wymagań edytorskich, zmian stylistycznych, gramatycznychi językowych nienaruszających moich uprawnień w zakresie autorskich praw osobistych do Utworu.</li>
+                <li>Wyrażam zgodę na umieszczenie na stronie internetowej Wydawcy w celach reklamowych i promocyjnych okładki, spisu treści, streszczenia oraz całego Utworu.</li>
+                <li>Upoważniam Wydawcę do udzielania osobom trzecim zgody na wykonywanie przez te osoby zależnego prawa autorskiego, w szczególności na rozporządzanie i korzystanie z praw zależnych.</li>
+                <li>Zobowiązuje się nie naruszać praw Wydawcy określonych w niniejszym oświadczeniu, a w szczególności, w przypadku zamiaru wydania Utworu w innym wydawnictwie, zobowiązuję się do uzyskania pisemnej pod rygorem nieważności zgody na to Wydawcy.</li>
+                <li>W razie odstąpienia przeze mnie od Umowy z przyczyn niezależnych od Wydawcy, zobowiązuję się zwrócić poniesione przez Wydawcę koszty w wysokości przez niego udokumentowanej.</li>
+            </ol>
+        <div class="title-subsub">
+            § 3
+        </div>
+        <div class="text-normal">
+            Jednocześnie udzielam Panu/i _______________________________________________ (redaktorowi naukowemu Publikacji) pełnomocnictwa do składania w moim imieniu oświadczeń woli wobec Wydawcy związanych z Utworem, w tym do zawarcia Umowy zgodnie z postanowieniami niniejszego oświadczenia Autora obejmującej, w szczególności nieodpłatne przeniesienie na Wydawcę autorskich praw majątkowych do mojej części Utworu na polach eksploatacji określonych w niniejszym oświadczeniu, przyjmowania takich oświadczeń, wykonywania uprawnień i obowiązków związanych z Utworem i Umową oraz do reprezentowania mnie we wszelkich kontaktach z Politechniką Rzeszowską w zakresie określonym niniejszym oświadczeniem Autora.
+        </div>
+        <div class="title-subsub">
+            § 4
+        </div>
+        <div class="text-normal">
+            <ol>
+                <li>Przeniesienie na Wydawcę majątkowych praw autorskich do Utworu nastąpi w dniu zawarcia Umowy. Z chwilą zawarcia Umowy nastąpi również przeniesienie na Wydawcę własności nośników, na których utrwalono Utwór, bez dodatkowego wynagrodzenia</li>
+                <li>Wydawcy przysługuje prawo przenoszenia na osoby trzecie uprawnień wynikającychz Umowy, w tym prawo przeniesienia majątkowych praw autorskich do Utworu.</li>
+            </ol>
+        </div>
+        <div class="title-subsub">
+            § 5
+        </div>
+        <div class="text-normal">
+            W zakresie nieuregulowanym niniejszym oświadczeniem Autora lub Umową, odpowiednie zastosowanie znajdują ustawy o prawie autorskim i prawach pokrewnych, Kodeksu cywilnego orazpostanowienia Regulaminu Oficyny Wydawniczej Politechniki Rzeszowskiej.
+        </div>
+        <div class="text-normal">
+            <div class="left">
+                _____________________________ <br>
+                (data, miejscowość)
+            </div>
+            <div class="right">
+                _____________________________ <br>
+                (podpis Autora)
+            </div>
+        </div>
+        <div class="text-normal">
+            <i>*niepotrzebne skreślić</i> <br>
+            <i>** w przypadku obywateli innych niż polskich należy podać nr i serię paszportu oraz kraj wydania</i>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

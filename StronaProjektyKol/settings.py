@@ -37,7 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'widget_tweaks',
+    'django_q',
 ]
+
+Q_CLUSTER = {
+    'name': 'StronaProjektyKol',
+    'workers': 2,
+    'recycle': 500,
+    'timeout': 60,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default',  # Używa bazy danych Django
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -185,6 +197,7 @@ SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'localhost:8000')
 SITE_NAME = os.environ.get('SITE_NAME', 'Projekty Kół Naukowych Politechniki Rzeszowskiej')
 SITE_ADMIN_MAIL = os.environ.get('SITE_ADMIN_MAIL', 'prace.kol@prz.edu.pl')
 SITE_ADMIN_PHONE = os.environ.get('SITE_ADMIN_PHONE', '123456789')
+GOTENBERG_URL = os.environ.get('GOTENBERG_URL', 'http://localhost:3000')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090')

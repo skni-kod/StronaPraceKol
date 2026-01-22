@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przypomnienie o oświadczeniu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+<h1>Przypomnienie o brakującym oświadczeniu</h1>
+    </div>
+    
+    <div class="content">
+<p>Witaj <strong>{{ author_name }}</strong>,</p>
+        
+        <div class="warning">
+<strong>Do Twojego artykułu dalej nie odesłano oświadczenia</strong>
+        </div>
+        
+<p>Twój artykuł:<strong>"{{ paper_title }}"</strong></p>
+        
+<p>został utworzony <strong>{{ created_at|date:"d.m.Y" }}</strong> i nadal nie ma dołączonego wymaganego oświadczenia.</p>
+<p>Prosimy o uzupełnienie tego dokumentu w systemie jak najszybciej.</p>
+        
+<p style="text-align: center;">
+<a href="https://{{ site_domain }}/papers/paper/{{ paper_id }}/edit/" class="button" style="text-decoration: none; color: white;">
+Kliknij, aby dodać oświadczenie
+</a>
+</p>
+        
+<p style="margin-top: 30px; font-size: 14px; color: #666;">
+Jeśli już dodałeś/aś oświadczenie, zignoruj tę wiadomość.
+</p>
+</div>
+
+<div class="footer">
+<p>{{ site_name }}</p>
+<p>To jest automatyczna wiadomość - prosimy nie odpowiadać.</p>
+</div>
+</body>
+</html>

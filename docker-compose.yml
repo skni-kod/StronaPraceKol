@@ -4,10 +4,25 @@ services:
     build: .
     env_file:
       - ./.env
+    environment:
+      - GOTENBERG_URL=http://gotenberg:3000
     restart: always
     volumes:
       - ./static:/app/static:rw
       - ./media:/app/media:rw
+    depends_on:
+      - gotenberg
+
+  django-qcluster:
+    build: .
+    command: python manage.py qcluster
+    env_file:
+      - ./.env
+    restart: always
+    volumes:
+      - ./media:/app/media:rw
+    depends_on:
+      - django-web
 
   nginx:
     image: nginx:latest
@@ -22,3 +37,9 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - django-web
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    restart: always
+    ports:
+      - "3000:3000"

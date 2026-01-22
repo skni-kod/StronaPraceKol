@@ -5,3 +5,7 @@
 /.idea/*
 /static/
 .env
+/.venv
+.prettierignore
+.python-version
+settings.json
