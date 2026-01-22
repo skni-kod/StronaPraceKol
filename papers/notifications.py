@@ -43,9 +43,14 @@ def send_statement_reminder():
         if not emails:
             continue
 
+        author_name = f"{paper.author.first_name} {paper.author.last_name}".strip() or paper.author.username
         subject = f"Prośba o przesłanie oświadczenia — {paper.title}"
         html_body = render_to_string('emails/statement_reminder.html', {
             'paper': paper,
+            'paper_title': paper.title,
+            'paper_id': paper.pk,
+            'created_at': paper.created_at,
+            'author_name': author_name,
             'site_name': SITE_NAME,
             'site_domain': SITE_DOMAIN,
         })
