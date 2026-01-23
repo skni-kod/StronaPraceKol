@@ -1,27 +1,29 @@
+import logging
+
+import requests
 from braces.views import CsrfExemptMixin
 from django.contrib import messages
-from urllib.parse import unquote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
-from django.utils.html import strip_tags
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
+
+from StronaProjektyKol.settings import SITE_NAME, SITE_ADMIN_MAIL, GOTENBERG_URL
 from messaging.utils import send_paper_creation_notification_email
 from .filters import PaperFilter
 from .forms import *
-import requests
 
 STATEMENT_FILE = 'statement-file'
+logger = logging.getLogger(__name__)
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -125,20 +127,24 @@ def paper_file_download(request, pk, item):
     :param item: integer (id of a file user wants to download)
     :return:
     """
-    #paper = Paper.objects.get(pk=pk)
     try:
         uploadedFile = UploadedFile.objects.get(pk=item)
     except UploadedFile.DoesNotExist:
-        return redirect('paper-list')
+        return redirect('paperList')
     paper = uploadedFile.paper
     if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         try:
-            return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.file.name)
+            return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.filename())
         except FileNotFoundError:
-            return redirect('paper-list')
+            logger.error(f'Uploaded file with id: {uploadedFile.id} not found')
+            #TODO: Maybe delete the UploadedFile entry from DB if file not found?
+            return redirect("paperList")
+        except PermissionError:
+            logger.error(f'Permission denied for file with id: {uploadedFile.id}')
+            return redirect("paperList")
     else:
-        return redirect('paper-list')
+        return redirect('paperList')
 
 
 class PaperCreateView(LoginRequiredMixin, CreateView):
