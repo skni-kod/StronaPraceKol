@@ -125,16 +125,18 @@ def paper_file_download(request, pk, item):
     :param item: integer (id of a file user wants to download)
     :return:
     """
-    print("request", request, "pk", pk, "item", item)
-    paper = Paper.objects.get(pk=pk)
-    print("paper", paper)
+    #paper = Paper.objects.get(pk=pk)
+    try:
+        uploadedFile = UploadedFile.objects.get(pk=item)
+    except UploadedFile.DoesNotExist:
+        return redirect('paper-list')
+    paper = uploadedFile.paper
     if request.user == paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
-        document = UploadedFile.objects.get(pk=item)
-        print("document", document)
-        filepath = str(BASE_DIR)+document.file.url
-        print("filepath", unquote(filepath))
-        return serve(request, os.path.basename(unquote(filepath)), os.path.dirname(unquote(filepath)))
+        try:
+            return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.file.name)
+        except FileNotFoundError:
+            return redirect('paper-list')
     else:
         return redirect('paper-list')
 
