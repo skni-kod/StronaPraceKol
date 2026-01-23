@@ -170,36 +170,39 @@ USE_L10N = True
 USE_TZ = True
 
 #EMAIL
+# jezeli lokalnie są rozne bledy z mailami, 
+# odkomentowac linie ponizej i zakomentowac 
+# obecna linie z EMAIL_BACKEND
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.mailtrap.io')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'b616df948c35a1')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '297234ec84f732')
-EMAIL_PORT = os.environ.get('EMAIL_PORT', '2525')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('SQL_USER', ''),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', ''),
-        'HOST': os.environ.get('SQL_HOST', ''),
-        'PORT': os.environ.get('SQL_PORT', ''),
+        'ENGINE': os.environ.get('SQL_ENGINE'),
+        'NAME': os.environ.get('SQL_DATABASE'),
+        'USER': os.environ.get('SQL_USER'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD'),
+        'HOST': os.environ.get('SQL_HOST'),
+        'PORT': os.environ.get('SQL_PORT'),
     }
 }
 
-SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'localhost:8000')
-SITE_NAME = os.environ.get('SITE_NAME', 'Projekty Kół Naukowych Politechniki Rzeszowskiej')
-SITE_ADMIN_MAIL = os.environ.get('SITE_ADMIN_MAIL', 'prace.kol@prz.edu.pl')
-SITE_ADMIN_PHONE = os.environ.get('SITE_ADMIN_PHONE', '123456789')
-GOTENBERG_URL = os.environ.get('GOTENBERG_URL', 'http://localhost:3000')
+SITE_DOMAIN = os.environ.get('SITE_DOMAIN')
+SITE_NAME = os.environ.get('SITE_NAME')
+SITE_ADMIN_MAIL = os.environ.get('SITE_ADMIN_MAIL')
+SITE_ADMIN_PHONE = os.environ.get('SITE_ADMIN_PHONE')
+GOTENBERG_URL = os.environ.get('GOTENBERG_URL')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'gzvrabaiv4_w_ac--+3=fbc_a(qe(0giym31q_zlf93)h2u090')
-
-DEBUG = os.environ.get('DEBUG', True)
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = os.environ.get('DEBUG', False)
