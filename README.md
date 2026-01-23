@@ -2,6 +2,11 @@
 
 Serwis ma służyć do obsługi zgłoszeń projetków studentów będących członkami kół naukowych
 
+To setup your .env file:
+
+By default, file you have is named example.env - inside of it there are vital environmental variables.
+In order to run this project on localhost, you have to rename it to .env instead of example.env.
+
 
 To setup and run your server:
 
