@@ -112,13 +112,31 @@ class Grade(models.Model):
         ('light', 'Light'),
         ('dark', 'Dark'),
     )
-
+    
     GRADE_CATEGORIES = (
-        ('correspondence', 'Zgodność z tematyką'),
-        ('originality', 'Oryginalność'),
-        ('merits', 'Poprawność merytoryczna'),
-        ('presentation', 'Jakość prezentacji'),
-        ('final_grade', 'Ocena końcowa'),
+        ('originality', 'Czy jest to oryginalne opracowanie wśród publikacji z tego zakresu?'),
+        ('layout', 'Czy układ opracowania jest zadowalający?'),
+        ('length', 'Czy objętość  opracowania jest adekwatna do jego treści?'),
+        ('language', 'Czy język oraz sposób przedstawienia wyników jest jasny dla czytelnika?'),
+        ('nomenclature', 'Czy oznaczenia oraz terminologia odpowiadają standardom z określonej dyscypliny nauki?'),
+        ('interpretation', 'Czy według Pani(a) opinii interpretacja wyników oraz wnioski są logiczne i uzasadnione?'),
+        ('abstract', 'Czy streszczenie zawiera wystarczające oraz użyteczne informacje?'),
+        ('title', 'Czy tytuł artykułu jest jasny i odpowiada jego treści?'),
+        ('illustrations', 'Czy rysunki i tabele są potrzebne oraz odpowiednie?'),
+        ('final_grade', 'Wniosek końcowy (rekomendacja do celów wydawniczych): praca'),
+    )
+
+    GRADE_CATEGORIES_EN = (
+        ('originality', 'Is this a new and original concept?'),
+        ('layout', 'Is the layout of the paper satisfactory?'),
+        ('length', 'Is the length of the paper adequate to its content?'),
+        ('language', 'Is the language and presentation clear to the reader?'),
+        ('nomenclature', 'Does the terminology meet the standards of the discipline?'),
+        ('interpretation', 'Is the interpretation of results logical and justified?'),
+        ('abstract', 'Does the abstract provide useful and sufficient information?'),
+        ('title', 'Is the title clear and appropriate for the content?'),
+        ('illustrations', 'Are the illustrations and tables necessary and appropriate?'),
+        ('final_grade', 'Final conclusion (recommendation for publication):'),
     )
 
     def get_tag_display_text(self):
@@ -140,21 +158,107 @@ class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     text = models.TextField()
-    correspondence = models.ForeignKey(Grade, related_name='correspondence', on_delete=models.SET_NULL, blank=True,
-                                       null=True, limit_choices_to={'tag': 'correspondence'})
-    originality = models.ForeignKey(Grade, related_name='originality', on_delete=models.SET_NULL, blank=True,
-                                    null=True, limit_choices_to={'tag': 'originality'})
-    merits = models.ForeignKey(Grade, related_name='merits', on_delete=models.SET_NULL, blank=True,
-                               null=True, limit_choices_to={'tag': 'merits'})
-    presentation = models.ForeignKey(Grade, related_name='presentation', on_delete=models.SET_NULL, blank=True,
-                                     null=True, limit_choices_to={'tag': 'presentation'})
-    final_grade = models.ForeignKey(Grade, related_name='final_grade', on_delete=models.SET_NULL, blank=True,
-                                    null=True, limit_choices_to={'tag': 'final_grade'})
+
+    originality = models.ForeignKey(
+        Grade, related_name='originality',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'originality'}
+    )
+
+    layout = models.ForeignKey(
+        Grade, related_name='layout',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'layout'}
+    )
+
+    length = models.ForeignKey(
+        Grade, related_name='length',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'length'}
+    )
+
+    language = models.ForeignKey(
+        Grade, related_name='language',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'language'}
+    )
+
+    nomenclature = models.ForeignKey(
+        Grade, related_name='nomenclature',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'nomenclature'}
+    )
+
+    interpretation = models.ForeignKey(
+        Grade, related_name='interpretation',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'interpretation'}
+    )
+
+    abstract = models.ForeignKey(
+        Grade, related_name='abstract',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'abstract'}
+    )
+
+    title = models.ForeignKey(
+        Grade, related_name='title',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'title'}
+    )
+
+    illustrations = models.ForeignKey(
+        Grade, related_name='illustrations',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'illustrations'}
+    )
+
+    final_grade = models.ForeignKey(
+        Grade, related_name='final_grade',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'final_grade'}
+    )
+    
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
     def aggregate_grades(self):
-        return self.correspondence, self.originality, self.merits, self.presentation, self.final_grade
+        return (
+            self.originality,
+            self.layout,
+            self.length,
+            self.language,
+            self.nomenclature,
+            self.interpretation,
+            self.abstract,
+            self.title,
+            self.illustrations,
+            self.final_grade,
+        )
+
+    def get_questions_with_answers(self):
+        result = []
+
+        for tag, label in Grade.GRADE_CATEGORIES:
+            selected_grade = getattr(self, tag)
+
+            label_en = next((item[1] for item in Grade.GRADE_CATEGORIES_EN if item[0] == tag), '')
+
+            options = []
+            for grade in Grade.objects.filter(tag=tag):
+                options.append({
+                    "name": grade.name,
+                    "checked": selected_grade and grade.pk == selected_grade.pk
+                })
+
+            result.append({
+                "tag": tag,
+                "label": label,
+                "label_en": label_en,
+                "options": options
+            })
+
+        return result
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'
