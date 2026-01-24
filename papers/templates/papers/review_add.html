@@ -7,85 +7,124 @@
         <div class="col mt-1">
             <form method='POST' class="post-form" id="review-edit-form">
                 {% csrf_token %}
-                <div class="row">
-                    {% with field=form.correspondence %}
-                        <div class="col-md-6">
-                            {% for error in field.errors %}
-                                <span class="text-danger">{{ error|escape }}</span>
-                            {% endfor %}
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field|add_class:'custom-select' }}
-                            </div>
-                        </div>
-                    {% endwith %}
+                <div class="row justify-content-center">
 
                     {% with field=form.originality %}
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             {% for error in field.errors %}
                                 <span class="text-danger">{{ error|escape }}</span>
                             {% endfor %}
-
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field|add_class:'custom-select' }}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
                             </div>
                         </div>
                     {% endwith %}
 
-                    {% with field=form.merits %}
-                        <div class="col-md-6">
+                    {% with field=form.layout %}
+                        <div class="col-md-8">
                             {% for error in field.errors %}
                                 <span class="text-danger">{{ error|escape }}</span>
                             {% endfor %}
-
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field|add_class:'custom-select' }}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
                             </div>
                         </div>
                     {% endwith %}
 
-                    {% with field=form.presentation %}
-                        <div class="col-md-6">
+                    {% with field=form.length %}
+                        <div class="col-md-8">
                             {% for error in field.errors %}
                                 <span class="text-danger">{{ error|escape }}</span>
                             {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
 
+                    {% with field=form.language %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
 
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field|add_class:'custom-select' }}
+                    {% with field=form.nomenclature %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.interpretation %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.abstract %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.title %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
+                            </div>
+                        </div>
+                    {% endwith %}
+
+                    {% with field=form.illustrations %}
+                        <div class="col-md-8">
+                            {% for error in field.errors %}
+                                <span class="text-danger">{{ error|escape }}</span>
+                            {% endfor %}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
                             </div>
                         </div>
                     {% endwith %}
 
                     {% with field=form.final_grade %}
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             {% for error in field.errors %}
                                 <span class="text-danger">{{ error|escape }}</span>
                             {% endfor %}
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"
-                                          id="{{ field.id_for_label }}">{{ field.label }}</span>
-                                </div>
-                                {{ field|add_class:'custom-select' }}
+                            <div class="form-group mb-3">
+                                <label class="d-block mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field|add_class:'custom-select w-100' }}
                             </div>
                         </div>
                     {% endwith %}
@@ -94,9 +133,7 @@
 
                 <div class="row text-left">
                     <div class="col-md-4 offset-md-1">
-                        <h5>
-                            Treść recenzji:
-                        </h5>
+                        <h5>Treść recenzji:</h5>
                     </div>
                 </div>
                 {{ form.text }}
@@ -107,18 +144,13 @@
     <div class="row justify-content-center mt-2">
         <div class="text-center col-md-4">
             {% if review %}
-                <button id="review-edit-cancel-btn" type="button" class="btn btn-primary">
-                    Anuluj
-                </button>
+                <button id="review-edit-cancel-btn" type="button" class="btn btn-primary">Anuluj</button>
             {% endif %}
-            <button id="review-edit-submit" type="button" class="btn btn-success">
-                Zapisz
-            </button>
+            <button id="review-edit-submit" type="button" class="btn btn-success">Zapisz</button>
         </div>
     </div>
-
-
 </div>
+
 
 <script>
     {% if review %}

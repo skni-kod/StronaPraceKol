@@ -2,161 +2,165 @@
   {
     "model": "papers.grade",
     "pk": 1,
-    "fields": {
-      "name": "Całkowita",
-      "value": 1,
-      "tag": "correspondence",
-      "display_color": "success"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "originality", "display_color": "success" }
   },
   {
     "model": "papers.grade",
     "pk": 2,
-    "fields": {
-      "name": "Średnia",
-      "value": 2,
-      "tag": "correspondence",
-      "display_color": "warning"
-    }
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "originality", "display_color": "warning" }
   },
   {
     "model": "papers.grade",
     "pk": 3,
-    "fields": {
-      "name": "Słaba",
-      "value": 3,
-      "tag": "correspondence",
-      "display_color": "danger"
-    }
+    "fields": { "name": "Nie", "value": 3, "tag": "originality", "display_color": "danger" }
   },
+
   {
     "model": "papers.grade",
     "pk": 4,
-    "fields": {
-      "name": "Brak",
-      "value": 4,
-      "tag": "correspondence",
-      "display_color": "dark"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "layout", "display_color": "success" }
   },
   {
     "model": "papers.grade",
     "pk": 5,
-    "fields": {
-      "name": "Całkowita",
-      "value": 1,
-      "tag": "originality",
-      "display_color": "success"
-    }
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "layout", "display_color": "warning" }
   },
   {
     "model": "papers.grade",
     "pk": 6,
-    "fields": {
-      "name": "Średnia",
-      "value": 2,
-      "tag": "originality",
-      "display_color": "warning"
-    }
+    "fields": { "name": "Nie", "value": 3, "tag": "layout", "display_color": "danger" }
   },
+
   {
     "model": "papers.grade",
     "pk": 7,
-    "fields": {
-      "name": "Słaba",
-      "value": 3,
-      "tag": "correspondence",
-      "display_color": "danger"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "length", "display_color": "success" }
   },
   {
     "model": "papers.grade",
     "pk": 8,
-    "fields": {
-      "name": "Brak",
-      "value": 4,
-      "tag": "correspondence",
-      "display_color": "dark"
-    }
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "length", "display_color": "warning" }
   },
   {
     "model": "papers.grade",
     "pk": 9,
-    "fields": {
-      "name": "Niewystarczająca",
-      "value": 1,
-      "tag": "merits",
-      "display_color": "danger"
-    }
+    "fields": { "name": "Nie", "value": 3, "tag": "length", "display_color": "danger" }
   },
+
   {
     "model": "papers.grade",
     "pk": 10,
-    "fields": {
-      "name": "Wystarczająca",
-      "value": 2,
-      "tag": "merits",
-      "display_color": "success"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "language", "display_color": "success" }
   },
   {
     "model": "papers.grade",
     "pk": 11,
-    "fields": {
-      "name": "Niewystarczająca",
-      "value": 1,
-      "tag": "presentation",
-      "display_color": "danger"
-    }
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "language", "display_color": "warning" }
   },
   {
     "model": "papers.grade",
     "pk": 12,
-    "fields": {
-      "name": "Wystarczająca",
-      "value": 2,
-      "tag": "presentation",
-      "display_color": "success"
-    }
+    "fields": { "name": "Nie", "value": 3, "tag": "language", "display_color": "danger" }
   },
+
   {
     "model": "papers.grade",
     "pk": 13,
-    "fields": {
-      "name": "Przyjąć",
-      "value": 1,
-      "tag": "final_grade",
-      "display_color": "success"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "nomenclature", "display_color": "success" }
   },
   {
     "model": "papers.grade",
     "pk": 14,
-    "fields": {
-      "name": "Raczej przyjąć",
-      "value": 2,
-      "tag": "final_grade",
-      "display_color": "info"
-    }
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "nomenclature", "display_color": "warning" }
   },
   {
     "model": "papers.grade",
     "pk": 15,
-    "fields": {
-      "name": "Raczej odrzucić",
-      "value": 3,
-      "tag": "final_grade",
-      "display_color": "warning"
-    }
+    "fields": { "name": "Nie", "value": 3, "tag": "nomenclature", "display_color": "danger" }
   },
+
   {
     "model": "papers.grade",
     "pk": 16,
-    "fields": {
-      "name": "Odrzucić",
-      "value": 4,
-      "tag": "final_grade",
-      "display_color": "danger"
-    }
+    "fields": { "name": "Tak", "value": 1, "tag": "interpretation", "display_color": "success" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 17,
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "interpretation", "display_color": "warning" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 18,
+    "fields": { "name": "Nie", "value": 3, "tag": "interpretation", "display_color": "danger" }
+  },
+
+  {
+    "model": "papers.grade",
+    "pk": 19,
+    "fields": { "name": "Tak", "value": 1, "tag": "abstract", "display_color": "success" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 20,
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "abstract", "display_color": "warning" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 21,
+    "fields": { "name": "Nie", "value": 3, "tag": "abstract", "display_color": "danger" }
+  },
+
+  {
+    "model": "papers.grade",
+    "pk": 22,
+    "fields": { "name": "Tak", "value": 1, "tag": "title", "display_color": "success" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 23,
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "title", "display_color": "warning" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 24,
+    "fields": { "name": "Nie", "value": 3, "tag": "title", "display_color": "danger" }
+  },
+
+  {
+    "model": "papers.grade",
+    "pk": 25,
+    "fields": { "name": "Tak", "value": 1, "tag": "illustrations", "display_color": "success" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 26,
+    "fields": { "name": "Zobacz szczegóły", "value": 2, "tag": "illustrations", "display_color": "warning" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 27,
+    "fields": { "name": "Nie", "value": 3, "tag": "illustrations", "display_color": "danger" }
+  },
+
+  {
+    "model": "papers.grade",
+    "pk": 28,
+    "fields": { "name": "Przyjęta", "value": 1, "tag": "final_grade", "display_color": "success" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 29,
+    "fields": { "name": "Przyjęta z małymi zmianami", "value": 2, "tag": "final_grade", "display_color": "info" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 30,
+    "fields": { "name": "Przyjęta z dużymi zmianami", "value": 3, "tag": "final_grade", "display_color": "warning" }
+  },
+  {
+    "model": "papers.grade",
+    "pk": 31,
+    "fields": { "name": "Odrzucona", "value": 4, "tag": "final_grade", "display_color": "danger" }
   }
 ]
