@@ -127,16 +127,16 @@ class Grade(models.Model):
     )
 
     GRADE_CATEGORIES_EN = (
-        ('originality', 'Is this a new and original concept?'),
-        ('layout', 'Is the layout of the paper satisfactory?'),
-        ('length', 'Is the length of the paper adequate to its content?'),
-        ('language', 'Is the language and presentation clear to the reader?'),
-        ('nomenclature', 'Does the terminology meet the standards of the discipline?'),
-        ('interpretation', 'Is the interpretation of results logical and justified?'),
-        ('abstract', 'Does the abstract provide useful and sufficient information?'),
-        ('title', 'Is the title clear and appropriate for the content?'),
-        ('illustrations', 'Are the illustrations and tables necessary and appropriate?'),
-        ('final_grade', 'Final conclusion (recommendation for publication):'),
+        ('originality', 'Is this a new and original contribution to the literature in this field?'),
+        ('layout', 'Is the organization of the paper satisfactory?'),
+        ('length', 'Is the length of the paper appropriate to the content?'),
+        ('language', 'Is the language and presentation clear to readers familiar with the field?'),
+        ('nomenclature', 'Do the notation and nomenclature used meet the standards determined in the area which the paper deals with?'),
+        ('interpretation', 'Do the interpretation of the results and conclusions sound logical and justifiable in your opinion?'),
+        ('abstract', 'Does the abstract contain sufficient and useful information?'),
+        ('title', 'Does the title of the paper reflect sufficiently and clearly the content?'),
+        ('illustrations', 'Are the illustrations and tables all necessary and acceptable?'),
+        ('final_grade', 'Final recommendation (to publishing purpose): paper'),
     )
 
     def get_tag_display_text(self):
