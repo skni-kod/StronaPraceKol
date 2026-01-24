@@ -441,7 +441,7 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
 
         if user in [itm.author for itm in paper.review_set.all()]:
             return False
-        if user == paper.author or (self.request.user.groups.filter(
+        if user == paper.author or (not self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
         return True
