@@ -606,7 +606,7 @@ def userReviewShow(request, **kwargs):
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
     if paper is None or reviewer is None or (
-            user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
+            not user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
         return HttpResponse(status=404)
     if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user != paper.author:
         return HttpResponse(status=404)
