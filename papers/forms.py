@@ -21,20 +21,17 @@ class FileUploadForm(forms.ModelForm):
         self.helper.form_show_labels = False
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
 
-    def is_valid(self):
-        valid = super().is_valid()
-        if not valid:
-            return valid
+    def clean(self):
+        cleaned_data = super().clean()
 
-        uploaded_file = self.cleaned_data.get('file')
+        uploaded_file = cleaned_data.get('file')
         if uploaded_file:
             if uploaded_file.size > MAX_FILE_SIZE:
                 self.add_error('file', ValidationError(
                     _('Plik "%(filename)s" przekracza maksymalny rozmiar %(max_size)s MB.'),
                     params={'filename': uploaded_file.name, 'max_size': MAX_FILE_SIZE // (1024 * 1024)},
                 ))
-                return False
-        return True
+        return cleaned_data
 
 
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
