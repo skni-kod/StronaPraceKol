@@ -1,11 +1,12 @@
+import re
 from crispy_forms.helper import FormHelper
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.fields import SummernoteTextFormField
-
-from .models import *
+from .models import Paper, UploadedFile, CoAuthor, StudentClub, Review, Grade,User, MAX_FILE_SIZE
 
 
 ### FILE FORMS
