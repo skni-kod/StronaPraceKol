@@ -9,13 +9,14 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
-from django.http import FileResponse, HttpResponseRedirect, HttpResponse
+from django.http import FileResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
+from django.views.generic.detail import SingleObjectMixin
 
 from StronaProjektyKol.settings import SITE_NAME, SITE_ADMIN_MAIL, GOTENBERG_URL
 from messaging.utils import send_paper_creation_notification_email
@@ -446,7 +447,7 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
 
         if user in [itm.author for itm in paper.review_set.all()]:
             return False
-        if user == paper.author or (self.request.user.groups.filter(
+        if user == paper.author or (not self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
         return True
@@ -565,6 +566,42 @@ class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
             return True
         return False
 
+class ReviewPDFView(LoginRequiredMixin, UserPassesTestMixin, SingleObjectMixin, View):
+    model = Review
+
+    def test_func(self):
+        try:
+            review = self.get_object()
+            return self.request.user == review.author
+        except (Review.DoesNotExist, Http404):
+                return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+    def get(self, request, pk):
+        review = self.get_object()
+        html = render_to_string('papers/review_pdf.html', {'review': review, 'questions': review.get_questions_with_answers()})
+
+        try:
+            response = requests.post(
+                f"{GOTENBERG_URL}/forms/chromium/convert/html",
+                files={'file': ('index.html', html, 'text/html')},
+                timeout=10
+            )
+
+            if response.status_code != 200:
+                return HttpResponse("Błąd generowania PDF", status=500)
+
+            pdf_response = HttpResponse(
+                response.content,
+                content_type='application/pdf'
+            )
+            pdf_response['Content-Disposition'] = f'inline; filename="review_{pk}.pdf"'
+            return pdf_response
+
+        except:
+            return HttpResponse("Usługa generowania PDF jest chwilowo niedostępna.", status=503)
 
 @csrf_exempt
 def userReviewShow(request, **kwargs):
@@ -575,7 +612,7 @@ def userReviewShow(request, **kwargs):
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
     if paper is None or reviewer is None or (
-            user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
+            not user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
         return HttpResponse(status=404)
     if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user != paper.author:
         return HttpResponse(status=404)

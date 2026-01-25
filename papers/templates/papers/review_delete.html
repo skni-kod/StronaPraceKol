@@ -48,6 +48,7 @@
             processData: false,
             contentType: false,
             type: 'POST',
+            headers: {'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value},
             success: function (data) {
                 $(".box").parent().html(data);
             }

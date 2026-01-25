@@ -143,20 +143,53 @@ def get_grade_label(tag):
 
 class ReviewCreationForm(forms.ModelForm):
     text = SummernoteTextFormField(label='Treść recenzji')
-    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),
-                                      queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(label=get_grade_label('originality'),
-                                   queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(label=get_grade_label('merits'),
-                              queryset=Grade.objects.filter(tag='merits'))
-    final_grade = GradeChoiceField(label=get_grade_label('final_grade'),
-                                   queryset=Grade.objects.filter(tag='final_grade'))
-    presentation = GradeChoiceField(label=get_grade_label('presentation'),
-                                    queryset=Grade.objects.filter(tag='presentation'))
+    originality = GradeChoiceField(
+        label=get_grade_label('originality'),
+        queryset=Grade.objects.filter(tag='originality')
+    )
+    layout = GradeChoiceField(
+        label=get_grade_label('layout'),
+        queryset=Grade.objects.filter(tag='layout')
+    )
+    length = GradeChoiceField(
+        label=get_grade_label('length'),
+        queryset=Grade.objects.filter(tag='length')
+    )
+    language = GradeChoiceField(
+        label=get_grade_label('language'),
+        queryset=Grade.objects.filter(tag='language')
+    )
+    nomenclature = GradeChoiceField(
+        label=get_grade_label('nomenclature'),
+        queryset=Grade.objects.filter(tag='nomenclature')
+    )
+    interpretation = GradeChoiceField(
+        label=get_grade_label('interpretation'),
+        queryset=Grade.objects.filter(tag='interpretation')
+    )
+    abstract = GradeChoiceField(
+        label=get_grade_label('abstract'),
+        queryset=Grade.objects.filter(tag='abstract')
+    )
+    title = GradeChoiceField(
+        label=get_grade_label('title'),
+        queryset=Grade.objects.filter(tag='title')
+    )
+    illustrations = GradeChoiceField(
+        label=get_grade_label('illustrations'),
+        queryset=Grade.objects.filter(tag='illustrations')
+    )
+    final_grade = GradeChoiceField(
+        label=get_grade_label('final_grade'),
+        queryset=Grade.objects.filter(tag='final_grade')
+    )
 
     class Meta:
         model = Review
-        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade', 'text']
+        fields = [
+            'originality', 'layout', 'length', 'language', 'nomenclature',
+            'interpretation', 'abstract', 'title', 'illustrations', 'final_grade', 'text'
+        ]
 
 
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):
