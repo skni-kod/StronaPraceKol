@@ -131,14 +131,13 @@ def paper_file_download(request, pk, item):
         uploadedFile = UploadedFile.objects.get(pk=item)
     except UploadedFile.DoesNotExist:
         return redirect('paperList')
-    paper = uploadedFile.paper
-    if request.user == paper.author or request.user.groups.filter(
+    if request.user == uploadedFile.paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
         try:
             return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.filename())
         except FileNotFoundError:
             logger.error(f'Uploaded file with id: {uploadedFile.id} not found')
-            #TODO: Maybe delete the UploadedFile entry from DB if file not found?
+            uploadedFile.delete()
             return redirect("paperList")
         except PermissionError:
             logger.error(f'Permission denied for file with id: {uploadedFile.id}')
@@ -178,7 +177,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                                                     {'formset': context['coAuthors']})
 
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
-                                                {'formset': context['files']})
+                                                {'formset': context['files'], 'max_file_size': MAX_FILE_SIZE})
 
         return context
     
@@ -279,7 +278,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
-                                                {'formset': context['files']})
+                                                {'formset': context['files'], 'max_file_size': MAX_FILE_SIZE})
 
         return context
 
