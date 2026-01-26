@@ -1,14 +1,12 @@
 import re
-
 from crispy_forms.helper import FormHelper
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.fields import SummernoteTextFormField
-from django.core.exceptions import ValidationError
-
-from .models import *
+from .models import Paper, UploadedFile, CoAuthor, StudentClub, Review, Grade,User, MAX_FILE_SIZE
 
 
 ### FILE FORMS
@@ -23,6 +21,19 @@ class FileUploadForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_show_labels = False
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        uploaded_file = cleaned_data.get('file')
+        if uploaded_file:
+            if uploaded_file.size > MAX_FILE_SIZE:
+                self.add_error('file', ValidationError(
+                    _('Plik "%(filename)s" przekracza maksymalny rozmiar %(max_size)s MB.'),
+                    params={'filename': uploaded_file.name, 'max_size': MAX_FILE_SIZE // (1024 * 1024)},
+                ))
+        return cleaned_data
+
 
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                           fields=['file'], extra=1, can_delete=True)
