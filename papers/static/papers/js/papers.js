@@ -32,12 +32,14 @@ $().ready(function () {
 
     $('#admin-assign-reviewers-submit').click(function () {
         var fd = new FormData(document.getElementById('admin-assign-reviewers-form'));
+        var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
         $.ajax({
             url: 'review/assign/',
             data: fd,
             processData: false,
             contentType: false,
             type: 'POST',
+            headers: csrfToken ? {'X-CSRFToken': csrfToken} : {},
             success: function (data) {
                 $('#admin-assign-reviewers-div').html(data);
             }

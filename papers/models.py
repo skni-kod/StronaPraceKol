@@ -3,10 +3,19 @@ import re
 import textwrap
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+
+
+def validate_file_size(value):
+    """Validate whether the uploaded file size is within the allowed limit (MAX_FILE_SIZE)."""
+    if value.size > MAX_FILE_SIZE:
+        raise ValidationError(f'Maximum file size is {MAX_FILE_SIZE / (1024 * 1024)} MB.')
 
 class NotificationPeriod(models.Model):
     name = models.CharField(max_length=64)
@@ -94,7 +103,7 @@ def paper_directory_path(instance, filename):
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=paper_directory_path, blank=True,max_length=512)
+    file = models.FileField(upload_to=paper_directory_path, blank=True, max_length=512, validators=[validate_file_size])
     created_at = models.DateTimeField(default=timezone.now)
 
     def filename(self):
@@ -112,13 +121,31 @@ class Grade(models.Model):
         ('light', 'Light'),
         ('dark', 'Dark'),
     )
-
+    
     GRADE_CATEGORIES = (
-        ('correspondence', 'Zgodność z tematyką'),
-        ('originality', 'Oryginalność'),
-        ('merits', 'Poprawność merytoryczna'),
-        ('presentation', 'Jakość prezentacji'),
-        ('final_grade', 'Ocena końcowa'),
+        ('originality', 'Czy jest to oryginalne opracowanie wśród publikacji z tego zakresu?'),
+        ('layout', 'Czy układ opracowania jest zadowalający?'),
+        ('length', 'Czy objętość  opracowania jest adekwatna do jego treści?'),
+        ('language', 'Czy język oraz sposób przedstawienia wyników jest jasny dla czytelnika?'),
+        ('nomenclature', 'Czy oznaczenia oraz terminologia odpowiadają standardom z określonej dyscypliny nauki?'),
+        ('interpretation', 'Czy według Pani(a) opinii interpretacja wyników oraz wnioski są logiczne i uzasadnione?'),
+        ('abstract', 'Czy streszczenie zawiera wystarczające oraz użyteczne informacje?'),
+        ('title', 'Czy tytuł artykułu jest jasny i odpowiada jego treści?'),
+        ('illustrations', 'Czy rysunki i tabele są potrzebne oraz odpowiednie?'),
+        ('final_grade', 'Wniosek końcowy (rekomendacja do celów wydawniczych): praca'),
+    )
+
+    GRADE_CATEGORIES_EN = (
+        ('originality', 'Is this a new and original contribution to the literature in this field?'),
+        ('layout', 'Is the organization of the paper satisfactory?'),
+        ('length', 'Is the length of the paper appropriate to the content?'),
+        ('language', 'Is the language and presentation clear to readers familiar with the field?'),
+        ('nomenclature', 'Do the notation and nomenclature used meet the standards determined in the area which the paper deals with?'),
+        ('interpretation', 'Do the interpretation of the results and conclusions sound logical and justifiable in your opinion?'),
+        ('abstract', 'Does the abstract contain sufficient and useful information?'),
+        ('title', 'Does the title of the paper reflect sufficiently and clearly the content?'),
+        ('illustrations', 'Are the illustrations and tables all necessary and acceptable?'),
+        ('final_grade', 'Final recommendation (to publishing purpose): paper'),
     )
 
     def get_tag_display_text(self):
@@ -140,21 +167,107 @@ class Review(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
     text = models.TextField()
-    correspondence = models.ForeignKey(Grade, related_name='correspondence', on_delete=models.SET_NULL, blank=True,
-                                       null=True, limit_choices_to={'tag': 'correspondence'})
-    originality = models.ForeignKey(Grade, related_name='originality', on_delete=models.SET_NULL, blank=True,
-                                    null=True, limit_choices_to={'tag': 'originality'})
-    merits = models.ForeignKey(Grade, related_name='merits', on_delete=models.SET_NULL, blank=True,
-                               null=True, limit_choices_to={'tag': 'merits'})
-    presentation = models.ForeignKey(Grade, related_name='presentation', on_delete=models.SET_NULL, blank=True,
-                                     null=True, limit_choices_to={'tag': 'presentation'})
-    final_grade = models.ForeignKey(Grade, related_name='final_grade', on_delete=models.SET_NULL, blank=True,
-                                    null=True, limit_choices_to={'tag': 'final_grade'})
+
+    originality = models.ForeignKey(
+        Grade, related_name='originality',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'originality'}
+    )
+
+    layout = models.ForeignKey(
+        Grade, related_name='layout',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'layout'}
+    )
+
+    length = models.ForeignKey(
+        Grade, related_name='length',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'length'}
+    )
+
+    language = models.ForeignKey(
+        Grade, related_name='language',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'language'}
+    )
+
+    nomenclature = models.ForeignKey(
+        Grade, related_name='nomenclature',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'nomenclature'}
+    )
+
+    interpretation = models.ForeignKey(
+        Grade, related_name='interpretation',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'interpretation'}
+    )
+
+    abstract = models.ForeignKey(
+        Grade, related_name='abstract',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'abstract'}
+    )
+
+    title = models.ForeignKey(
+        Grade, related_name='title',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'title'}
+    )
+
+    illustrations = models.ForeignKey(
+        Grade, related_name='illustrations',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'illustrations'}
+    )
+
+    final_grade = models.ForeignKey(
+        Grade, related_name='final_grade',
+        on_delete=models.SET_NULL, blank=True, null=True,
+        limit_choices_to={'tag': 'final_grade'}
+    )
+    
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
     def aggregate_grades(self):
-        return self.correspondence, self.originality, self.merits, self.presentation, self.final_grade
+        return (
+            self.originality,
+            self.layout,
+            self.length,
+            self.language,
+            self.nomenclature,
+            self.interpretation,
+            self.abstract,
+            self.title,
+            self.illustrations,
+            self.final_grade,
+        )
+
+    def get_questions_with_answers(self):
+        result = []
+
+        for tag, label in Grade.GRADE_CATEGORIES:
+            selected_grade = getattr(self, tag)
+
+            label_en = next((item[1] for item in Grade.GRADE_CATEGORIES_EN if item[0] == tag), '')
+
+            options = []
+            for grade in Grade.objects.filter(tag=tag):
+                options.append({
+                    "name": grade.name,
+                    "checked": selected_grade and grade.pk == selected_grade.pk
+                })
+
+            result.append({
+                "tag": tag,
+                "label": label,
+                "label_en": label_en,
+                "options": options
+            })
+
+        return result
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'

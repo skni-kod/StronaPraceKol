@@ -1,27 +1,30 @@
+import logging
+import requests
 from braces.views import CsrfExemptMixin
+from django.conf import settings
 from django.contrib import messages
-from urllib.parse import unquote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.db import transaction
-from django.utils.html import strip_tags
-from django.http import FileResponse, HttpResponseRedirect, HttpResponse
+from django.http import FileResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils import timezone
+from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.views.static import serve
-from StronaProjektyKol.settings import SITE_NAME, BASE_DIR, SITE_ADMIN_MAIL, GOTENBERG_URL
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View
+from django.views.generic.detail import SingleObjectMixin
+
 from messaging.utils import send_paper_creation_notification_email
 from .filters import PaperFilter
 from .forms import *
-import requests
 
 STATEMENT_FILE = 'statement-file'
+logger = logging.getLogger(__name__)
 
 class PaperListView(LoginRequiredMixin, ListView):
     model = Paper
@@ -33,7 +36,7 @@ class PaperListView(LoginRequiredMixin, ListView):
         context = super(PaperListView, self).get_context_data(**kwargs)
 
         context['site_name'] = 'papers'
-        context['site_title'] = f'Artykuły - {SITE_NAME}'
+        context['site_title'] = f'Artykuły - {settings.SITE_NAME}'
         context['filter'] = PaperFilter(
             self.request.GET, queryset=self.get_queryset())
 
@@ -78,7 +81,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
         context = super(PaperDetailView, self).get_context_data(**kwargs)
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
-        context['site_title'] = f'Informacje o artykule - {SITE_NAME}'
+        context['site_title'] = f'Informacje o artykule - {settings.SITE_NAME}'
         paper_iter = 0
 
         GET_DATA = self.request.GET
@@ -125,18 +128,23 @@ def paper_file_download(request, pk, item):
     :param item: integer (id of a file user wants to download)
     :return:
     """
-    print("request", request, "pk", pk, "item", item)
-    paper = Paper.objects.get(pk=pk)
-    print("paper", paper)
-    if request.user == paper.author or request.user.groups.filter(
+    try:
+        uploadedFile = UploadedFile.objects.get(pk=item)
+    except UploadedFile.DoesNotExist:
+        return redirect('paperList')
+    if request.user == uploadedFile.paper.author or request.user.groups.filter(
             name='reviewer').exists() or request.user.is_staff:
-        document = UploadedFile.objects.get(pk=item)
-        print("document", document)
-        filepath = str(BASE_DIR)+document.file.url
-        print("filepath", unquote(filepath))
-        return serve(request, os.path.basename(unquote(filepath)), os.path.dirname(unquote(filepath)))
+        try:
+            return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.filename())
+        except FileNotFoundError:
+            logger.error(f'Uploaded file with id: {uploadedFile.id} not found')
+            uploadedFile.delete()
+            return redirect("paperList")
+        except PermissionError:
+            logger.error(f'Permission denied for file with id: {uploadedFile.id}')
+            return redirect("paperList")
     else:
-        return redirect('paper-list')
+        return redirect('paperList')
 
 
 class PaperCreateView(LoginRequiredMixin, CreateView):
@@ -149,7 +157,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
         context = super(PaperCreateView, self).get_context_data(**kwargs)
         context['form'].fields['club'].empty_label = 'Wybierz koło naukowe'
         context['site_name'] = 'papers'
-        context['site_title'] = f'Nowy artykuł - {SITE_NAME}'
+        context['site_title'] = f'Nowy artykuł - {settings.SITE_NAME}'
         context['site_type'] = 'create'
 
         if self.request.POST:
@@ -170,7 +178,7 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                                                     {'formset': context['coAuthors']})
 
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
-                                                {'formset': context['files']})
+                                                {'formset': context['files'], 'max_file_size': MAX_FILE_SIZE})
 
         return context
     
@@ -248,7 +256,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(PaperEditView, self).get_context_data(**kwargs)
         context['site_name'] = 'papers'
-        context['site_title'] = f'Edytuj artykuł - {SITE_NAME}'
+        context['site_title'] = f'Edytuj artykuł - {settings.SITE_NAME}'
         context['site_type'] = 'edit'
 
         if self.request.POST:
@@ -271,7 +279,7 @@ class PaperEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['coAuthorsForm'] = render_to_string('papers/paper_add_author_formset.html',
                                                     {'formset': context['coAuthors']})
         context['filesForm'] = render_to_string('papers/upload_files_formset.html',
-                                                {'formset': context['files']})
+                                                {'formset': context['files'], 'max_file_size': MAX_FILE_SIZE})
 
         return context
 
@@ -371,7 +379,7 @@ class ReviewListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['site_name'] = 'reviews'
-        context['site_title'] = f'Recenzje - {SITE_NAME}'
+        context['site_title'] = f'Recenzje - {settings.SITE_NAME}'
         for review in context['reviews']:
             review.paper.get_unread_messages = len(
                 review.paper.get_unread_messages(self.request.user))
@@ -417,10 +425,10 @@ def send_review_notification_email(review):
     msg = EmailMultiAlternatives(
         subject=subject,
         body=plain_text_content,
-        from_email=SITE_ADMIN_MAIL,
-        to=[SITE_ADMIN_MAIL],
+        from_email=settings.SITE_ADMIN_MAIL,
+        to=[settings.SITE_ADMIN_MAIL],
         bcc=recipients,
-        headers={'Reply-To': SITE_ADMIN_MAIL}
+        headers={'Reply-To': settings.SITE_ADMIN_MAIL}
     )
 
     msg.attach_alternative(html_content, "text/html")
@@ -439,7 +447,7 @@ class ReviewCreateView(CsrfExemptMixin, LoginRequiredMixin, UserPassesTestMixin,
 
         if user in [itm.author for itm in paper.review_set.all()]:
             return False
-        if user == paper.author or (self.request.user.groups.filter(
+        if user == paper.author or (not self.request.user.groups.filter(
                 name='reviewer').exists() and not user.is_staff) or paper.reviewers.filter(pk=user.pk).count() == 0:
             return False
         return True
@@ -558,6 +566,42 @@ class ReviewerAssignmentView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
             return True
         return False
 
+class ReviewPDFView(LoginRequiredMixin, UserPassesTestMixin, SingleObjectMixin, View):
+    model = Review
+
+    def test_func(self):
+        try:
+            review = self.get_object()
+            return self.request.user == review.author
+        except (Review.DoesNotExist, Http404):
+                return False
+
+    def handle_no_permission(self):
+        return redirect('paperList')
+
+    def get(self, request, pk):
+        review = self.get_object()
+        html = render_to_string('papers/review_pdf.html', {'review': review, 'questions': review.get_questions_with_answers()})
+
+        try:
+            response = requests.post(
+                f"{settings.GOTENBERG_URL}/forms/chromium/convert/html",
+                files={'file': ('index.html', html, 'text/html')},
+                timeout=10
+            )
+
+            if response.status_code != 200:
+                return HttpResponse("Błąd generowania PDF", status=500)
+
+            pdf_response = HttpResponse(
+                response.content,
+                content_type='application/pdf'
+            )
+            pdf_response['Content-Disposition'] = f'inline; filename="review_{pk}.pdf"'
+            return pdf_response
+
+        except:
+            return HttpResponse("Usługa generowania PDF jest chwilowo niedostępna.", status=503)
 
 @csrf_exempt
 def userReviewShow(request, **kwargs):
@@ -568,7 +612,7 @@ def userReviewShow(request, **kwargs):
     paper = Paper.objects.get(pk=kwargs.get('paper'))
     reviewer = User.objects.get(pk=kwargs.get('reviewer'))
     if paper is None or reviewer is None or (
-            user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
+            not user.groups.filter(name='reviewer').exists() and user != paper.author and not user.is_staff):
         return HttpResponse(status=404)
     if not user.is_staff and not user.groups.filter(name='reviewer').exists() and user != paper.author:
         return HttpResponse(status=404)
@@ -640,7 +684,7 @@ def paper_pdf_form_view(request, pk):
     context = {
         'object': paper,
         'formset': formset,
-        'site_title': f'Dane autora - {SITE_NAME}',
+        'site_title': f'Dane autora - {settings.SITE_NAME}',
         'site_name': 'papers',
     }
     
@@ -706,7 +750,7 @@ def paper_statement_pdf(request, pk):
         },
     )
 
-    url = f"{GOTENBERG_URL}/forms/chromium/convert/html"
+    url = f"{settings.GOTENBERG_URL}/forms/chromium/convert/html"
     files = {
         'index.html': ('index.html', html.encode('utf-8'), 'text/html'),
     }

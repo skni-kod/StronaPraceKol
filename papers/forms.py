@@ -1,14 +1,12 @@
 import re
-
 from crispy_forms.helper import FormHelper
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django_summernote.fields import SummernoteTextFormField
-from django.core.exceptions import ValidationError
-
-from .models import *
+from .models import Paper, UploadedFile, CoAuthor, StudentClub, Review, Grade,User, MAX_FILE_SIZE
 
 
 ### FILE FORMS
@@ -23,6 +21,19 @@ class FileUploadForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_show_labels = False
         formtag_prefix = re.sub('-[0-9]+$', '', kwargs.get('prefix', ''))
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        uploaded_file = cleaned_data.get('file')
+        if uploaded_file:
+            if uploaded_file.size > MAX_FILE_SIZE:
+                self.add_error('file', ValidationError(
+                    _('Plik "%(filename)s" przekracza maksymalny rozmiar %(max_size)s MB.'),
+                    params={'filename': uploaded_file.name, 'max_size': MAX_FILE_SIZE // (1024 * 1024)},
+                ))
+        return cleaned_data
+
 
 UploadFileFormSet = inlineformset_factory(Paper, UploadedFile, form=FileUploadForm,
                                           fields=['file'], extra=1, can_delete=True)
@@ -130,20 +141,53 @@ def get_grade_label(tag):
 
 class ReviewCreationForm(forms.ModelForm):
     text = SummernoteTextFormField(label='Treść recenzji')
-    correspondence = GradeChoiceField(label=get_grade_label('correspondence'),
-                                      queryset=Grade.objects.filter(tag='correspondence'))
-    originality = GradeChoiceField(label=get_grade_label('originality'),
-                                   queryset=Grade.objects.filter(tag='originality'))
-    merits = GradeChoiceField(label=get_grade_label('merits'),
-                              queryset=Grade.objects.filter(tag='merits'))
-    final_grade = GradeChoiceField(label=get_grade_label('final_grade'),
-                                   queryset=Grade.objects.filter(tag='final_grade'))
-    presentation = GradeChoiceField(label=get_grade_label('presentation'),
-                                    queryset=Grade.objects.filter(tag='presentation'))
+    originality = GradeChoiceField(
+        label=get_grade_label('originality'),
+        queryset=Grade.objects.filter(tag='originality')
+    )
+    layout = GradeChoiceField(
+        label=get_grade_label('layout'),
+        queryset=Grade.objects.filter(tag='layout')
+    )
+    length = GradeChoiceField(
+        label=get_grade_label('length'),
+        queryset=Grade.objects.filter(tag='length')
+    )
+    language = GradeChoiceField(
+        label=get_grade_label('language'),
+        queryset=Grade.objects.filter(tag='language')
+    )
+    nomenclature = GradeChoiceField(
+        label=get_grade_label('nomenclature'),
+        queryset=Grade.objects.filter(tag='nomenclature')
+    )
+    interpretation = GradeChoiceField(
+        label=get_grade_label('interpretation'),
+        queryset=Grade.objects.filter(tag='interpretation')
+    )
+    abstract = GradeChoiceField(
+        label=get_grade_label('abstract'),
+        queryset=Grade.objects.filter(tag='abstract')
+    )
+    title = GradeChoiceField(
+        label=get_grade_label('title'),
+        queryset=Grade.objects.filter(tag='title')
+    )
+    illustrations = GradeChoiceField(
+        label=get_grade_label('illustrations'),
+        queryset=Grade.objects.filter(tag='illustrations')
+    )
+    final_grade = GradeChoiceField(
+        label=get_grade_label('final_grade'),
+        queryset=Grade.objects.filter(tag='final_grade')
+    )
 
     class Meta:
         model = Review
-        fields = ['correspondence', 'originality', 'merits', 'presentation', 'final_grade', 'text']
+        fields = [
+            'originality', 'layout', 'length', 'language', 'nomenclature',
+            'interpretation', 'abstract', 'title', 'illustrations', 'final_grade', 'text'
+        ]
 
 
 class ReviewerChoiceField(forms.ModelMultipleChoiceField):

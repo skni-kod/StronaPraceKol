@@ -2,6 +2,8 @@
 
 Serwis ma służyć do obsługi zgłoszeń projetków studentów będących członkami kół naukowych
 
+To setup your .env file (crucial):
+  - rename example.env to .env
 
 To setup and run your server:
 

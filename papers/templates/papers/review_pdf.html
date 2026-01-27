@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Sheet / Blankiet recenzji</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            font-size: 16pt;
+        }
+
+        .ans-margin {
+            padding-right: 60px;
+        }
+
+        .labels-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .label-item {
+            width: 100px;
+            text-align: center;
+            line-height: 1.1;
+            font-size: 14pt;
+            white-space: nowrap;
+        }
+
+        .question-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .question-text { flex: 1; }
+
+        .options-container {
+            display: flex;
+            white-space: nowrap;
+        }
+
+        .checkbox-wrapper {
+            width: 100px;
+            text-align: center;
+        }
+
+        .checkbox-lg {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #000;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        .checkbox-lg.checked { background-color: #000; }
+
+        .final-grid {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 25px;
+        }
+
+        .final-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .final-label {
+            font-size: 17px;
+            line-height: 1.2;
+            min-height: 3.5em;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        hr { border-top: 3px solid #000; }
+        .page-break { page-break-before: always; }
+    </style>
+</head>
+<body class="container-fluid p-0">
+
+<h2 class="text-center mb-4 font-weight-bold">Review Sheet / Blankiet recenzji</h2>
+
+<div class="text-center mb-4">
+    <span class="font-weight-bold">Title / Tytuł:<br>
+    {{ review.paper.title }}
+    </span>
+</div>
+
+<hr> 
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-end mb-3 ans-margin">
+        <div>
+            <strong>A Please respond to the following questions</strong><br>
+            <span class="d-block ml-4"><strong>Prosimy o odpowiedzi na następujące pytania</strong></span>
+        </div>
+        <div class="labels-container">
+            <div class="d-flex">
+                <div class="label-item">Yes</div>
+                <div class="label-item">See comments</div>
+                <div class="label-item">No</div>
+            </div>
+            <div class="d-flex">
+                <div class="label-item">Tak</div>
+                <div class="label-item">Zobacz uwagi</div>
+                <div class="label-item">Nie</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="questions-section">
+        {% for question in questions %}
+            {% if forloop.last %}
+                <div>
+                    <div class="question-text">
+                        {{ forloop.counter }}. {{ question.label_en }}
+                        <div class="ml-4">{{ question.label }}</div>
+                    </div>
+
+                    <div class="final-grid ans-margin">
+                        {% for option in question.options %}
+                        <div class="final-col">
+                            <div class="final-label">
+                                {% if forloop.counter == 1 %}accepted<br>przyjęta
+                                {% elif forloop.counter == 2 %}accepted with minor changes<br>przyjęta z małymi zmianami
+                                {% elif forloop.counter == 3 %}accepted with major changes<sup>1</sup><br>przyjęta z dużymi zmianami<sup>1</sup>
+                                {% elif forloop.counter == 4 %}rejected<sup>2</sup><br>odrzucona<sup>2</sup>
+                                {% endif %}
+                            </div>
+                            <span class="checkbox-lg {% if option.checked %}checked{% endif %}"></span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="question-row">
+                    <div class="question-text">
+                        <div>{{ forloop.counter }}. {{ question.label_en }}</div>
+                        <div class="ml-4">{{ question.label }}</div>
+                    </div>
+                    <div class="options-container ans-margin">
+                        {% for option in question.options %}
+                        <div class="checkbox-wrapper">
+                            <span class="checkbox-lg {% if option.checked %}checked{% endif %}"></span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div class="page-break mb-4">
+    <hr>
+    <div class="mb-3">
+        <strong>B Confidential/Poufne</strong><br>
+        
+        <div style="font-size: 13pt; margin-top: 20px;" class="ans-margin">
+            <sup>1</sup> repeated review required / wymaga ponownej opinii Recenzenta<br>
+            <sup>2</sup> write justification please / proszę uzasadnić
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="mb-4">
+    <div class="mb-3">
+        <strong>C List here your detailed comments to support the responses you gave above.</strong><br>
+        <span class="d-block ml-4"><strong>Szczegółowy komentarz do udzielonych powyżej odpowiedzi</strong></span>
+    </div>
+    <div style="font-size: 16pt; line-height: 1.4;">
+        {{ review.text|safe }}
+    </div>
+</div>
+
+</body>
+</html>

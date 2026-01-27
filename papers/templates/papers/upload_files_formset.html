@@ -18,20 +18,20 @@
     <div class="col-md-6 offset-md-3">
         <button type="button" class="btn btn-primary mb-4" id="add_file_btn">Dodaj plik</button>
         {% for form in formset.forms %}
-            <div class="formset_row-{{ formset.prefix }} mb-2">
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden|as_crispy_field }}
-                {% endfor %}
-                <div class="d-flex align-items-center justify-content-between p-2 border rounded">
-                    <div class="flex-grow-1 mr-3">
-                        {% render_field form.file class='form-control-file' %}
-                    </div>
-                    <button type="button" class="btn btn-danger btn-sm remove_file_button">
-                        Usuń
-                    </button>
+        <div class="formset_row-{{ formset.prefix }} mb-2">
+            {% for hidden in form.hidden_fields %}
+            {{ hidden|as_crispy_field }}
+            {% endfor %}
+            <div class="d-flex align-items-center justify-content-between p-2 border rounded">
+                <div class="flex-grow-1 mr-3">
+                    {% render_field form.file class='form-control-file' %}
                 </div>
-                {{ form.DELETE }}
+                <button type="button" class="btn btn-danger btn-sm remove_file_button">
+                    Usuń
+                </button>
             </div>
+            {{ form.DELETE }}
+        </div>
         {% endfor %}
     </div>
 </div>
@@ -42,5 +42,19 @@
         prefix: '{{ formset.prefix }}',
         add_btn: $('#add_file_btn'),
         remove_btn_class: 'remove_file_button',
+    });
+
+    // Check file size on file input change
+    $(document).on('change', 'input[type="file"]', function () {
+        const maxFileSize = {{ max_file_size }};
+        const maxFileSizeMB = maxFileSize / (1024 * 1024);
+        const fileInput = $(this)[0];
+        if (fileInput.files.length > 0) {
+            const fileSize = fileInput.files[0].size;
+            if (fileSize > maxFileSize) {
+                alert('Plik przekracza maksymalny rozmiar ' + maxFileSizeMB + ' MB.');
+                fileInput.value = ''; // Clear the input
+            }
+        }
     });
 </script>
