@@ -36,7 +36,7 @@ class IndexView(ListView):
         # Create any data and add it to the context
         context['site_name'] = 'index'
         context['site_title'] = f'Strona główna - {SITE_NAME}'
-        context['announcement'] = Announcement.objects.order_by('id').first()
+        context['announcement'] = Announcement.objects.order_by("-created_at").first()
         return context
 
 
