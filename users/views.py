@@ -109,7 +109,7 @@ class ContactView(ListView):
         # Create any data and add it to the context
         context['site_name'] = 'contact'
         context['site_title'] = f'Kontakt - {SITE_NAME}'
-        context['announcement'] = Announcement.objects.filter(pk=2).first()
+        context['announcement'] = Announcement.objects.order_by('id')[1:2].first()
         return context
 
 
