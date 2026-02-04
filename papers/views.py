@@ -209,17 +209,13 @@ class PaperCreateView(LoginRequiredMixin, CreateView):
                     self.object.save()
 
             if files.is_valid():
-                # receiced a list of file fields
-                # each file field has a list of files
-                # but file can be empty, so we need to check it
                 for file_fields in self.request.FILES.lists():
                     if file_fields[0] == STATEMENT_FILE:
                         continue
                     for file_field in file_fields[1]:
-                        if len(file_fields[1]) > 0:
-                            file_instance = UploadedFile(
-                                file=file_field, paper=self.object)
-                            file_instance.save()
+                        file_instance = UploadedFile(
+                            file=file_field, paper=self.object)
+                        file_instance.save()
 
         send_paper_creation_notification_email(self.object)
         return super(PaperCreateView, self).form_valid(form)
