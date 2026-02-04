@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1 class="mb-4">Kontakt</h1>
+<hr class="my-3">
 
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <div class="row">
-                <h1>Kontakt</h1>
-            </div>
-        </div>
-        <div class="col-md-3"></div>
+{% if contacts %}
+{% for contact in contacts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ contact.name }}</h5>
+        {% if contact.email %}
+        <p class="card-text mb-1">
+            <strong>Email:</strong>
+            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+        </p>
+        {% endif %}
+        {% if contact.phone %}
+        <p class="card-text mb-1">
+            <strong>Telefon:</strong> {{ contact.phone }}
+        </p>
+        {% endif %}
     </div>
-
-    <hr class="my-1">
-
-    <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <div class="row">
-            <p>Telefon: {{ admin_phone }}</p>
-        </div>
-        <div class="row">
-            <p>Email: {{ admin_mail }}</p>
-        </div>
-    </div>
-    <br>
-
+</div>
+{% endfor %}
+{% else %}
+<div class="alert alert-info">Brak danych kontaktowych</div>
+{% endif %}
 {% endblock %}

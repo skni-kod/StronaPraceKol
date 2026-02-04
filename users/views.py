@@ -19,11 +19,11 @@ from django.utils.http import urlsafe_base64_encode
 # for TemplateView classes
 from django.views.generic import ListView, TemplateView
 from StronaProjektyKol.settings import SITE_NAME, SITE_DOMAIN, SITE_ADMIN_MAIL, SITE_ADMIN_PHONE
-from papers.models import Announcement, NotificationPeriod, Paper
+from papers.models import NotificationPeriod, Paper
 # forms
 from .forms import UserLoginForm, UserPasswordChangeForm
 from .forms import UserRegisterForm
-from .models import UserDetail
+from .models import UserDetail, ContactInfo, Announcement
 
 
 class IndexView(ListView):
@@ -36,7 +36,7 @@ class IndexView(ListView):
         # Create any data and add it to the context
         context['site_name'] = 'index'
         context['site_title'] = f'Strona główna - {SITE_NAME}'
-        context['announcement'] = Announcement.objects.order_by("-created_at").first()
+        context['announcements'] = Announcement.objects.order_by("-created_at")[:5]
         return context
 
 
@@ -99,17 +99,14 @@ class SendNotificationsView(TemplateView):
 
 
 
-class ContactView(ListView):
-    template_name = 'users/index.html'
-    model = Announcement
+class ContactView(TemplateView):
+    template_name = 'users/contact.html'
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get the context
         context = super().get_context_data(**kwargs)
-        # Create any data and add it to the context
         context['site_name'] = 'contact'
         context['site_title'] = f'Kontakt - {SITE_NAME}'
-        context['announcement'] = Announcement.objects.order_by('id')[1:2].first()
+        context['contacts'] = ContactInfo.objects.all()
         return context
 
 

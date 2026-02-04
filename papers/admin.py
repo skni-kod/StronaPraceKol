@@ -10,8 +10,6 @@ from StronaProjektyKol.settings import SITE_ADMIN_MAIL
 from .models import *
 
 
-class AnnouncementAdmin(SummernoteModelAdmin):
-    summernote_fields = '__all__'
 
 
 class MassEmailModel(models.Model):
@@ -105,4 +103,3 @@ admin.site.register(Message)
 admin.site.register(MessageSeen)
 admin.site.register(NotificationPeriod)
 admin.site.register(MassEmailModel, MassEmailModelAdmin)
-admin.site.register(Announcement, AnnouncementAdmin)
