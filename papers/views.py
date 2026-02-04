@@ -122,7 +122,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 @login_required
 def paper_file_download(request, pk, item):
     """
-    Function allows logged in users to download a file if they have permission to
+    Function allows logged-in users to download a file if they have permission to
     :param request:
     :param pk: integer (id of a paper that the files belongs to)
     :param item: integer (id of a file user wants to download)
