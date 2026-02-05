@@ -6,21 +6,19 @@
 
 {% if contacts %}
 {% for contact in contacts %}
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">{{ contact.name }}</h5>
-        {% if contact.email %}
-        <p class="card-text mb-1">
-            <strong>Email:</strong>
-            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
-        </p>
-        {% endif %}
-        {% if contact.phone %}
-        <p class="card-text mb-1">
-            <strong>Telefon:</strong> {{ contact.phone }}
-        </p>
-        {% endif %}
-    </div>
+<div class="mb-4 pb-3 border-bottom">
+    <h5 class="mb-2">{{ contact.name }}</h5>
+    {% if contact.email %}
+    <p class="mb-1">
+        <strong>Email:</strong>
+        <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+    </p>
+    {% endif %}
+    {% if contact.phone %}
+    <p class="mb-1">
+        <strong>Telefon:</strong> {{ contact.phone }}
+    </p>
+    {% endif %}
 </div>
 {% endfor %}
 {% else %}

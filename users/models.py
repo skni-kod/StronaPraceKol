@@ -30,6 +30,7 @@ class ContactInfo(models.Model):
 class Announcement(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
+    show_date = models.BooleanField(default=False)
 
     def __str__(self):
         return textwrap.shorten(self.text, width=20)

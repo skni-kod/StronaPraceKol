@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2 class="mb-4">Ogłoszenia</h2>
 
 {% if announcements %}
 {% for announcement in announcements %}
-<div class="card mb-3">
-    <div class="card-body">
-        <div class="card-text">{{ announcement.text|safe }}</div>
-    </div>
-    <div class="card-footer text-muted">
-        <small>{{ announcement.created_at|date:"d.m.Y H:i" }}</small>
-    </div>
+<div class="mb-4 pb-3 border-bottom">
+    {% if announcement.show_date %}
+        <div class="mb-2">
+            <span class="badge badge-info">{{ announcement.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+    {% endif %}
+    <div>{{ announcement.text|safe }}</div>
 </div>
 {% endfor %}
 {% else %}
