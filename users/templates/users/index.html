@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <br>
-    <div class="container mx-1 my-1">
-        {{ announcement.text|safe }}
-    </div>
-{% endblock %}
 
+{% if announcements %}
+{% for announcement in announcements %}
+<div class="mb-4 pb-3 border-bottom">
+    {% if announcement.show_date %}
+        <div class="mb-2">
+            <span class="badge badge-info">{{ announcement.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+    {% endif %}
+    <div>{{ announcement.text|safe }}</div>
+</div>
+{% endfor %}
+{% else %}
+<div class="alert alert-info">Brak ogłoszeń</div>
+{% endif %}
+{% endblock %}
