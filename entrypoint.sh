@@ -2,7 +2,7 @@
 echo "Applying database migrations..."
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
-python manage.py loaddata announcement grades groups notificationperiod studentclubs
+python manage.py loaddata grades groups notificationperiod studentclubs
 python manage.py setup_scheduled_tasks
 python manage.py qcluster &
 
