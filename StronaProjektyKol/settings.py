@@ -205,4 +205,4 @@ SITE_ADMIN_PHONE = os.environ.get('SITE_ADMIN_PHONE')
 GOTENBERG_URL = os.environ.get('GOTENBERG_URL')
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = os.environ.get("DEBUG", 'False').lower() == 'true'
