@@ -7,4 +7,4 @@ python manage.py setup_scheduled_tasks
 python manage.py qcluster &
 
 echo "Starting Gunicorn..."
-exec gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 StronaProjektyKol.wsgi:application
+exec gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 --limit-request-line 16384 StronaProjektyKol.wsgi:application
