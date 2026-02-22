@@ -273,14 +273,6 @@ class Review(models.Model):
         return f'[{self.author}] - {self.paper}'
 
 
-class Announcement(models.Model):
-    text = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return textwrap.shorten(self.text, width=20)
-
-
 class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, related_name='paper', default=None, on_delete=models.CASCADE)
