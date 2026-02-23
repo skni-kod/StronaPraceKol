@@ -198,6 +198,20 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+}
+
 SITE_DOMAIN = os.environ.get('SITE_DOMAIN')
 SITE_NAME = os.environ.get('SITE_NAME')
 SITE_ADMIN_MAIL = os.environ.get('SITE_ADMIN_MAIL')
