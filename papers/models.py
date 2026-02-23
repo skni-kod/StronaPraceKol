@@ -3,10 +3,18 @@ import re
 import textwrap
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+
+def validate_file_size(value):
+    """Validate whether the uploaded file size is within the allowed limit (MAX_FILE_SIZE)."""
+    if value.size > MAX_FILE_SIZE:
+        raise ValidationError(f'Maximum file size is {MAX_FILE_SIZE / (1024 * 1024)} MB.')
 
 class NotificationPeriod(models.Model):
     name = models.CharField(max_length=64)
@@ -89,6 +97,13 @@ def paper_directory_path(instance, filename):
     short_name = clean_name[:40]
 
     return f'paper_files/paperNo.{instance.paper.pk}/{short_name}.{ext}'
+
+    # _filename = filename.split('.')
+    # filename = re.sub(r'\W+', '', _filename[0])
+    # filename = filename.replace(' ','_')
+    # filename = textwrap.shorten(filename,width=100,placeholder='')
+    # filename += f'.{_filename[-1]}'
+    # return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
 
 
 class UploadedFile(models.Model):
