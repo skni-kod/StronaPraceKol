@@ -3,19 +3,10 @@ import re
 import textwrap
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
-
-MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
-
-
-def validate_file_size(value):
-    """Validate whether the uploaded file size is within the allowed limit (MAX_FILE_SIZE)."""
-    if value.size > MAX_FILE_SIZE:
-        raise ValidationError(f'Maximum file size is {MAX_FILE_SIZE / (1024 * 1024)} MB.')
 
 class NotificationPeriod(models.Model):
     name = models.CharField(max_length=64)
@@ -93,17 +84,16 @@ def remove_polish_chars(text):
     return text
 
 def paper_directory_path(instance, filename):
-    _filename = filename.split('.')
-    filename = re.sub(r'\W+', '', _filename[0])
-    filename = filename.replace(' ','_')
-    filename = textwrap.shorten(filename,width=100,placeholder='')
-    filename += f'.{_filename[-1]}'
-    return f'paper_files/paperNo.{instance.paper.pk}/{filename}'
+    ext = filename.split('.')[-1]
+    clean_name = re.sub(r'\W+', '', filename.rsplit('.', 1)[0])
+    short_name = clean_name[:40]
+
+    return f'paper_files/paperNo.{instance.paper.pk}/{short_name}.{ext}'
 
 
 class UploadedFile(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=paper_directory_path, blank=True, max_length=512, validators=[validate_file_size])
+    file = models.FileField(upload_to=paper_directory_path, blank=True,max_length=512)
     created_at = models.DateTimeField(default=timezone.now)
 
     def filename(self):
@@ -271,6 +261,14 @@ class Review(models.Model):
 
     def __str__(self):
         return f'[{self.author}] - {self.paper}'
+
+
+class Announcement(models.Model):
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return textwrap.shorten(self.text, width=20)
 
 
 class Message(models.Model):
