@@ -7,13 +7,14 @@ let ForeignMessageHTML = '';
 let CanGetMessage = true;
 
 function getConversationTarget() {
-    let activeLink = $(".message_link.active[href='.messagebox']").first();
-    if (activeLink.length === 0) {
-        activeLink = $(".message_link[href='.messagebox']").first();
-    }
+    let reviewerId = ReviewerId || '';
+    let editorId = EditorId || '';
 
-    const reviewerId = activeLink.attr('data-reviewer') || ReviewerId || '';
-    const editorId = activeLink.attr('data-editor') || EditorId || '';
+    if (reviewerId) {
+        editorId = '';
+    } else if (editorId) {
+        reviewerId = '';
+    }
 
     ReviewerId = reviewerId;
     EditorId = editorId;
