@@ -111,7 +111,7 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists():
+        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists() or self.request.user.groups.filter(name='editor').exists():
             return True
         return False
 
