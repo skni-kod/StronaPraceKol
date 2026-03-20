@@ -369,7 +369,7 @@
     <div class="row text-center my-5">
         <div class="col-md-4">
             {% if prev %}
-                <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
+                <a href="{% url 'paperDetail' prev %}">
                     <button type="button" class="btn btn-warning btn-lg">Poprzedni</button>
                 </a>
             {% endif %}
@@ -381,7 +381,7 @@
         </div>
         <div class="col-md-4">
             {% if next %}
-                <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
+                <a href="{% url 'paperDetail' next %}">
                     <button type="button" class="btn btn-primary btn-lg">Następny</button>
                 </a>
             {% endif %}
