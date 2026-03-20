@@ -47,6 +47,7 @@ class Paper(models.Model):
     description = models.TextField()
     approved = models.BooleanField(default=False)
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
+    editors = models.ManyToManyField(User, related_name='editors', blank=True, max_length=3)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     statement = models.PositiveIntegerField(default=0)

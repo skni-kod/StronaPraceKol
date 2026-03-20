@@ -65,6 +65,9 @@ class PaperListView(LoginRequiredMixin, ListView):
         # FOR ADMIN
         if self.request.user.is_staff:
             return Paper.objects.all()
+        #FOR EDITOR
+        if self.request.user.groups.filter(name='editor').exists():
+            return Paper.objects.all().filter(editors=self.request.user)
         # FOR REVIEWER
         if self.request.user.groups.filter(name='reviewer').exists():
             return Paper.objects.all().filter(reviewers=self.request.user)
