@@ -4,7 +4,8 @@ $().ready(function () {
 
     $(".message_link").on('click', function (event) {
         $("#messages_box").html('');
-        ReviewerId = $(this).attr('data-reviewer');
+        ReviewerId = $(this).attr('data-reviewer') || '';
+        EditorId = $(this).attr('data-editor') || '';
         CanGetMessage = true;
         LastMessageId = -1;
         GetMessage();
@@ -28,6 +29,15 @@ $().ready(function () {
                 }
             });
     };
+
+    const firstMessageLink = $(".message_link[href='.messagebox']").first();
+    if (firstMessageLink.length > 0) {
+        ReviewerId = firstMessageLink.attr('data-reviewer') || '';
+        EditorId = firstMessageLink.attr('data-editor') || '';
+        CanGetMessage = true;
+        LastMessageId = -1;
+        GetMessage();
+    }
 
 
     $('#admin-assign-reviewers-submit').click(function () {

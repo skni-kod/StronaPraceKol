@@ -47,6 +47,7 @@ class Paper(models.Model):
     description = models.TextField()
     approved = models.BooleanField(default=False)
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True, max_length=2)
+    editors = models.ManyToManyField(User, related_name='editors', blank=True, max_length=3)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     statement = models.PositiveIntegerField(default=0)
@@ -60,7 +61,7 @@ class Paper(models.Model):
         return self.statement > 0 and UploadedFile.objects.filter(pk=self.statement).exists()
 
     def get_unread_messages(self, user):
-        if user not in self.reviewers.all() and user != self.author:
+        if user not in self.reviewers.all() and user not in self.editors.all() and user != self.author:
             return []
 
         messages = []
@@ -277,7 +278,8 @@ class Review(models.Model):
 class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, related_name='paper', default=None, on_delete=models.CASCADE)
-    reviewer = models.ForeignKey(User, related_name='reviewer', default=None, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(User, related_name='reviewer', default=None, null=True, blank=True, on_delete=models.CASCADE)
+    editor = models.ForeignKey(User, related_name='editor', default=None, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     text = models.TextField()
 
