@@ -279,6 +279,7 @@ class Message(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     paper = models.ForeignKey(Paper, related_name='paper', default=None, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, related_name='reviewer', default=None, on_delete=models.CASCADE)
+    editor = models.ForeignKey(User, related_name='editor', default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     text = models.TextField()
 
