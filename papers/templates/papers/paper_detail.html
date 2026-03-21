@@ -211,7 +211,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            {% if reviews|length < 1 and not user.is_staff and not user|is_in_group:'reviewer' %}
+            {% if reviews|length < 1 and not user.is_staff and not user|is_in_group:'reviewer' and not user|is_in_group:'editor' %}
                 <span class="badge bg-secondary">Brak recenzji</span>
             {% else %}
                 <ul class="nav nav-pills justify-content-center">
@@ -223,7 +223,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    {% if user.is_staff or user == paper.author or user|is_in_group:'reviewer' %}
+                    {% if user.is_staff or user == paper.author or user|is_in_group:'reviewer' or user|is_in_group:'editor' %}
                         {% for reviewer in paper.reviewers.all %}
                             <li class="nav-item m-2">
                                 <a data-toggle="tab" href="#review-{{ reviewer.pk }}"
@@ -265,7 +265,7 @@
         </div>
     </div>
 
-    {% if paper.reviewers.all|length > 0 %}
+    {% if paper.reviewers.all|length > 0 or paper.editors.all|length > 0 %}
 
         <div class="row mt-5">
             <div class="col-md-12 text-left offset-md-1">
@@ -282,13 +282,22 @@
 
                         <li class="nav-item m-2">
                             <a data-toggle="tab" href=".numberbox" class="nav-link message_link m-2"
-                               data-reviewer="{{ user.pk }}">
+                               data-reviewer="{{ user.pk }}" data-editor="">
                                 Numer do autora 
                             </a>
                         </li>
                         <li class="nav-item m-2">
                             <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
-                               data-reviewer="{{ user.pk }}">
+                               data-reviewer="{{ user.pk }}" data-editor="">
+                                Konwersacja z autorami
+                            </a>
+                        </li>
+
+                    {% elif user|is_in_group:'editor' and user != paper.author %}
+
+                        <li class="nav-item m-2">
+                            <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
+                               data-reviewer="" data-editor="{{ user.pk }}">
                                 Konwersacja z autorami
                             </a>
                         </li>
@@ -297,8 +306,16 @@
                         {% for reviewer in paper.reviewers.all %}
                             <li class="nav-item">
                                 <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
-                                   data-reviewer="{{ reviewer.pk }}">
-                                    {{ reviewer.first_name }} {{ reviewer.last_name }}
+                                   data-reviewer="{{ reviewer.pk }}" data-editor="">
+                                    [Recenzent] {{ reviewer.first_name }} {{ reviewer.last_name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        {% for editor in paper.editors.all %}
+                            <li class="nav-item">
+                                <a data-toggle="tab" href=".messagebox" class="nav-link message_link m-2"
+                                   data-reviewer="" data-editor="{{ editor.pk }}">
+                                    [Edytor] {{ editor.first_name }} {{ editor.last_name }}
                                 </a>
                             </li>
                         {% endfor %}
@@ -339,19 +356,20 @@
             render_message_url = "{% url 'render_messages' %}";
             Username = "{{ user.username }}";
             PaperId = "{{ paper.pk }}";
-            ReviewerId = 0;
+            ReviewerId = "";
+            EditorId = "";
         </script>
 
     {% endif %}
 
     <script>is_staff = {{ user.is_staff|lower }};</script>
-    <script src="{% static  'js/messaging.js' %}"></script>
-    <script src="{% static  'js/papers.js' %}"></script>
+    <script src="{% static  'js/messaging.js' %}?v=20260320c"></script>
+    <script src="{% static  'js/papers.js' %}?v=20260320c"></script>
 
     <div class="row text-center my-5">
         <div class="col-md-4">
             {% if prev %}
-                <a href="{% url 'paperDetail' prev %}?id={{ prev_id }}{{ queryset_pks }}">
+                <a href="{% url 'paperDetail' prev %}">
                     <button type="button" class="btn btn-warning btn-lg">Poprzedni</button>
                 </a>
             {% endif %}
@@ -363,7 +381,7 @@
         </div>
         <div class="col-md-4">
             {% if next %}
-                <a href="{% url 'paperDetail' next %}?id={{ next_id }}{{ queryset_pks }}">
+                <a href="{% url 'paperDetail' next %}">
                     <button type="button" class="btn btn-primary btn-lg">Następny</button>
                 </a>
             {% endif %}

@@ -41,13 +41,11 @@ class PaperListView(LoginRequiredMixin, ListView):
             self.request.GET, queryset=self.get_queryset())
 
         papers = context['filter'].qs.order_by('title')
-        queryset_pks = ''
+        self.request.session['paper_navigation_pks'] = list(papers.values_list('pk', flat=True))
         for paper in papers:
-            queryset_pks += f'&q={paper.pk}'
             paper.get_unread_messages = len(
                 paper.get_unread_messages(self.request.user))
 
-        context['queryset_pks'] = queryset_pks
         context['papers_length'] = papers.count()
 
         paginator = Paginator(papers, 5)
@@ -65,6 +63,9 @@ class PaperListView(LoginRequiredMixin, ListView):
         # FOR ADMIN
         if self.request.user.is_staff:
             return Paper.objects.all()
+        #FOR EDITOR
+        if self.request.user.groups.filter(name='editor').exists():
+            return Paper.objects.all().filter(editors=self.request.user)
         # FOR REVIEWER
         if self.request.user.groups.filter(name='reviewer').exists():
             return Paper.objects.all().filter(reviewers=self.request.user)
@@ -82,36 +83,27 @@ class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, 
 
         context['reviews'] = Review.objects.filter(paper=context['paper'])
         context['site_title'] = f'Informacje o artykule - {settings.SITE_NAME}'
-        paper_iter = 0
 
-        GET_DATA = self.request.GET
+        qs_list = self.request.session.get('paper_navigation_pks', [])
+        paper_pk = context['paper'].pk
+        if paper_pk in qs_list:
+            paper_iter = qs_list.index(paper_pk)
 
-        if 'id' in GET_DATA and GET_DATA['id'] is not None:
-            paper_iter = int(GET_DATA['id'])
-        if 'q' in GET_DATA:
-            qs_list = [int(i) for i in GET_DATA.getlist('q')]
-            queryset_pks = ''
-            for itm in qs_list:
-                queryset_pks += f'&q={itm}'
-            context['queryset_pks'] = queryset_pks
-
-            if 1 < paper_iter <= len(qs_list):
-                var = Paper.objects.filter(pk=qs_list[paper_iter - 2]).first()
+            if paper_iter > 0:
+                var = Paper.objects.filter(pk=qs_list[paper_iter - 1]).first()
                 if var is not None:
                     context['prev'] = var.pk
-                    context['prev_id'] = paper_iter - 1
 
-            if 1 <= paper_iter < len(qs_list):
-                var = Paper.objects.filter(pk=qs_list[paper_iter]).first()
+            if paper_iter < len(qs_list) - 1:
+                var = Paper.objects.filter(pk=qs_list[paper_iter + 1]).first()
                 if var is not None:
                     context['next'] = var.pk
-                    context['next_id'] = paper_iter + 1
 
         return context
 
     def test_func(self):
         paper = self.get_object()
-        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists():
+        if self.request.user == paper.author or self.request.user.groups.filter(name='reviewer').exists() or self.request.user.groups.filter(name='editor').exists():
             return True
         return False
 

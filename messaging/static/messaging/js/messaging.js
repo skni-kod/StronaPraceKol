@@ -6,11 +6,33 @@ let OwnMessageHTML = '';
 let ForeignMessageHTML = '';
 let CanGetMessage = true;
 
+function getConversationTarget() {
+    let reviewerId = ReviewerId || '';
+    let editorId = EditorId || '';
+
+    if (reviewerId) {
+        editorId = '';
+    } else if (editorId) {
+        reviewerId = '';
+    }
+
+    ReviewerId = reviewerId;
+    EditorId = editorId;
+
+    return {
+        reviewerId: reviewerId,
+        editorId: editorId,
+    };
+}
+
 function SendMessage() {
+    const target = getConversationTarget();
+
     $.post(send_message_url,
         {
             paper_id: PaperId,
-            reviewer_id: ReviewerId,
+            reviewer_id: target.reviewerId,
+            editor_id: target.editorId,
             message_text: $('#input_message').val(),
         },
         function (data, status) {
@@ -27,11 +49,14 @@ function GetMessage() {
     if (CanGetMessage == false)
         return;
 
+    const target = getConversationTarget();
+
     CanGetMessage = false;
     $.post(get_messages_url,
         {
             paper_id: PaperId,
-            reviewer_id: ReviewerId,
+            reviewer_id: target.reviewerId,
+            editor_id: target.editorId,
             last_message_id: LastMessageId,
         },
         function (data, status) {
