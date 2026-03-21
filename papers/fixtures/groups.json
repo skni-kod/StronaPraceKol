@@ -6,4 +6,12 @@
 		"name": "reviewer",
 		"permissions": []
 	}
+},
+{
+	"model": "auth.group",
+	"pk": 2,
+	"fields": {
+		"name": "editor",
+		"permissions": []
+	}
 }]
