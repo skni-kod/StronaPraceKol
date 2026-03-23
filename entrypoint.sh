@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Applying database migrations..."
-python manage.py migrate --noinput
+python manage.py migrate --verbosity 3 --noinput
 python manage.py collectstatic --noinput
 python manage.py loaddata --verbosity 3 grades groups notificationperiod studentclubs
 python manage.py setup_scheduled_tasks

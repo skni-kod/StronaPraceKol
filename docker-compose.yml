@@ -1,16 +1,14 @@
 services:
-  django-web:
-    build: .
-    env_file:
-      - ./.env
+  pg:
+    image: postgres:17.6
+    ports:
+      - "5432:5432"
     environment:
-      - GOTENBERG_URL=http://gotenberg:3000
-    restart: always
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - ./static:/app/static:rw
-      - ./media:/app/media:rw
-    depends_on:
-      - gotenberg
+      - pgdata:/var/lib/postgresql/data
 
   django-qcluster:
     build: .
@@ -20,25 +18,12 @@ services:
     restart: always
     volumes:
       - ./media:/app/media:rw
-    depends_on:
-      - django-web
 
-  nginx:
-    image: nginx:latest
-    ports:
-      - "${PORT_80}:80"
-      - "${PORT_443}:443"
-    restart: always
-    volumes:
-      - "${NGINX_CONF_PATH}:/etc/nginx/nginx.conf:ro"
-      - ./static:/static:ro
-      - ./media:/media:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-    depends_on:
-      - django-web
+  # gotenberg:
+  #   image: gotenberg/gotenberg:7
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
 
-  gotenberg:
-    image: gotenberg/gotenberg:7
-    restart: always
-    ports:
-      - "3000:3000"
+volumes:
+  pgdata: {}
