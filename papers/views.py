@@ -124,11 +124,18 @@ def paper_file_download(request, pk, item):
     :return:
     """
     try:
-        uploadedFile = UploadedFile.objects.get(pk=item)
+        uploadedFile = UploadedFile.objects.select_related('paper').get(pk=item, paper_id=pk)
     except UploadedFile.DoesNotExist:
         return redirect('paperList')
+
+    is_statement_file = uploadedFile.pk == uploadedFile.paper.statement
+    is_editor_non_author = request.user.groups.filter(name='editor').exists() and request.user != uploadedFile.paper.author and not request.user.is_staff
+
+    if is_statement_file and is_editor_non_author:
+        return redirect('paperList')
+
     if request.user == uploadedFile.paper.author or request.user.groups.filter(
-            name='reviewer').exists() or request.user.is_staff:
+            name='reviewer').exists() or request.user.groups.filter(name='editor').exists() or request.user.is_staff:
         try:
             return FileResponse(uploadedFile.file.open('rb'), as_attachment=True, filename=uploadedFile.filename())
         except FileNotFoundError:

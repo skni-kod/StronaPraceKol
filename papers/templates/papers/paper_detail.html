@@ -153,7 +153,11 @@
             {% if paper.statement %}
                 {% for file in paper.uploadedfile_set.all %}
                     {% if file.pk == paper.statement %}
+                        {% if user|is_in_group:'editor' and user != paper.author and not user.is_staff %}
+                            <span class="text-muted">Brak dostępu do oświadczenia</span>
+                        {% else %}
                         <a href="{% url 'paperFileDownload' pk=paper.id item=file.id %}">{{ file.filename }}</a>
+                        {% endif %}
                         <small class="text-muted d-block">
                             Przesłano: {{ file.created_at|date:"d/m/Y G:i" }}
                         </small>
