@@ -2,6 +2,10 @@ name: Build and push
 
 on:
   workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
   workflow_dispatch:
 
 permissions:
@@ -28,4 +32,4 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/skni-kod/stronapracekol:${{ github.ref_name }}
+            ghcr.io/skni-kod/stronapracekol:${{ inputs.image_tag }}

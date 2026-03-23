@@ -2,7 +2,7 @@ name: Staging deploy
 
 on:
   push:
-    branches: main
+    branches: [main]
 
 permissions:
   contents: read
@@ -11,6 +11,8 @@ permissions:
 jobs:
   build:
     uses: ./.github/workflows/build_push.yml
+    with:
+      image_tag: dev
 
   deploy:
     needs: [build]

@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     uses: ./.github/workflows/build_push.yml
+    with:
+      image_tag: prod
 
   deploy:
     needs: [build]
