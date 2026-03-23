@@ -5,6 +5,7 @@ import textwrap
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_delete
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -61,11 +62,24 @@ class Paper(models.Model):
         return self.statement > 0 and UploadedFile.objects.filter(pk=self.statement).exists()
 
     def get_unread_messages(self, user):
-        if user not in self.reviewers.all() and user not in self.editors.all() and user != self.author:
-            return []
+        if user.is_staff or user == self.author:
+            allowed_messages = Message.objects.filter(paper=self)
+        else:
+            role_filter = Q()
+
+            if user in self.reviewers.all():
+                role_filter |= Q(reviewer=user, editor__isnull=True)
+
+            if user in self.editors.all():
+                role_filter |= Q(editor=user, reviewer__isnull=True)
+
+            if not role_filter:
+                return []
+
+            allowed_messages = Message.objects.filter(paper=self).filter(role_filter)
 
         messages = []
-        for message in Message.objects.filter(paper=self):
+        for message in allowed_messages:
             if message.author == user:
                 continue
             if not message.is_seen(user):

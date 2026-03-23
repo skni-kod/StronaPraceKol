@@ -9,6 +9,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import transaction
+from django.db.models import Q
 from django.http import FileResponse, HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
@@ -63,14 +64,16 @@ class PaperListView(LoginRequiredMixin, ListView):
         # FOR ADMIN
         if self.request.user.is_staff:
             return Paper.objects.all()
-        #FOR EDITOR
+
+        qs_filter = Q(author=self.request.user)
+
         if self.request.user.groups.filter(name='editor').exists():
-            return Paper.objects.all().filter(editors=self.request.user)
-        # FOR REVIEWER
+            qs_filter |= Q(editors=self.request.user)
+
         if self.request.user.groups.filter(name='reviewer').exists():
-            return Paper.objects.all().filter(reviewers=self.request.user)
-        # FOR REGULAR USER
-        return Paper.objects.all().filter(author=self.request.user)
+            qs_filter |= Q(reviewers=self.request.user)
+
+        return Paper.objects.filter(qs_filter).distinct()
 
 
 class PaperDetailView(LoginRequiredMixin, UserPassesTestMixin, CsrfExemptMixin, DetailView):
