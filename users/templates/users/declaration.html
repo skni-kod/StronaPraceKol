@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Deklaracja dostępności</h2>
+  {% if declaration %}
+  <div class="mb-4 pb-3 border-bottom">
+    <div>{{ declaration.text|safe }}</div>
+  </div>
+  {% else %}
+  <div class="alert alert-info">Brak deklaracji dostępności</div>
+  {% endif %}
+</div>
+{% endblock %}

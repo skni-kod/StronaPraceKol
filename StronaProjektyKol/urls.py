@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -21,12 +22,13 @@ from django.urls import include, path
 from users.views import IndexView, ContactView
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('admin/', admin.site.urls),
-    path('contact/', ContactView.as_view(), name='contact'),
-    path('papers/', include('papers.urls')),
-    path('documents/', include('documents.urls')),
-    path('user/', include('users.urls')),
-    path('messaging/', include('messaging.urls')),
-    path('summernote/', include('django_summernote.urls')),
+    path("", IndexView.as_view(), name="index"),
+    path("admin/", admin.site.urls),
+    path("contact/", ContactView.as_view(), name="contact"),
+    path("papers/", include("papers.urls")),
+    path("documents/", include("documents.urls")),
+    path("user/", include("users.urls")),
+    path("messaging/", include("messaging.urls")),
+    path("summernote/", include("django_summernote.urls")),
+    path("deklaracja-dostepnosci/", include("users.urls")),  # delegujemy do users.urls
 ]
