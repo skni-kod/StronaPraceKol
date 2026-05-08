@@ -39,7 +39,7 @@ class StudentClub(models.Model):
 
 
 class Paper(models.Model):
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=256)
     club = models.ForeignKey(StudentClub, default=StudentClub.get_default_pk, on_delete=models.SET_DEFAULT)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     author_percentage= models.FloatField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
